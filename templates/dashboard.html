@@ -24,6 +24,7 @@ body {
 
 .navbar h2 {
     margin: 0;
+    font-size: 18px;
 }
 
 .navbar a {
@@ -40,37 +41,47 @@ body {
 /* CONTAINER */
 .container {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 40px;
+    padding-bottom: 60px;
+}
+
+.container h1 {
+    color: white;
 }
 
 /* GRID CARDS */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    width: 80%;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    width: 85%;
     margin: auto;
 }
 
 .card {
     background: #fff3e0;
     color: #4e342e;
-    padding: 30px;
-    border-radius: 10px;
+    padding: 20px;
+    border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     transition: 0.3s;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .card:hover {
-    transform: scale(1.05);
+    transform: scale(1.07);
+    background: #ffe0b2;
 }
 
-/* IMAGE CARDS */
+/* =========================
+   📁 IMAGE CARDS (FIXED)
+========================= */
 .image-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
-    width: 80%;
+    width: 90%;
     margin: 50px auto;
 }
 
@@ -78,14 +89,15 @@ body {
     background: #fff3e0;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
     transition: 0.3s;
+    text-align: left;
 }
 
 .image-card img {
     width: 100%;
-    height: 180px;
-    object-fit: cover;
+    height: auto;           /* ✅ FIX: full image visible */
+    display: block;
 }
 
 .image-card .description {
@@ -93,12 +105,23 @@ body {
     color: #4e342e;
 }
 
+.image-card h3 {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.image-card p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #5d4037;
+}
+
 .image-card:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px);
 }
 
 /* =========================
-   🏆 PHOTO GALLERY (ROW STYLE)
+   🏆 GALLERY (FIXED)
 ========================= */
 .gallery-section {
     margin-top: 70px;
@@ -107,24 +130,20 @@ body {
 
 .gallery-section h2 {
     color: white;
-    font-size: 32px;
-    margin-bottom: 20px;
+    font-size: 30px;
 }
 
-/* FIXED ROW LAYOUT */
 .gallery-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-    width: 80%;
+    width: 90%;
     margin: auto;
 }
 
-/* FIXED CARD SIZE */
 .gallery-card {
     width: 220px;
-    flex: 0 0 auto;
     background: #fff3e0;
     border-radius: 12px;
     overflow: hidden;
@@ -134,8 +153,8 @@ body {
 
 .gallery-card img {
     width: 100%;
-    height: 160px;
-    object-fit: cover;
+    height: auto;          /* ✅ FIX: full image visible */
+    display: block;
 }
 
 .gallery-card p {
@@ -176,13 +195,13 @@ body {
 
     <!-- NAV CARDS -->
     <div class="grid">
-        <a href="{{ url_for('projects') }}"><div class="card">📁 Projects</div></a>
-        <a href="{{ url_for('uploads') }}"><div class="card">📁 Uploads</div></a>
-        <a href="{{ url_for('discussion') }}"><div class="card">💬 Discussion</div></a>
-        <a href="{{ url_for('leadership') }}"><div class="card">👨‍💼 Leadership</div></a>
-        <a href="{{ url_for('activities') }}"><div class="card">🎯 Activities</div></a>
-        <a href="{{ url_for('contact') }}"><div class="card">📞 Contact</div></a>
-        <a href="{{ url_for('about') }}"><div class="card">ℹ️ About</div></a>
+        <a href="{{ url_for('projects') }}" class="card">📁 Projects</a>
+        <a href="{{ url_for('uploads') }}" class="card">📁 Uploads</a>
+        <a href="{{ url_for('discussion') }}" class="card">💬 Discussion</a>
+        <a href="{{ url_for('leadership') }}" class="card">👨‍💼 Leadership</a>
+        <a href="{{ url_for('activities') }}" class="card">🎯 Activities</a>
+        <a href="{{ url_for('contact') }}" class="card">📞 Contact</a>
+        <a href="{{ url_for('about') }}" class="card">ℹ️ About</a>
     </div>
 
     <!-- IMAGE CARDS -->
@@ -192,7 +211,10 @@ body {
             <img src="{{ url_for('static', filename='images/img4.jpeg') }}">
             <div class="description">
                 <h3>Automated Temperature Control</h3>
-                <p>Keeps temperature stable automatically in incubation systems.</p>
+                <p>
+                    A smart incubation system that automatically regulates temperature for optimal conditions.
+                    It improves efficiency in agricultural incubation projects.
+                </p>
             </div>
         </div>
 
@@ -200,7 +222,10 @@ body {
             <img src="{{ url_for('static', filename='images/img3.jpeg') }}">
             <div class="description">
                 <h3>Anti-Flood Detector</h3>
-                <p>Detects rising water levels and triggers alerts.</p>
+                <p>
+                    Detects rising water levels using sensors and triggers alarms to prevent flood damage
+                    in homes and institutions.
+                </p>
             </div>
         </div>
 
@@ -208,7 +233,10 @@ body {
             <img src="{{ url_for('static', filename='images/sofware.jpg') }}">
             <div class="description">
                 <h3>Web Development</h3>
-                <p>Building modern websites and applications.</p>
+                <p>
+                    Development of modern web applications using Flask, HTML, CSS and databases
+                    for real-world digital solutions.
+                </p>
             </div>
         </div>
 
@@ -216,15 +244,15 @@ body {
             <img src="{{ url_for('static', filename='images/jk1234.png') }}">
             <div class="description">
                 <h3>Certificate Award</h3>
-                <p>Members are awarded certificates after completing training and projects.</p>
+                <p>
+                    Students receive certificates after completing training and innovation projects.
+                </p>
             </div>
         </div>
 
     </div>
 
-    <!-- =========================
-         🏆 PHOTO GALLERY
-    ========================= -->
+    <!-- GALLERY -->
     <div class="gallery-section">
 
         <h2>🏆 Innovation Achievements & Trophies</h2>
