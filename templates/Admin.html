@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+    font-family:Arial;
+    background:#f1f5f9;
+    margin:0;
+}
+
+/* NAV */
+.navbar{
+    background:#1e3a8a;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.navbar a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* CONTAINER */
+.container{
+    width:90%;
+    margin:auto;
+    margin-top:20px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+/* BUTTON */
+.delete{
+    background:red;
+    color:white;
+    padding:5px 10px;
+    border-radius:5px;
+    text-decoration:none;
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+<h2>Admin Panel</h2>
+<a href="/logout">Logout</a>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h3>Users</h3>
+<table>
+<tr><th>Name</th><th>Email</th></tr>
+{% for u in users %}
+<tr>
+<td>{{u.name}}</td>
+<td>{{u.email}}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div class="card">
+<h3>Projects</h3>
+<table>
+<tr><th>Title</th><th>Action</th></tr>
+{% for p in projects %}
+<tr>
+<td>{{p.title}}</td>
+<td><a class="delete" href="/delete_project/{{p.id}}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+</div>
+
+</body>
+</html>

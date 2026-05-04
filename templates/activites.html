@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+    font-family:Arial;
+    background:#42a5f5;
+    margin:0;
+    padding:0
+}
+
+.navbar{
+    background:#6f4e37;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.navbar a{
+    color:white;
+    text-decoration:none;
+    margin-left:15px;
+    font-weight:bold
+}
+
+.container{
+    width:70%;
+    margin:auto;
+    padding:30px;
+    text-align:center
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    margin:20px 0;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    text-align:left;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h3{
+    color:#1e3a8a;
+    margin-bottom:10px;
+}
+
+ul{
+    list-style-type:circle;
+    margin-left:20px;
+    line-height:1.8;
+}
+
+/* IMAGE ROW */
+.image-row{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+/* IMAGE CARD STYLE */
+/* IMAGE ROW */
+.image-row{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+/* CARD SAME SIZE AS IMAGE */
+.image-card{
+    flex:1;
+    border-radius:12px;
+    overflow:hidden; /* keeps image inside rounded corners */
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    background:white;
+}
+
+/* IMAGE FULLY VISIBLE */
+.image-card img{
+    width:100%;
+    height:auto; /* 🔥 VERY IMPORTANT */
+    display:block;
+    object-fit:contain;
+}
+
+/* HOVER EFFECT */
+.image-card:hover img{
+    transform:scale(1.1);
+}
+
+/* RESPONSIVE (MOBILE) */
+@media screen and (max-width: 768px){
+    .container{
+        width:90%;
+    }
+
+    .image-row{
+        flex-direction:column;
+    }
+
+    .image-card img{
+        height:200px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+<h2>Activities</h2>
+<div>
+<a href="/dashboard">Dashboard</a>
+<a href="/logout">Logout</a>
+</div>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h3>Ongoing Activities</h3>
+<ul>
+<li>Preparing for the coming TVET fair  Competitions </li>
+<li>Preparing for the 4TH INTERNATIONAL RESEARCH,SCIENCE,INNOVATION CONFERENCE AND SKILLS EXPO (3-5 JUNE 2026) </li>
+</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Upcoming Activities</h3>
+<ul>
+
+
+<li>KATTI Mount kenya East TVET fair Paper and robotics competition</li>
+<ol>
+    <li>Regionals competition(14-15  May 2026)</li>
+    <li>Nationals Competition (28-29 May 2026))</li>
+    <li>The selected winners proceed to Wajir County for Madaraka Day celebration (1 JUNE 2026)</li>
+</ol>
+<li>4TH INTERNATIONAL RESEARCH,SCIENCE,INNOVATION CONFERENCE AND SKILLS EXPO (3-5 JUNE 2026)</li>
+</ul>
+
+<!-- IMAGE ROW -->
+<div class="image-row">
+
+    <div class="image-card">
+        <img src="/static/images/event.jpeg">
+    </div>
+
+    <div class="image-card">
+        <img src="/static/images/event2.jpeg">
+    </div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

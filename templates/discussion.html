@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Discussion Forum</title>
+
+<style>
+body {
+    font-family: Arial;
+    background:#1e88e5;
+    margin: 0;
+    padding: 0;
+}
+.navbar {
+    background:#6f4e37;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: bold;
+}
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+}
+form input, form select {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+form button {
+    padding: 10px 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+form button:hover {
+    background: #1d4ed8;
+}
+.message-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+.reply-card {
+    background: #eef2ff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: 5px 0 5px 30px;
+}
+.reply-form {
+    margin-left: 30px;
+    display: none;
+}
+.reply-toggle {
+    background: none;
+    border: none;
+    color: #2563eb;
+    cursor: pointer;
+}
+.no-replies {
+    margin-left: 30px;
+    color: gray;
+    font-style: italic;
+}
+</style>
+
+<script>
+function toggleReply(id) {
+    const form = document.getElementById('reply-form-' + id);
+    form.style.display = form.style.display === 'block' ? 'none' : 'block';
+}
+</script>
+
+</head>
+<body>
+
+<div class="navbar">
+    <h2>Discussion Forum</h2>
+    <div>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+<h3>Post a New Message</h3>
+<form method="POST" action="{{ url_for('discussion') }}">
+    <label>Topic:</label><br>
+    <select name="topic" required>
+        <option value="General">General</option>
+        <option value="Projects">Projects</option>
+        <option value="Events">Events</option>
+        <option value="Other">Other</option>
+    </select><br>
+
+    <input type="text" name="message" placeholder="Type your message..." required><br>
+    <button type="submit">Send</button>
+</form>
+
+<hr>
+
+<h3>Discussion Threads</h3>
+
+{% if discussions %}
+    {% for d in discussions %}
+    <div class="message-card">
+        <strong>{{ d.user_name }} ({{ d.topic }})</strong>
+        <p>{{ d.message }}</p>
+        <small>{{ d.created_at }}</small>
+
+        <br>
+        <button class="reply-toggle" onclick="toggleReply({{ d.id }})">Reply</button>
+
+        <!-- Reply form -->
+        <form method="POST" action="{{ url_for('discussion') }}" class="reply-form" id="reply-form-{{ d.id }}">
+            <input type="hidden" name="discussion_id" value="{{ d.id }}">
+            <input type="text" name="message" placeholder="Type your reply..." required>
+            <button type="submit">Send</button>
+        </form>
+
+        <!-- Replies -->
+        {% if replies_dict.get(d.id) %}
+            {% for r in replies_dict[d.id] %}
+            <div class="reply-card">
+                <strong>{{ r.user_name }}</strong>
+                <p>{{ r.message }}</p>
+                <small>{{ r.created_at }}</small>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-replies">No replies yet.</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No discussions yet. Start the conversation above!</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>

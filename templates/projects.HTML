@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ 'Edit Project' if project else 'Upload Page' }}</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#1e88e5;
+    margin:0;
+    padding:0;
+}
+
+.container{
+    width:60%;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#1e3a8a;
+}
+
+/* SECTION BOXES */
+.section{
+    margin-top:30px;
+    padding:20px;
+    border-radius:12px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+/* INPUTS */
+input[type=text], input[type=email], textarea, input[type=file], select{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    margin-bottom:12px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+textarea{
+    resize:none;
+}
+
+/* BUTTONS */
+button{
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    width:100%;
+    font-size:15px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+/* LINKS */
+.links{
+    text-align:center;
+    margin-top:20px;
+}
+
+.links a{
+    margin:10px;
+    text-decoration:none;
+    color:#1e3a8a;
+    font-weight:bold;
+}
+
+.links a:hover{
+    color:#3b82f6;
+}
+
+/* PREVIEW */
+.preview{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.preview img{
+    width:100px;
+    height:100px;
+    object-fit:cover;
+    border-radius:8px;
+}
+</style>
+
+<script>
+function previewImages(){
+    const preview = document.getElementById('preview');
+    preview.innerHTML = "";
+    const files = document.getElementById('file').files;
+
+    for(let i=0; i<files.length; i++){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(files[i]);
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📂 Project & Skills Portal</h1>
+
+<!-- ================= PROJECT FORM ================= -->
+<div class="section">
+    <h2>📤 Upload Project</h2>
+
+    <form action="{{ url_for('projects') }}" method="POST" enctype="multipart/form-data">
+
+        <label>Project Title</label>
+        <input type="text" name="title" required>
+
+        <label>Description</label>
+        <textarea name="description" rows="4" required></textarea>
+
+        <label>Upload Images</label>
+        <input type="file" name="files" id="file" multiple onchange="previewImages()">
+
+        <div id="preview" class="preview"></div>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Phone</label>
+        <input type="text" name="phone" required>
+
+        <label>WhatsApp</label>
+        <input type="text" name="whatsapp">
+
+        <!-- PROJECT SUBMIT BUTTON -->
+        <button type="submit">🚀 Submit Project</button>
+
+    </form>
+</div>
+
+<!-- ================= SKILLS FORM ================= -->
+<div class="section">
+    <h2>🏆 Skills Competition</h2>
+
+    <form action="{{ url_for('skills') }}" method="POST">
+
+        <label>Student Name</label>
+        <input type="text" name="name" required>
+
+        <label>Class</label>
+        <input type="text" name="class" required>
+
+        <label>Department</label>
+        <input type="text" name="department" required>
+
+        <label>Area of Competition</label>
+        <select name="area" required>
+            <option value="">Select Area</option>
+            <option>Web Development</option>
+            <option>Mobile App Development</option>
+            <option>Electrical Engineering</option>
+            <option>Mechanical Engineering</option>
+            <option>Graphic Design</option>
+            <option>Networking</option>
+        </select>
+
+        <label>Supervisor</label>
+        <input type="text" name="supervisor" required>
+
+        <!-- SKILLS SUBMIT BUTTON -->
+        <button type="submit">🏅 Submit Entry</button>
+
+    </form>
+</div>
+
+<!-- ================= NAVIGATION ================= -->
+<div class="links">
+    <a href="{{ url_for('uploads') }}">📂 View Uploads</a>
+    <a href="{{ url_for('dashboard') }}">⬅ Back to Dashboard</a>
+</div>
+
+</div>
+
+</body>
+</html>

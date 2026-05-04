@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uploaded Projects</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#1e88e5;
+    margin:0;
+    padding:0;
+}
+
+.container{
+    width:85%;
+    margin:50px auto;
+}
+
+h1{
+    text-align:center;
+    color:#1e3a8a;
+}
+
+/* SECTION TITLE */
+.section-title{
+    margin:30px 0 10px;
+    color:#0f172a;
+    font-size:22px;
+}
+
+/* CARD */
+.project-card{
+    background:white;
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+}
+
+.project-card h2{
+    margin:0;
+    color:#1e3a8a;
+}
+
+.project-card p{
+    margin:8px 0;
+    color:#333;
+}
+
+/* IMAGES */
+.image-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:15px;
+    margin-top:15px;
+}
+
+.image-grid img{
+    width:90%;
+    height:400px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+/* LINKS */
+.links{
+    margin-top:15px;
+}
+
+.links a, .links form button{
+    margin-right:15px;
+    font-weight:bold;
+    text-decoration:none;
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+.links a{
+    color:#2563eb;
+}
+
+.links a:hover, .links form button:hover{
+    color:#1d4ed8;
+    text-decoration:underline;
+}
+
+.delete-btn{
+    color:#dc2626;
+}
+
+/* SUPPORT BOX */
+.support-box{
+    margin-top:20px;
+    padding:15px;
+    border-radius:10px;
+    background:#f0f9ff;
+    border:1px solid #bae6fd;
+}
+
+.support-box h3{
+    margin:0 0 10px 0;
+    color:#0c4a6e;
+}
+
+.support-box a{
+    display:block;
+    margin:5px 0;
+    color:#0369a1;
+    text-decoration:none;
+}
+
+.support-box a:hover{
+    text-decoration:underline;
+}
+
+/* SKILLS TABLE STYLE */
+.skills-card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+}
+
+.skill-item{
+    padding:10px;
+    border-bottom:1px solid #e5e7eb;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📂 All Uploads System</h1>
+
+<!-- ================= PROJECTS ================= -->
+<h2 class="section-title">📁 Projects</h2>
+
+{% if projects %}
+    {% for project in projects %}
+    <div class="project-card">
+
+        <h2>{{ project['title'] }}</h2>
+        <p>{{ project['description'] }}</p>
+        <p><strong>Uploaded by:</strong> {{ project['uploader'] }}</p>
+
+        {% if project['file'] %}
+        <div class="image-grid">
+            {% for img in project['file'].split(',') %}
+                <img src="{{ url_for('static', filename='uploads/' + img) }}">
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- CONTACT -->
+        <div class="support-box">
+            <h3>💬 Contact Seller</h3>
+
+            {% if project['email'] %}
+                <a href="mailto:{{ project['email'] }}">📧 Email</a>
+            {% endif %}
+
+            {% if project['phone'] %}
+                <a href="tel:{{ project['phone'] }}">📞 Call</a>
+            {% endif %}
+
+            {% if project['whatsapp'] %}
+                <a href="https://wa.me/{{ project['whatsapp'] }}" target="_blank">💬 WhatsApp</a>
+            {% endif %}
+        </div>
+
+        <div class="links">
+            <a href="{{ url_for('projects') }}">📤 Upload New</a>
+            <a href="{{ url_for('dashboard') }}">⬅ Dashboard</a>
+
+            <form action="{{ url_for('delete_project', project_id=project['id']) }}" method="POST" style="display:inline;">
+                <button class="delete-btn">🗑 Delete</button>
+            </form>
+        </div>
+
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No projects uploaded yet.</p>
+{% endif %}
+
+<!-- ================= SKILLS ================= -->
+<h2 class="section-title">🏆 Skills Competition Entries</h2>
+
+{% if skills %}
+<div class="skills-card">
+
+    {% for s in skills %}
+    <div class="skill-item">
+
+        <p><strong>Name:</strong> {{ s['name'] }}</p>
+        <p><strong>Class:</strong> {{ s['class'] }}</p>
+        <p><strong>Department:</strong> {{ s['department'] }}</p>
+        <p><strong>Area:</strong> {{ s['area'] }}</p>
+        <p><strong>Supervisor:</strong> {{ s['supervisor'] }}</p>
+
+    </div>
+    {% endfor %}
+
+</div>
+{% else %}
+<p>No skills entries yet.</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>
