@@ -12,22 +12,22 @@ app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 # ---------------- BASE DIR ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------- RENDER-SAFE STORAGE ----------------
-DB_NAME = os.path.join("/tmp", "database.db")
-UPLOAD_FOLDER = os.path.join("/tmp", "uploads")
+# ---------------- RENDER SAFE STORAGE (FIXED) ----------------
+DB_NAME = os.path.join(BASE_DIR, "database.db")
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static/uploads")
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-# ---------------- DATABASE CONNECTION ----------------
+# ---------------- DATABASE ----------------
 def get_connection():
     conn = sqlite3.connect(DB_NAME, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
 
-# ---------------- INIT DATABASE ----------------
+# ---------------- INIT DB (SAFE) ----------------
 def init_db():
     try:
         conn = get_connection()
@@ -93,7 +93,7 @@ def init_db():
         conn.close()
 
     except Exception as e:
-        print("DB INIT ERROR:", e)
+        print("DB ERROR:", e)
 
 
 init_db()
@@ -136,13 +136,11 @@ def dashboard():
 
     conn.close()
 
-    return render_template(
-        "dashboard.html",
-        projects_count=projects_count,
-        skills_count=skills_count,
-        assistants_count=assistants_count,
-        discussions_count=discussions_count
-    )
+    return render_template("dashboard.html",
+                           projects_count=projects_count,
+                           skills_count=skills_count,
+                           assistants_count=assistants_count,
+                           discussions_count=discussions_count)
 
 
 # ---------------- LOGIN ----------------
@@ -170,29 +168,23 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        try:
-            conn = get_connection()
-            cur = conn.cursor()
+        conn = get_connection()
+        cur = conn.cursor()
 
-            cur.execute("""
-                INSERT INTO users(name,email,password,role)
-                VALUES (?,?,?,?)
-            """, (
-                request.form['name'],
-                request.form['email'],
-                generate_password_hash(request.form['password']),
-                "user"
-            ))
+        cur.execute("""
+            INSERT INTO users(name,email,password,role)
+            VALUES (?,?,?,?)
+        """, (
+            request.form['name'],
+            request.form['email'],
+            generate_password_hash(request.form['password']),
+            "user"
+        ))
 
-            conn.commit()
-            conn.close()
+        conn.commit()
+        conn.close()
 
-            return redirect(url_for('login'))
-
-        except Exception as e:
-            print("REGISTER ERROR:", e)
-            flash("Registration failed")
-            return redirect(url_for('register'))
+        return redirect(url_for('login'))
 
     return render_template('register.html')
 
@@ -218,15 +210,14 @@ def projects():
             filenames = []
 
             for file in files:
-                if file and file.filename.strip():
+                if file and file.filename:
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     filenames.append(filename)
 
             cur.execute("""
-                INSERT INTO projects(
-                    title, description, file, email, phone, whatsapp, uploader
-                ) VALUES (?,?,?,?,?,?,?)
+                INSERT INTO projects(title,description,file,email,phone,whatsapp,uploader)
+                VALUES (?,?,?,?,?,?,?)
             """, (
                 request.form.get('title', ''),
                 request.form.get('description', ''),
@@ -251,25 +242,32 @@ def projects():
     return render_template('projects.html')
 
 
-# ---------------- UPLOADS ----------------
+# ---------------- UPLOADS (FIXED SAFE) ----------------
 @app.route('/uploads')
 @login_required
 def uploads():
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute("SELECT * FROM projects ORDER BY id DESC")
-    projects = cur.fetchall()
+        cur.execute("SELECT * FROM projects ORDER BY id DESC")
+        projects = cur.fetchall()
 
-    cur.execute("SELECT * FROM skills ORDER BY id DESC")
-    skills = cur.fetchall()
+        cur.execute("SELECT * FROM skills ORDER BY id DESC")
+        skills = cur.fetchall()
 
-    conn.close()
+        conn.close()
 
-    return render_template("uploads.html", projects=projects, skills=skills)
+        return render_template("uploads.html",
+                               projects=projects,
+                               skills=skills)
+
+    except Exception as e:
+        print("UPLOAD ERROR:", e)
+        return f"Uploads error: {e}", 500
 
 
-# ---------------- SKILLS FIX ROUTE (IMPORTANT FIX) ----------------
+# ---------------- SKILLS ----------------
 @app.route('/skills', methods=['POST'])
 @login_required
 def skills():
@@ -302,10 +300,8 @@ def assistant():
 
     if request.method == 'POST':
         cur.execute("""
-            INSERT INTO assistants(
-                type, innovator_name, phone_number,
-                project_name, assistant_area, category
-            ) VALUES (?,?,?,?,?,?)
+            INSERT INTO assistants(type,innovator_name,phone_number,project_name,assistant_area,category)
+            VALUES (?,?,?,?,?,?)
         """, (
             request.form.get('type', ''),
             request.form.get('innovator_name', ''),
@@ -367,11 +363,9 @@ def discussion():
 
     conn.close()
 
-    return render_template(
-        'discussion.html',
-        discussions=discussions,
-        replies_dict=replies_dict
-    )
+    return render_template('discussion.html',
+                           discussions=discussions,
+                           replies_dict=replies_dict)
 
 
 # ---------------- OTHER PAGES ----------------
@@ -392,7 +386,7 @@ def leadership():
     return render_template('leadership.html')
 
 
-# ---------------- ERROR DEBUG ----------------
+# ---------------- ERROR ----------------
 @app.errorhandler(500)
 def server_error(e):
     print("SERVER ERROR:", e)
