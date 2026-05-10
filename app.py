@@ -3,93 +3,88 @@ import sqlite3, os
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
-from datetime import datetime
 
 app = Flask(__name__)
 
-# ---------------- SECURITY ----------------
-app.secret_key = os.environ.get("SECRET_KEY", "fallbacksecret")
+# ---------------- SECRET KEY (use env in production) ----------------
+app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
-# ---------------- CONFIG ----------------
+# ---------------- BASE DIR ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+# ---------------- UPLOAD FOLDER ----------------
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
+# ---------------- DATABASE ----------------
 DB_NAME = os.path.join(BASE_DIR, "database.db")
 
-# ---------------- DB ----------------
+
 def get_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
 
 
+# ---------------- INIT DB ----------------
 def init_db():
     conn = get_connection()
     cur = conn.cursor()
 
-    # USERS
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
+    cur.execute("""CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         email TEXT UNIQUE,
         password TEXT,
         role TEXT
-    )
-    """)
+    )""")
 
-    # PROJECTS
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS projects (
+    cur.execute("""CREATE TABLE IF NOT EXISTS projects (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         description TEXT,
         file TEXT,
-        uploader TEXT,
         email TEXT,
         phone TEXT,
-        whatsapp TEXT
-    )
-    """)
+        whatsapp TEXT,
+        uploader TEXT
+    )""")
 
-    # SKILLS
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS skills (
+    cur.execute("""CREATE TABLE IF NOT EXISTS skills (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        class TEXT,
+        class_name TEXT,
         department TEXT,
         area TEXT,
         supervisor TEXT
-    )
-    """)
+    )""")
 
-    # DISCUSSIONS
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS discussions (
+    cur.execute("""CREATE TABLE IF NOT EXISTS assistants (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        topic TEXT,
-        user_name TEXT,
-        message TEXT,
-        created_at TEXT
-    )
-    """)
+        type TEXT,
+        innovator_name TEXT,
+        phone_number TEXT,
+        project_name TEXT,
+        assistant_area TEXT,
+        category TEXT
+    )""")
 
-    # REPLIES (FIXED)
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS replies (
+    cur.execute("""CREATE TABLE IF NOT EXISTS discussions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_name TEXT,
+        topic TEXT,
+        message TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )""")
+
+    cur.execute("""CREATE TABLE IF NOT EXISTS replies (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         discussion_id INTEGER,
         user_name TEXT,
         message TEXT,
-        created_at TEXT
-    )
-    """)
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )""")
 
     conn.commit()
     conn.close()
@@ -97,52 +92,88 @@ def init_db():
 
 init_db()
 
-# ---------------- HELPERS ----------------
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+# ---------------- LOGIN DECORATOR ----------------
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if 'user' not in session:
-            flash("Please login first!")
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return wrapper
 
 
-# ---------------- INDEX ----------------
+# ---------------- HOME ----------------
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-# ---------------- AUTH ----------------
-@app.route('/register', methods=['GET','POST'])
-def register():
+# ---------------- DASHBOARD ----------------
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM projects")
+    projects_count = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM skills")
+    skills_count = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM assistants")
+    assistants_count = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM discussions")
+    discussions_count = cur.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        'dashboard.html',
+        projects_count=projects_count,
+        skills_count=skills_count,
+        assistants_count=assistants_count,
+        discussions_count=discussions_count
+    )
+
+
+# ---------------- LOGIN ----------------
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-        confirm = request.form['confirm_password']
-
-        if password != confirm:
-            flash("Passwords do not match!")
-            return redirect(url_for('register'))
-
-        hashed = generate_password_hash(password)
-
         conn = get_connection()
         cur = conn.cursor()
 
-        cur.execute("SELECT * FROM users WHERE email=?", (email,))
-        if cur.fetchone():
-            flash("Email already exists!")
-            return redirect(url_for('login'))
+        cur.execute("SELECT * FROM users WHERE email=?", (request.form['email'],))
+        user = cur.fetchone()
+        conn.close()
 
-        cur.execute("INSERT INTO users(name,email,password,role) VALUES (?,?,?,?)",
-                    (name, email, hashed, "user"))
+        if user and check_password_hash(user['password'], request.form['password']):
+            session['user'] = user['name']
+            return redirect(url_for('dashboard'))
+
+        flash("Invalid login")
+        return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+
+# ---------------- REGISTER ----------------
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""INSERT INTO users(name,email,password,role)
+        VALUES (?,?,?,?)""", (
+            request.form['name'],
+            request.form['email'],
+            generate_password_hash(request.form['password']),
+            "user"
+        ))
 
         conn.commit()
         conn.close()
@@ -152,30 +183,7 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/login', methods=['GET','POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        conn = get_connection()
-        cur = conn.cursor()
-
-        cur.execute("SELECT * FROM users WHERE email=?", (email,))
-        user = cur.fetchone()
-        conn.close()
-
-        if user and check_password_hash(user['password'], password):
-            session['user'] = user['name']
-            session['role'] = user['role']
-            return redirect(url_for('dashboard'))
-        else:
-            flash("Invalid credentials!")
-            return redirect(url_for('login'))
-
-    return render_template('login.html')
-
-
+# ---------------- LOGOUT ----------------
 @app.route('/logout')
 @login_required
 def logout():
@@ -183,71 +191,41 @@ def logout():
     return redirect(url_for('index'))
 
 
-# ---------------- DASHBOARD ----------------
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
-
-
 # ---------------- PROJECTS ----------------
-@app.route('/projects', methods=['GET','POST'])
+@app.route('/projects', methods=['GET', 'POST'])
 @login_required
 def projects():
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        email = request.form['email']
-        phone = request.form['phone']
-        whatsapp = request.form['whatsapp']
+    conn = get_connection()
+    cur = conn.cursor()
 
+    if request.method == 'POST':
         files = request.files.getlist('files')
         filenames = []
 
         for file in files:
-            if file and allowed_file(file.filename):
+            if file and file.filename:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filenames.append(filename)
 
-        conn = get_connection()
-        cur = conn.cursor()
-
-        cur.execute("""
-            INSERT INTO projects(title,description,file,uploader,email,phone,whatsapp)
-            VALUES (?,?,?,?,?,?,?)
-        """, (title, description, ",".join(filenames), session['user'], email, phone, whatsapp))
+        cur.execute("""INSERT INTO projects(
+            title, description, file, email, phone, whatsapp, uploader
+        ) VALUES (?,?,?,?,?,?,?)""", (
+            request.form.get('title', ''),
+            request.form.get('description', ''),
+            ",".join(filenames),
+            request.form.get('email', ''),
+            request.form.get('phone', ''),
+            request.form.get('whatsapp', ''),
+            session['user']
+        ))
 
         conn.commit()
         conn.close()
-
         return redirect(url_for('uploads'))
 
-    return render_template('projects.html')  # FIXED LOWERCASE
-
-
-# ---------------- SKILLS ----------------
-@app.route('/skills', methods=['POST'])
-@login_required
-def skills():
-    name = request.form['name']
-    student_class = request.form['class']
-    department = request.form['department']
-    area = request.form['area']
-    supervisor = request.form['supervisor']
-
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO skills(name,class,department,area,supervisor)
-        VALUES (?,?,?,?,?)
-    """, (name, student_class, department, area, supervisor))
-
-    conn.commit()
     conn.close()
-
-    return redirect(url_for('uploads'))
+    return render_template('projects.html')
 
 
 # ---------------- UPLOADS ----------------
@@ -268,58 +246,34 @@ def uploads():
     return render_template('uploads.html', projects=projects, skills=skills)
 
 
-# ---------------- DELETE ----------------
-@app.route('/delete_project/<int:project_id>', methods=['POST'])
+# ---------------- ASSISTANT ----------------
+@app.route('/assistant', methods=['GET', 'POST'])
 @login_required
-def delete_project(project_id):
+def assistant():
     conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT file FROM projects WHERE id=?", (project_id,))
-    project = cur.fetchone()
+    if request.method == 'POST':
+        cur.execute("""INSERT INTO assistants(
+            type, innovator_name, phone_number, project_name, assistant_area, category
+        ) VALUES (?,?,?,?,?,?)""", (
+            request.form.get('type', ''),
+            request.form.get('innovator_name', ''),
+            request.form.get('phone_number', ''),
+            request.form.get('project_name', ''),
+            request.form.get('assistant_area', ''),
+            request.form.get('category', '')
+        ))
 
-    if project:
-        files = project['file'].split(',')
-        for f in files:
-            path = os.path.join(app.config['UPLOAD_FOLDER'], f)
-            if os.path.exists(path):
-                os.remove(path)
-
-        cur.execute("DELETE FROM projects WHERE id=?", (project_id,))
         conn.commit()
+        return redirect(url_for('assistant'))
+
+    cur.execute("SELECT * FROM assistants ORDER BY id DESC")
+    assistants = cur.fetchall()
 
     conn.close()
-    return redirect(url_for('uploads'))
 
-
-# ---------------- STATIC PAGES ----------------
-@app.route('/leadership')
-@login_required
-def leadership():
-    return render_template('leadership.html')
-
-
-@app.route('/about')
-@login_required
-def about():
-    return render_template('about.html')
-
-
-@app.route('/activities')
-@login_required
-def activities():
-    return render_template('activities.html')
-
-
-@app.route('/contact')
-@login_required
-def contact():
-    return render_template('contact.html')
-
-
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
+    return render_template('assistant.html', assistants=assistants)
 
 
 # ---------------- DISCUSSION ----------------
@@ -330,59 +284,66 @@ def discussion():
     cur = conn.cursor()
 
     if request.method == 'POST':
-        user = session['user']
-        discussion_id = request.form.get('discussion_id')
         message = request.form.get('message')
-
-        if not message or message.strip() == "":
-            flash("Message cannot be empty!")
-            return redirect(url_for('discussion'))
+        discussion_id = request.form.get('discussion_id')
 
         if discussion_id:
-            cur.execute("""
-                INSERT INTO replies(discussion_id, user_name, message, created_at)
-                VALUES (?, ?, ?, ?)
-            """, (
-                discussion_id,
-                user,
-                message,
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            ))
+            cur.execute("""INSERT INTO replies(discussion_id,user_name,message)
+            VALUES (?,?,?)""", (discussion_id, session['user'], message))
         else:
-            topic = request.form.get('topic', 'General')
-
-            cur.execute("""
-                INSERT INTO discussions(topic, user_name, message, created_at)
-                VALUES (?, ?, ?, ?)
-            """, (
-                topic,
-                user,
-                message,
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cur.execute("""INSERT INTO discussions(user_name,topic,message)
+            VALUES (?,?,?)""", (
+                session['user'],
+                request.form.get('topic'),
+                message
             ))
 
         conn.commit()
+        return redirect(url_for('discussion'))
 
-    cur.execute("SELECT * FROM discussions ORDER BY created_at DESC")
+    cur.execute("SELECT * FROM discussions ORDER BY id DESC")
     discussions = cur.fetchall()
 
-    cur.execute("SELECT * FROM replies ORDER BY created_at ASC")
+    cur.execute("SELECT * FROM replies ORDER BY id ASC")
     replies = cur.fetchall()
-
-    conn.close()
 
     replies_dict = {}
     for r in replies:
         replies_dict.setdefault(r['discussion_id'], []).append(r)
 
-    return render_template(
-        'discussion.html',
-        discussions=discussions,
-        replies_dict=replies_dict
-    )
+    conn.close()
+
+    return render_template('discussion.html',
+                           discussions=discussions,
+                           replies_dict=replies_dict)
 
 
-# ---------------- RUN ----------------
+# ---------------- OTHER PAGES ----------------
+@app.route('/activities')
+def activities():
+    return render_template('activities.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/leadership')
+def leadership():
+    return render_template('leadership.html')
+
+
+# ---------------- ERROR ----------------
+@app.errorhandler(500)
+def server_error(e):
+    print("ERROR:", e)
+    return "Internal Server Error", 500
+
+
+# ---------------- RUN (RENDER READY) ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
