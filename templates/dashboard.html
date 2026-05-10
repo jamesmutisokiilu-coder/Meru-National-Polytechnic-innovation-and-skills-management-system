@@ -1,108 +1,202 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dashboard - Jemo Tech Solutions</title>
+<meta charset="UTF-8">
+<title>Innovation and Skills Management System</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:#f4f6f9;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #2b8ef1;
 }
 
 /* NAVBAR */
-.navbar{
-background:#0d47a1;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
+.navbar {
+    background: #8b5e3c;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+    position: relative;
 }
 
-.navbar h2{
-color:white;
+.navbar h2 {
+    margin: 0;
+    font-size: 22px;
 }
 
-.navbar div{
-display:flex;
-align-items:center;
-flex-wrap:wrap;
+/* HAMBURGER ICON */
+.hamburger {
+    font-size: 30px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.navbar a{
-color:white;
-text-decoration:none;
-margin:8px;
-font-weight:bold;
-padding:6px 10px;
-border-radius:6px;
-transition:0.3s;
+/* DROPDOWN MENU (HIDDEN BY DEFAULT) */
+#menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
+    right: 20px;
+    background: #8b5e3c;
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 220px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 999;
 }
 
-.navbar a:hover{
-background:rgba(255,255,255,0.2);
+/* LINKS INSIDE MENU */
+#menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 6px;
+    display: block;
 }
 
-/* ADMIN BUTTON */
-.admin-btn{
-background:#ff9800;
+#menu a:hover {
+    background: #a97455;
 }
 
-.admin-btn:hover{
-background:#e68900;
-}
-
-/* LOGOUT */
-.logout{
-background:red;
-}
-
-.logout:hover{
-background:darkred;
+/* SHOW MENU */
+#menu.show {
+    display: flex;
 }
 
 /* CONTAINER */
-.container{
-padding:40px;
+.container {
+    text-align: center;
+    margin-top: 50px;
+    padding-bottom: 50px;
 }
 
-.welcome{
-text-align:center;
-margin-bottom:30px;
-color:#0d47a1;
+.container h1 {
+    color: white;
+    margin-bottom: 30px;
 }
 
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
+/* GRID CARDS */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    width: 85%;
+    margin: auto;
 }
 
-.card{
-background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-text-align:center;
-transition:0.3s;
+.grid a {
+    text-decoration: none;
 }
 
-.card:hover{
-transform:translateY(-5px);
+.card {
+    background: #fff3e0;
+    color: #4e342e;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.card a{
-text-decoration:none;
-color:#0d47a1;
-font-weight:bold;
-font-size:18px;
+.card:hover {
+    transform: scale(1.05);
+    background: #ffe0b2;
+}
+
+/* IMAGE CARDS */
+.image-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    width: 85%;
+    margin: 60px auto;
+}
+
+.image-card {
+    background: #fff3e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.image-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.image-card .description {
+    padding: 15px;
+    color: #4e342e;
+}
+
+.image-card:hover {
+    transform: scale(1.05);
+}
+
+/* PHOTO GALLERY */
+.gallery-section {
+    margin-top: 70px;
+    padding-bottom: 50px;
+}
+
+.gallery-section h2 {
+    color: white;
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 85%;
+    margin: auto;
+}
+
+.gallery-card {
+    width: 220px;
+    flex: 0 0 auto;
+    background: #fff3e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.gallery-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.gallery-card p {
+    padding: 10px;
+    color: #4e342e;
+    font-weight: bold;
+    margin: 0;
+}
+
+.gallery-card:hover {
+    transform: scale(1.05);
+}
+
+/* FOOTER */
+.footer {
+    background: #8b5e3c;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
 }
 </style>
 
@@ -113,74 +207,125 @@ font-size:18px;
 <!-- NAVBAR -->
 <div class="navbar">
 
-<h2>Jemo Tech Dashboard</h2>
+    <h2>Meru National Polytechnic Innovation & Skills Management System</h2>
 
-<div>
-<a href="/services">Services</a>
-<a href="/portfolio">Portfolio</a>
-<a href="/blog">Blog</a>
-<a href="/support">Support</a>
-<a href="/training">Training</a>
-<a href="/downloads">Downloads</a>
-<a href="/booking">Booking</a>
-<a href="/about">About</a>
-<a href="/contact">Contact</a>
+    <!-- HAMBURGER -->
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
 
-<!-- ADMIN LOGIN BUTTON -->
-<a href="/admin" class="admin-btn">Admin Panel</a>
-
-<!-- LOGOUT -->
-<a href="/logout" class="logout">Logout</a>
-</div>
+    <!-- DROPDOWN MENU -->
+    <div id="menu">
+        <a href="{{ url_for('projects') }}">📁 Projects</a>
+        <a href="{{ url_for('uploads') }}">📤 Uploads</a>
+        <a href="{{ url_for('discussion') }}">💬 Discussion</a>
+        <a href="{{ url_for('leadership') }}">👨‍💼 Leadership</a>
+        <a href="{{ url_for('activities') }}">🎯 Activities</a>
+        <a href="{{ url_for('assistant') }}">🤝 Need Assistant</a>
+        <a href="{{ url_for('contact') }}">📞 Contact</a>
+        <a href="{{ url_for('about') }}">ℹ️ About</a>
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
 
 </div>
 
-<!-- CONTENT -->
+<!-- MAIN CONTENT -->
 <div class="container">
 
-<h1 class="welcome">Welcome {{ username }}</h1>
+    <h1>Welcome to Innovation & Skills Management System 🚀</h1>
 
-<div class="grid">
+    <!-- GRID CARDS -->
+    <div class="grid">
 
-<div class="card">
-<a href="/services">ICT Services</a>
+        <a href="{{ url_for('projects') }}"><div class="card">📁 Projects</div></a>
+        <a href="{{ url_for('uploads') }}"><div class="card">📤 Uploads</div></a>
+        <a href="{{ url_for('discussion') }}"><div class="card">💬 Discussion</div></a>
+        <a href="{{ url_for('leadership') }}"><div class="card">👨‍💼 Leadership</div></a>
+        <a href="{{ url_for('activities') }}"><div class="card">🎯 Activities</div></a>
+        <a href="{{ url_for('assistant') }}"><div class="card">🤝 Need Assistant</div></a>
+        <a href="{{ url_for('contact') }}"><div class="card">📞 Contact</div></a>
+        <a href="{{ url_for('about') }}"><div class="card">ℹ️ About</div></a>
+
+    </div>
+
+    <!-- IMAGE CARDS -->
+    <div class="image-cards">
+
+        <div class="image-card">
+            <img src="{{ url_for('static', filename='images/img4.jpeg') }}">
+            <div class="description">
+                <h3>Automated Temperature Control</h3>
+                <p>Keeps temperature stable automatically in incubation systems.</p>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="{{ url_for('static', filename='images/img3.jpeg') }}">
+            <div class="description">
+                <h3>Anti-Flood Detector</h3>
+                <p>Detects rising water levels and triggers alerts.</p>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="{{ url_for('static', filename='images/sofware.jpg') }}">
+            <div class="description">
+                <h3>Web Development</h3>
+                <p>Building modern websites and applications.</p>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="{{ url_for('static', filename='images/jk1234.png') }}">
+            <div class="description">
+                <h3>Certificate Award</h3>
+                <p>Members are awarded certificates after completing training and projects.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PHOTO GALLERY -->
+    <div class="gallery-section">
+
+        <h2>🏆 Innovation Achievements & Trophies</h2>
+
+        <div class="gallery-grid">
+
+            <div class="gallery-card">
+                <img src="{{ url_for('static', filename='images/trophy.jpg') }}">
+                <p>Best Innovation Award</p>
+            </div>
+
+            <div class="gallery-card">
+                <img src="{{ url_for('static', filename='images/students.jpeg') }}">
+                <p>Student Award</p>
+            </div>
+
+            <div class="gallery-card">
+                <img src="{{ url_for('static', filename='images/event1.jpg') }}">
+                <p>National Tech Event</p>
+            </div>
+
+            <div class="gallery-card">
+                <img src="{{ url_for('static', filename='images/team1.jpg') }}">
+                <p>Winning Team</p>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="card">
-<a href="/portfolio">Projects Portfolio</a>
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 Meru National Polytechnic Innovation & Skills Management System
 </div>
 
-<div class="card">
-<a href="/blog">Tech Blog</a>
-</div>
-
-<div class="card">
-<a href="/support">Support Helpdesk</a>
-</div>
-
-<div class="card">
-<a href="/training">Training Courses</a>
-</div>
-
-<div class="card">
-<a href="/downloads">Downloads</a>
-</div>
-
-<div class="card">
-<a href="/booking">Book Service</a>
-</div>
-
-<div class="card">
-<a href="/about">About Us</a>
-</div>
-
-<div class="card">
-<a href="/contact">Contact Us</a>
-</div>
-
-</div>
-
-</div>
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("show");
+}
+</script>
 
 </body>
 </html>
