@@ -3,73 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ 'Edit Project' if project else 'Upload Page' }}</title>
+<title>Project & Skills Portal</title>
 
 <style>
 body{
-    font-family:Arial;
-    background:#1e88e5;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #1e88e5, #42a5f5);
     margin:0;
     padding:0;
 }
 
+/* MAIN CONTAINER */
 .container{
-    width:60%;
+    width:65%;
     margin:40px auto;
     background:white;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    padding:35px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
 
+/* TITLE */
 h1{
     text-align:center;
+    color:#0d47a1;
+    margin-bottom:25px;
+}
+
+/* SECTION */
+.section{
+    margin-top:25px;
+    padding:25px;
+    border-radius:14px;
+    background:#f5f9ff;
+    border:1px solid #dbeafe;
+    transition:0.3s;
+}
+
+.section:hover{
+    transform: scale(1.01);
+}
+
+/* LABEL */
+label{
+    font-weight:600;
     color:#1e3a8a;
 }
 
-/* SECTION BOXES */
-.section{
-    margin-top:30px;
-    padding:20px;
-    border-radius:12px;
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
-}
-
 /* INPUTS */
-input[type=text], input[type=email], textarea, input[type=file], select{
+input, textarea, select{
     width:100%;
-    padding:10px;
+    padding:12px;
     margin-top:6px;
-    margin-bottom:12px;
-    border-radius:6px;
-    border:1px solid #ccc;
+    margin-bottom:14px;
+    border-radius:10px;
+    border:1px solid #cbd5e1;
+    outline:none;
+    transition:0.2s;
 }
 
+input:focus, textarea:focus, select:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 6px rgba(37,99,235,0.3);
+}
+
+/* TEXTAREA */
 textarea{
     resize:none;
 }
 
-/* BUTTONS */
+/* BUTTON */
 button{
-    padding:12px;
-    background:#2563eb;
+    width:100%;
+    padding:14px;
+    background:linear-gradient(90deg,#2563eb,#1d4ed8);
     color:white;
     border:none;
-    border-radius:8px;
-    cursor:pointer;
-    width:100%;
+    border-radius:10px;
     font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
 }
 
 button:hover{
-    background:#1d4ed8;
+    background:linear-gradient(90deg,#1d4ed8,#1e40af);
+    transform:translateY(-2px);
 }
 
-/* LINKS */
+/* NAV LINKS */
 .links{
     text-align:center;
-    margin-top:20px;
+    margin-top:25px;
 }
 
 .links a{
@@ -80,22 +105,23 @@ button:hover{
 }
 
 .links a:hover{
-    color:#3b82f6;
+    color:#2563eb;
 }
 
-/* PREVIEW */
+/* IMAGE PREVIEW */
 .preview{
     display:flex;
-    gap:10px;
     flex-wrap:wrap;
+    gap:10px;
     margin-top:10px;
 }
 
 .preview img{
-    width:100px;
-    height:100px;
+    width:90px;
+    height:90px;
     object-fit:cover;
-    border-radius:8px;
+    border-radius:10px;
+    border:2px solid #93c5fd;
 }
 </style>
 
@@ -103,15 +129,18 @@ button:hover{
 function previewImages(){
     const preview = document.getElementById('preview');
     preview.innerHTML = "";
+
     const files = document.getElementById('file').files;
 
     for(let i=0; i<files.length; i++){
         const reader = new FileReader();
+
         reader.onload = function(e){
             const img = document.createElement("img");
             img.src = e.target.result;
             preview.appendChild(img);
         }
+
         reader.readAsDataURL(files[i]);
     }
 }
@@ -123,9 +152,9 @@ function previewImages(){
 
 <div class="container">
 
-<h1>📂 Project & Skills Portal</h1>
+<h1>📂 Project & Skills Management Portal</h1>
 
-<!-- ================= PROJECT FORM ================= -->
+<!-- ================= PROJECT UPLOAD ================= -->
 <div class="section">
     <h2>📤 Upload Project</h2>
 
@@ -138,7 +167,7 @@ function previewImages(){
         <textarea name="description" rows="4" required></textarea>
 
         <label>Upload Images</label>
-        <input type="file" name="files" id="file" multiple onchange="previewImages()">
+        <input type="file" name="files" id="file" multiple accept="image/*" onchange="previewImages()">
 
         <div id="preview" class="preview"></div>
 
@@ -146,20 +175,19 @@ function previewImages(){
         <input type="email" name="email" required>
 
         <label>Phone</label>
-        <input type="text" name="phone" required>
+        <input type="text" name="phone" required placeholder="07XXXXXXXX">
 
         <label>WhatsApp</label>
-        <input type="text" name="whatsapp">
+        <input type="text" name="whatsapp" placeholder="2547XXXXXXXX">
 
-        <!-- PROJECT SUBMIT BUTTON -->
         <button type="submit">🚀 Submit Project</button>
 
     </form>
 </div>
 
-<!-- ================= SKILLS FORM ================= -->
+<!-- ================= SKILLS ================= -->
 <div class="section">
-    <h2>🏆 Skills Competition</h2>
+    <h2>🏆 Skills Competition Entry</h2>
 
     <form action="{{ url_for('skills') }}" method="POST">
 
@@ -186,7 +214,6 @@ function previewImages(){
         <label>Supervisor</label>
         <input type="text" name="supervisor" required>
 
-        <!-- SKILLS SUBMIT BUTTON -->
         <button type="submit">🏅 Submit Entry</button>
 
     </form>
