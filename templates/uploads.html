@@ -1,287 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Innovation and Skills Management System</title>
+<title>Uploads System</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #2b8ef1;
+body{
+    font-family: 'Segoe UI', Arial;
+    background: linear-gradient(135deg,#1e88e5,#42a5f5);
+    margin:0;
 }
 
-/* NAVBAR */
-.navbar {
-    background: #8b5e3c;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+.container{
+    width:85%;
+    margin:40px auto;
 }
 
-.navbar h2 {
-    margin: 0;
-    font-size: 18px;
+h1{
+    text-align:center;
+    color:white;
 }
 
-.navbar a {
-    color: white;
-    margin-left: 15px;
-    text-decoration: none;
-    font-weight: bold;
+.section-title{
+    color:white;
+    margin:30px 0 10px;
 }
 
-.navbar a:hover {
-    color: #ffe0b2;
+/* PROJECT CARD */
+.project-card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
 }
 
-/* CONTAINER */
-.container {
-    text-align: center;
-    margin-top: 40px;
-    padding-bottom: 60px;
+.project-card h2{
+    margin:0;
 }
 
-.container h1 {
-    color: white;
+/* IMAGE GRID */
+.image-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+    margin-top:10px;
 }
 
-/* GRID CARDS */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-    width: 85%;
-    margin: auto;
+.image-grid img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
 }
 
-.card {
-    background: #fff3e0;
-    color: #4e342e;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: 0.3s;
-    font-weight: bold;
-    text-decoration: none;
+/* CONTACT BOX */
+.support-box{
+    margin-top:15px;
+    padding:10px;
+    background:#f1f5f9;
+    border-radius:10px;
 }
 
-.card:hover {
-    transform: scale(1.07);
-    background: #ffe0b2;
+.support-box a{
+    display:block;
+    margin:5px 0;
+    text-decoration:none;
+    color:#1d4ed8;
+    font-weight:bold;
 }
 
-/* =========================
-   📁 IMAGE CARDS (FIXED)
-========================= */
-.image-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    width: 90%;
-    margin: 50px auto;
+/* DELETE BUTTON */
+.btn-delete{
+    background:red;
+    color:white;
+    padding:8px 12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
 }
 
-.image-card {
-    background: #fff3e0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    transition: 0.3s;
-    text-align: left;
+/* SKILLS */
+.skills-container{
+    margin-top:30px;
 }
 
-.image-card img {
-    width: 100%;
-    height: auto;           /* ✅ FIX: full image visible */
-    display: block;
+.skill-card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
 
-.image-card .description {
-    padding: 15px;
-    color: #4e342e;
+.empty{
+    color:white;
+    text-align:center;
+    font-size:18px;
 }
-
-.image-card h3 {
-    margin: 5px 0;
-    font-size: 18px;
-}
-
-.image-card p {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #5d4037;
-}
-
-.image-card:hover {
-    transform: translateY(-5px);
-}
-
-/* =========================
-   🏆 GALLERY (FIXED)
-========================= */
-.gallery-section {
-    margin-top: 70px;
-    padding-bottom: 50px;
-}
-
-.gallery-section h2 {
-    color: white;
-    font-size: 30px;
-}
-
-.gallery-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    width: 90%;
-    margin: auto;
-}
-
-.gallery-card {
-    width: 220px;
-    background: #fff3e0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
-
-.gallery-card img {
-    width: 100%;
-    height: auto;          /* ✅ FIX: full image visible */
-    display: block;
-}
-
-.gallery-card p {
-    padding: 10px;
-    color: #4e342e;
-    font-weight: bold;
-    margin: 0;
-}
-
-.gallery-card:hover {
-    transform: scale(1.05);
-}
-
 </style>
+
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-    <h2>Meru National Polytechnic Innovation & Skills Management System</h2>
-    <div>
-        <a href="{{ url_for('projects') }}">📁 Projects</a>
-        <a href="{{ url_for('uploads') }}">📁 Uploads</a>
-        <a href="{{ url_for('discussion') }}">💬 Discussion</a>
-        <a href="{{ url_for('leadership') }}">👨‍💼 Leadership</a>
-        <a href="{{ url_for('activities') }}">🎯 Activities</a>
-        <a href="{{ url_for('contact') }}">📞 Contact</a>
-        <a href="{{ url_for('about') }}">ℹ️ About</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </div>
-</div>
-
-<!-- MAIN -->
 <div class="container">
 
-    <h1>Welcome to Innovation & Skills Management System 🚀</h1>
+<h1>📂 Uploads Dashboard</h1>
 
-    <!-- NAV CARDS -->
-    <div class="grid">
-        <a href="{{ url_for('projects') }}" class="card">📁 Projects</a>
-        <a href="{{ url_for('uploads') }}" class="card">📁 Uploads</a>
-        <a href="{{ url_for('discussion') }}" class="card">💬 Discussion</a>
-        <a href="{{ url_for('leadership') }}" class="card">👨‍💼 Leadership</a>
-        <a href="{{ url_for('activities') }}" class="card">🎯 Activities</a>
-        <a href="{{ url_for('contact') }}" class="card">📞 Contact</a>
-        <a href="{{ url_for('about') }}" class="card">ℹ️ About</a>
-    </div>
+<!-- ================= PROJECTS ================= -->
+<h2 class="section-title">📁 Projects</h2>
 
-    <!-- IMAGE CARDS -->
-    <div class="image-cards">
+{% if projects %}
+    {% for project in projects %}
+    <div class="project-card">
 
-        <div class="image-card">
-            <img src="{{ url_for('static', filename='images/img4.jpeg') }}">
-            <div class="description">
-                <h3>Automated Temperature Control</h3>
-                <p>
-                    A smart incubation system that automatically regulates temperature for optimal conditions.
-                    It improves efficiency in agricultural incubation projects.
-                </p>
-            </div>
+        <h2>{{ project['title'] }}</h2>
+        <p>{{ project['description'] }}</p>
+        <p><b>Uploaded by:</b> {{ project['uploader'] }}</p>
+
+        {% if project['file'] %}
+        <div class="image-grid">
+            {% for img in project['file'].split(',') %}
+                {% if img %}
+                <img src="{{ url_for('static', filename='uploads/' + img) }}">
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- CONTACT -->
+        <div class="support-box">
+            <h3>Contact</h3>
+
+            {% if project['email'] %}
+            <a href="mailto:{{ project['email'] }}">📧 Email</a>
+            {% endif %}
+
+            {% if project['phone'] %}
+            <a href="tel:{{ project['phone'] }}">📞 Call</a>
+            {% endif %}
+
+            {% if project['whatsapp'] %}
+            <a href="https://wa.me/{{ project['whatsapp']|replace('+','')|replace(' ','') }}">
+                💬 WhatsApp
+            </a>
+            {% endif %}
         </div>
 
-        <div class="image-card">
-            <img src="{{ url_for('static', filename='images/img3.jpeg') }}">
-            <div class="description">
-                <h3>Anti-Flood Detector</h3>
-                <p>
-                    Detects rising water levels using sensors and triggers alarms to prevent flood damage
-                    in homes and institutions.
-                </p>
-            </div>
-        </div>
-
-        <div class="image-card">
-            <img src="{{ url_for('static', filename='images/sofware.jpg') }}">
-            <div class="description">
-                <h3>Web Development</h3>
-                <p>
-                    Development of modern web applications using Flask, HTML, CSS and databases
-                    for real-world digital solutions.
-                </p>
-            </div>
-        </div>
-
-        <div class="image-card">
-            <img src="{{ url_for('static', filename='images/jk1234.png') }}">
-            <div class="description">
-                <h3>Certificate Award</h3>
-                <p>
-                    Students receive certificates after completing training and innovation projects.
-                </p>
-            </div>
-        </div>
+        <!-- DELETE PROJECT (FIXED) -->
+        <form action="{{ url_for('delete_project', project_id=project['id']) }}" method="POST">
+            <button class="btn-delete" type="submit"
+            onclick="return confirm('Delete this project?')">
+                🗑 Delete Project
+            </button>
+        </form>
 
     </div>
+    {% endfor %}
+{% else %}
+<p class="empty">No projects uploaded yet.</p>
+{% endif %}
 
-    <!-- GALLERY -->
-    <div class="gallery-section">
+<!-- ================= SKILLS ================= -->
+<h2 class="section-title">🏆 Skills Competition Entries</h2>
 
-        <h2>🏆 Innovation Achievements & Trophies</h2>
+<div class="skills-container">
 
-        <div class="gallery-grid">
+{% if skills %}
+    {% for s in skills %}
+    <div class="skill-card">
 
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/trophy.jpg') }}">
-                <p>Best Innovation Award</p>
-            </div>
+        <p><b>Name:</b> {{ s['name'] }}</p>
+        <p><b>Class:</b> {{ s['class_name'] }}</p>
+        <p><b>Department:</b> {{ s['department'] }}</p>
+        <p><b>Area:</b> {{ s['area'] }}</p>
+        <p><b>Supervisor:</b> {{ s['supervisor'] }}</p>
 
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/students.jpeg') }}">
-                <p>Student Award</p>
-            </div>
-
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/event1.jpg') }}">
-                <p>National Tech Event</p>
-            </div>
-
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/team1.jpg') }}">
-                <p>Winning Team</p>
-            </div>
-
-        </div>
+        <!-- DELETE SKILL (FIXED) -->
+        <form action="{{ url_for('delete_skill', skill_id=s['id']) }}" method="POST">
+            <button class="btn-delete" type="submit"
+            onclick="return confirm('Delete this skill entry?')">
+                🗑 Delete Skill
+            </button>
+        </form>
 
     </div>
+    {% endfor %}
+{% else %}
+<p class="empty">No skills entries yet.</p>
+{% endif %}
+
+</div>
 
 </div>
 
