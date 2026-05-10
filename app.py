@@ -6,13 +6,13 @@ from functools import wraps
 
 app = Flask(__name__)
 
-# ---------------- SECRET KEY (use env in production) ----------------
+# ---------------- SECRET KEY ----------------
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
 # ---------------- BASE DIR ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------- UPLOAD FOLDER ----------------
+# ---------------- UPLOADS ----------------
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -27,73 +27,80 @@ def get_connection():
     return conn
 
 
-# ---------------- INIT DB ----------------
+# ---------------- INIT DB (SAFE FOR RENDER) ----------------
 def init_db():
-    conn = get_connection()
-    cur = conn.cursor()
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        email TEXT UNIQUE,
-        password TEXT,
-        role TEXT
-    )""")
+        cur.executescript("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT UNIQUE,
+            password TEXT,
+            role TEXT
+        );
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS projects (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        description TEXT,
-        file TEXT,
-        email TEXT,
-        phone TEXT,
-        whatsapp TEXT,
-        uploader TEXT
-    )""")
+        CREATE TABLE IF NOT EXISTS projects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            description TEXT,
+            file TEXT,
+            email TEXT,
+            phone TEXT,
+            whatsapp TEXT,
+            uploader TEXT
+        );
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS skills (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        class_name TEXT,
-        department TEXT,
-        area TEXT,
-        supervisor TEXT
-    )""")
+        CREATE TABLE IF NOT EXISTS skills (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            class_name TEXT,
+            department TEXT,
+            area TEXT,
+            supervisor TEXT
+        );
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS assistants (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT,
-        innovator_name TEXT,
-        phone_number TEXT,
-        project_name TEXT,
-        assistant_area TEXT,
-        category TEXT
-    )""")
+        CREATE TABLE IF NOT EXISTS assistants (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT,
+            innovator_name TEXT,
+            phone_number TEXT,
+            project_name TEXT,
+            assistant_area TEXT,
+            category TEXT
+        );
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS discussions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT,
-        topic TEXT,
-        message TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )""")
+        CREATE TABLE IF NOT EXISTS discussions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_name TEXT,
+            topic TEXT,
+            message TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS replies (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        discussion_id INTEGER,
-        user_name TEXT,
-        message TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )""")
+        CREATE TABLE IF NOT EXISTS replies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            discussion_id INTEGER,
+            user_name TEXT,
+            message TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
+
+    except Exception as e:
+        print("DB INIT ERROR:", e)
 
 
+# IMPORTANT FOR RENDER
 init_db()
 
 
-# ---------------- LOGIN DECORATOR ----------------
+# ---------------- LOGIN REQUIRED ----------------
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -130,13 +137,11 @@ def dashboard():
 
     conn.close()
 
-    return render_template(
-        'dashboard.html',
-        projects_count=projects_count,
-        skills_count=skills_count,
-        assistants_count=assistants_count,
-        discussions_count=discussions_count
-    )
+    return render_template("dashboard.html",
+                           projects_count=projects_count,
+                           skills_count=skills_count,
+                           assistants_count=assistants_count,
+                           discussions_count=discussions_count)
 
 
 # ---------------- LOGIN ----------------
@@ -164,21 +169,27 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        conn = get_connection()
-        cur = conn.cursor()
+        try:
+            conn = get_connection()
+            cur = conn.cursor()
 
-        cur.execute("""INSERT INTO users(name,email,password,role)
-        VALUES (?,?,?,?)""", (
-            request.form['name'],
-            request.form['email'],
-            generate_password_hash(request.form['password']),
-            "user"
-        ))
+            cur.execute("""INSERT INTO users(name,email,password,role)
+            VALUES (?,?,?,?)""", (
+                request.form['name'],
+                request.form['email'],
+                generate_password_hash(request.form['password']),
+                "user"
+            ))
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
 
-        return redirect(url_for('login'))
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            print("REGISTER ERROR:", e)
+            flash("Registration failed")
+            return redirect(url_for('register'))
 
     return render_template('register.html')
 
@@ -199,29 +210,36 @@ def projects():
     cur = conn.cursor()
 
     if request.method == 'POST':
-        files = request.files.getlist('files')
-        filenames = []
+        try:
+            files = request.files.getlist('files')
+            filenames = []
 
-        for file in files:
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                filenames.append(filename)
+            for file in files:
+                if file and file.filename.strip():
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    filenames.append(filename)
 
-        cur.execute("""INSERT INTO projects(
-            title, description, file, email, phone, whatsapp, uploader
-        ) VALUES (?,?,?,?,?,?,?)""", (
-            request.form.get('title', ''),
-            request.form.get('description', ''),
-            ",".join(filenames),
-            request.form.get('email', ''),
-            request.form.get('phone', ''),
-            request.form.get('whatsapp', ''),
-            session['user']
-        ))
+            cur.execute("""INSERT INTO projects(
+                title, description, file, email, phone, whatsapp, uploader
+            ) VALUES (?,?,?,?,?,?,?)""", (
+                request.form.get('title', ''),
+                request.form.get('description', ''),
+                ",".join(filenames),
+                request.form.get('email', ''),
+                request.form.get('phone', ''),
+                request.form.get('whatsapp', ''),
+                session['user']
+            ))
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+
+        except Exception as e:
+            print("PROJECT ERROR:", e)
+
+        finally:
+            conn.close()
+
         return redirect(url_for('uploads'))
 
     conn.close()
@@ -243,7 +261,7 @@ def uploads():
 
     conn.close()
 
-    return render_template('uploads.html', projects=projects, skills=skills)
+    return render_template("uploads.html", projects=projects, skills=skills)
 
 
 # ---------------- ASSISTANT ----------------
@@ -336,11 +354,11 @@ def leadership():
     return render_template('leadership.html')
 
 
-# ---------------- ERROR ----------------
+# ---------------- ERROR DEBUG ----------------
 @app.errorhandler(500)
 def server_error(e):
-    print("ERROR:", e)
-    return "Internal Server Error", 500
+    print("SERVER ERROR:", e)
+    return str(e), 500
 
 
 # ---------------- RUN (RENDER READY) ----------------
