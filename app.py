@@ -12,7 +12,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 # ---------------- BASE DIR ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------- RENDER SAFE STORAGE (FIXED) ----------------
+# ---------------- RENDER SAFE STORAGE ----------------
 DB_NAME = os.path.join(BASE_DIR, "database.db")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static/uploads")
 
@@ -27,73 +27,69 @@ def get_connection():
     return conn
 
 
-# ---------------- INIT DB (SAFE) ----------------
+# ---------------- INIT DB ----------------
 def init_db():
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
-        cur.executescript("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            email TEXT UNIQUE,
-            password TEXT,
-            role TEXT
-        );
+    cur.executescript("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT UNIQUE,
+        password TEXT,
+        role TEXT
+    );
 
-        CREATE TABLE IF NOT EXISTS projects (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            description TEXT,
-            file TEXT,
-            email TEXT,
-            phone TEXT,
-            whatsapp TEXT,
-            uploader TEXT
-        );
+    CREATE TABLE IF NOT EXISTS projects (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        description TEXT,
+        file TEXT,
+        email TEXT,
+        phone TEXT,
+        whatsapp TEXT,
+        uploader TEXT
+    );
 
-        CREATE TABLE IF NOT EXISTS skills (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            class_name TEXT,
-            department TEXT,
-            area TEXT,
-            supervisor TEXT
-        );
+    CREATE TABLE IF NOT EXISTS skills (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        class_name TEXT,
+        department TEXT,
+        area TEXT,
+        supervisor TEXT
+    );
 
-        CREATE TABLE IF NOT EXISTS assistants (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            type TEXT,
-            innovator_name TEXT,
-            phone_number TEXT,
-            project_name TEXT,
-            assistant_area TEXT,
-            category TEXT
-        );
+    CREATE TABLE IF NOT EXISTS assistants (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT,
+        innovator_name TEXT,
+        phone_number TEXT,
+        project_name TEXT,
+        assistant_area TEXT,
+        category TEXT
+    );
 
-        CREATE TABLE IF NOT EXISTS discussions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_name TEXT,
-            topic TEXT,
-            message TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
+    CREATE TABLE IF NOT EXISTS discussions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_name TEXT,
+        topic TEXT,
+        message TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
 
-        CREATE TABLE IF NOT EXISTS replies (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            discussion_id INTEGER,
-            user_name TEXT,
-            message TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
+    CREATE TABLE IF NOT EXISTS replies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        discussion_id INTEGER,
+        user_name TEXT,
+        message TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
 
-        conn.commit()
-        conn.close()
-
-    except Exception as e:
-        print("DB ERROR:", e)
+    conn.commit()
+    conn.close()
 
 
 init_db()
@@ -205,36 +201,30 @@ def projects():
     cur = conn.cursor()
 
     if request.method == 'POST':
-        try:
-            files = request.files.getlist('files')
-            filenames = []
+        files = request.files.getlist('files')
+        filenames = []
 
-            for file in files:
-                if file and file.filename:
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    filenames.append(filename)
+        for file in files:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                filenames.append(filename)
 
-            cur.execute("""
-                INSERT INTO projects(title,description,file,email,phone,whatsapp,uploader)
-                VALUES (?,?,?,?,?,?,?)
-            """, (
-                request.form.get('title', ''),
-                request.form.get('description', ''),
-                ",".join(filenames),
-                request.form.get('email', ''),
-                request.form.get('phone', ''),
-                request.form.get('whatsapp', ''),
-                session['user']
-            ))
+        cur.execute("""
+            INSERT INTO projects(title,description,file,email,phone,whatsapp,uploader)
+            VALUES (?,?,?,?,?,?,?)
+        """, (
+            request.form.get('title', ''),
+            request.form.get('description', ''),
+            ",".join(filenames),
+            request.form.get('email', ''),
+            request.form.get('phone', ''),
+            request.form.get('whatsapp', ''),
+            session['user']
+        ))
 
-            conn.commit()
-
-        except Exception as e:
-            print("PROJECT ERROR:", e)
-
-        finally:
-            conn.close()
+        conn.commit()
+        conn.close()
 
         return redirect(url_for('uploads'))
 
@@ -242,29 +232,24 @@ def projects():
     return render_template('projects.html')
 
 
-# ---------------- UPLOADS (FIXED SAFE) ----------------
+# ---------------- UPLOADS ----------------
 @app.route('/uploads')
 @login_required
 def uploads():
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
+    conn = get_connection()
+    cur = conn.cursor()
 
-        cur.execute("SELECT * FROM projects ORDER BY id DESC")
-        projects = cur.fetchall()
+    cur.execute("SELECT * FROM projects ORDER BY id DESC")
+    projects = cur.fetchall()
 
-        cur.execute("SELECT * FROM skills ORDER BY id DESC")
-        skills = cur.fetchall()
+    cur.execute("SELECT * FROM skills ORDER BY id DESC")
+    skills = cur.fetchall()
 
-        conn.close()
+    conn.close()
 
-        return render_template("uploads.html",
-                               projects=projects,
-                               skills=skills)
-
-    except Exception as e:
-        print("UPLOAD ERROR:", e)
-        return f"Uploads error: {e}", 500
+    return render_template("uploads.html",
+                           projects=projects,
+                           skills=skills)
 
 
 # ---------------- SKILLS ----------------
@@ -285,6 +270,34 @@ def skills():
         request.form.get('supervisor', '')
     ))
 
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('uploads'))
+
+
+# ---------------- DELETE PROJECT (ADDED FIX) ----------------
+@app.route('/delete_project/<int:project_id>', methods=['POST'])
+@login_required
+def delete_project(project_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM projects WHERE id=?", (project_id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('uploads'))
+
+
+# ---------------- DELETE SKILL (ADDED FIX) ----------------
+@app.route('/delete_skill/<int:skill_id>', methods=['POST'])
+@login_required
+def delete_skill(skill_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM skills WHERE id=?", (skill_id,))
     conn.commit()
     conn.close()
 
