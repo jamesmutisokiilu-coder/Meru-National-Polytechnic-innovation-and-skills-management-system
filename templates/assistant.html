@@ -14,8 +14,7 @@
 }
 
 body{
-    background:#f4f7fb;
-    color:#333;
+    background:#2b8ef1;
 }
 
 /* HEADER */
@@ -24,15 +23,6 @@ header{
     color:white;
     text-align:center;
     padding:30px;
-}
-
-header h1{
-    font-size:36px;
-}
-
-header p{
-    margin-top:10px;
-    font-size:17px;
 }
 
 /* CONTAINER */
@@ -50,82 +40,53 @@ header p{
 }
 
 @media(max-width:900px){
-    .grid{
-        grid-template-columns:1fr;
-    }
+    .grid{grid-template-columns:1fr;}
 }
 
-/* FORM CARD */
+/* CARD */
 .card{
     background:white;
     padding:25px;
     border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-.card h2{
-    color:#0d47a1;
-    margin-bottom:20px;
-    text-align:center;
+    box-shadow:0 6px 20px rgba(0,0,0,0.15);
 }
 
 /* FORM */
 .form-group{
-    margin-bottom:18px;
+    margin-bottom:15px;
 }
 
-.form-group label{
+label{
+    font-weight:bold;
     display:block;
-    margin-bottom:8px;
-    font-weight:bold;
+    margin-bottom:5px;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select{
+input, textarea, select{
     width:100%;
-    padding:12px;
+    padding:10px;
+    border-radius:8px;
     border:1px solid #ccc;
-    border-radius:10px;
-    font-size:15px;
 }
 
-.form-group textarea{
-    resize:none;
-    height:110px;
-}
-
-.call-link{
-    margin:15px 0;
-    text-align:center;
-}
-
-.call-link a{
-    text-decoration:none;
-    color:#0d47a1;
-    font-weight:bold;
-    font-size:17px;
-}
-
-.call-link a:hover{
-    color:#1565c0;
+textarea{
+    height:100px;
 }
 
 /* BUTTON */
 button{
     width:100%;
-    padding:14px;
-    border:none;
+    padding:12px;
     background:#0d47a1;
     color:white;
-    border-radius:10px;
-    font-size:16px;
+    border:none;
+    border-radius:8px;
     cursor:pointer;
-    transition:0.3s;
+    font-size:15px;
 }
 
 button:hover{
-    background:#08306b;
+    background:#1565c0;
 }
 
 /* POSTS */
@@ -133,15 +94,9 @@ button:hover{
     margin-top:40px;
 }
 
-.posts-section h2{
-    color:#0d47a1;
-    margin-bottom:20px;
-    text-align:center;
-}
-
 .posts-container{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
     gap:20px;
 }
 
@@ -149,35 +104,38 @@ button:hover{
 .post-card{
     background:white;
     padding:20px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-    border-left:6px solid #1565c0;
+    border-radius:12px;
+    border-left:5px solid #1565c0;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
 
 .post-card h3{
-    color:#0d47a1;
     margin-bottom:10px;
+    color:#0d47a1;
 }
 
-.post-card p{
-    margin:8px 0;
-    line-height:1.5;
-}
-
+/* BADGE */
 .badge{
     display:inline-block;
-    background:#e3f2fd;
-    color:#0d47a1;
-    padding:6px 12px;
-    border-radius:20px;
     margin-top:10px;
-    font-size:14px;
+    padding:5px 10px;
+    background:#e3f2fd;
+    border-radius:20px;
+    font-size:13px;
 }
 
-footer{
-    background:#0d47a1;
-    color:white;
+/* EMPTY STATE */
+.empty{
     text-align:center;
+    color:white;
+    margin-top:20px;
+    font-size:18px;
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    color:white;
     padding:20px;
     margin-top:40px;
 }
@@ -188,52 +146,51 @@ footer{
 
 <header>
     <h1>Innovation & Skills Assistant Board</h1>
-    <p>Helping innovators connect with assistants and collaborators</p>
+    <p>Connect innovators with assistants and trainers</p>
 </header>
 
 <div class="container">
 
-    <!-- TWO FORMS -->
+    <!-- FORMS -->
     <div class="grid">
 
         <!-- INNOVATION FORM -->
         <div class="card">
-            <h2>Need Assistant In Innovation</h2>
+            <h2>Need Assistant in Project Development</h2>
 
-            <form id="innovationForm">
+            <form method="POST" action="{{ url_for('assistant') }}">
+
+                <input type="hidden" name="type" value="Innovation">
 
                 <div class="form-group">
                     <label>Name of Innovator</label>
-                    <input type="text" id="innovatorName" required>
+                    <input type="text" name="innovator_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone_number" required>
                 </div>
 
                 <div class="form-group">
                     <label>Project Name</label>
-                    <input type="text" id="projectName" required>
+                    <input type="text" name="project_name" required>
                 </div>
 
                 <div class="form-group">
                     <label>Area of Assistant Needed</label>
-                    <textarea id="assistantArea" required></textarea>
+                    <textarea name="assistant_area" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Category</label>
-                    <select id="innovationCategory" required>
-                        <option value="">Select Category</option>
+                    <select name="category" required>
                         <option>Technology</option>
                         <option>Agriculture</option>
                         <option>Business</option>
                         <option>Health</option>
                         <option>Environment</option>
                     </select>
-                </div>
-
-                <!-- CALL LINK -->
-                <div class="call-link">
-                    <a href="tel:+254720559814">
-                        📞 I Need Assistant Call This Number
-                    </a>
                 </div>
 
                 <button type="submit">Submit Innovation Request</button>
@@ -243,34 +200,33 @@ footer{
 
         <!-- SKILLS FORM -->
         <div class="card">
-            <h2>Need Assistant In Skills</h2>
+            <h2>Need Assistant in Skills</h2>
 
-            <form id="skillsForm">
+            <form method="POST" action="{{ url_for('assistant') }}">
+
+                <input type="hidden" name="type" value="Skills">
 
                 <div class="form-group">
-                    <label>Innovator Name</label>
-                    <input type="text" id="skillsName" required>
+                    <label>Name</label>
+                    <input type="text" name="innovator_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone_number" required>
                 </div>
 
                 <div class="form-group">
                     <label>Area of Assistant</label>
-                    <textarea id="skillsArea" required></textarea>
+                    <textarea name="assistant_area" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Category</label>
-                    <select id="skillsCategory" required>
-                        <option value="">Select Category</option>
+                    <select name="category" required>
                         <option>ICT</option>
                         <option>Engineering</option>
                     </select>
-                </div>
-
-                <!-- CALL LINK -->
-                <div class="call-link">
-                    <a href="tel:+254720559814">
-                        📞 I Need Assistant Call This Number Club patron
-                    </a>
                 </div>
 
                 <button type="submit">Submit Skills Request</button>
@@ -280,16 +236,47 @@ footer{
 
     </div>
 
-    <!-- POSTS SECTION -->
+    <!-- POSTS -->
     <div class="posts-section">
 
-        <h2>Posted Assistant Requests</h2>
+        <h2 style="color:white;text-align:center;margin-top:30px;">
+            Posted Assistant Requests
+        </h2>
 
-        <div class="posts-container" id="postsContainer">
+        {% if assistants %}
 
-            <!-- POSTS WILL APPEAR HERE -->
+        <div class="posts-container">
+
+            {% for post in assistants %}
+            <div class="post-card">
+
+                <h3>{{ post['type'] }} Assistant Needed</h3>
+
+                <p><strong>Innovator:</strong> {{ post['innovator_name'] }}</p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    <a href="tel:{{ post['phone_number'] }}">
+                        {{ post['phone_number'] }}
+                    </a>
+                </p>
+
+                {% if post['project_name'] %}
+                <p><strong>Project:</strong> {{ post['project_name'] }}</p>
+                {% endif %}
+
+                <p><strong>Area:</strong> {{ post['assistant_area'] }}</p>
+
+                <span class="badge">{{ post['category'] }}</span>
+
+            </div>
+            {% endfor %}
 
         </div>
+
+        {% else %}
+        <p class="empty">No assistant requests yet.</p>
+        {% endif %}
 
     </div>
 
@@ -298,60 +285,6 @@ footer{
 <footer>
     © 2026 Innovation Skills Collaboration Platform
 </footer>
-
-<script>
-const postsContainer = document.getElementById("postsContainer");
-
-/* INNOVATION FORM */
-document.getElementById("innovationForm").addEventListener("submit", function(e){
-
-    e.preventDefault();
-
-    const name = document.getElementById("innovatorName").value;
-    const project = document.getElementById("projectName").value;
-    const area = document.getElementById("assistantArea").value;
-    const category = document.getElementById("innovationCategory").value;
-
-    const card = document.createElement("div");
-    card.classList.add("post-card");
-
-    card.innerHTML = `
-        <h3>Innovation Assistant Needed</h3>
-        <p><strong>Innovator:</strong> ${name}</p>
-        <p><strong>Project:</strong> ${project}</p>
-        <p><strong>Assistant Area:</strong> ${area}</p>
-        <span class="badge">${category}</span>
-    `;
-
-    postsContainer.prepend(card);
-
-    this.reset();
-});
-
-/* SKILLS FORM */
-document.getElementById("skillsForm").addEventListener("submit", function(e){
-
-    e.preventDefault();
-
-    const name = document.getElementById("skillsName").value;
-    const area = document.getElementById("skillsArea").value;
-    const category = document.getElementById("skillsCategory").value;
-
-    const card = document.createElement("div");
-    card.classList.add("post-card");
-
-    card.innerHTML = `
-        <h3>Skills Assistant Needed</h3>
-        <p><strong>Innovator:</strong> ${name}</p>
-        <p><strong>Area of Assistant:</strong> ${area}</p>
-        <span class="badge">${category}</span>
-    `;
-
-    postsContainer.prepend(card);
-
-    this.reset();
-});
-</script>
 
 </body>
 </html>
