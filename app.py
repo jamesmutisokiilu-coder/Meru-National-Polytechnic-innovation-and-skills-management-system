@@ -272,7 +272,7 @@ def uploads():
 # ---------------- SKILLS FIX ROUTE (IMPORTANT FIX) ----------------
 @app.route('/skills', methods=['POST'])
 @login_required
-def add_skill():
+def skills():
     conn = get_connection()
     cur = conn.cursor()
 
