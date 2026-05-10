@@ -12,22 +12,22 @@ app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 # ---------------- BASE DIR ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------- UPLOADS ----------------
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/uploads')
+# ---------------- RENDER-SAFE STORAGE ----------------
+DB_NAME = os.path.join("/tmp", "database.db")
+UPLOAD_FOLDER = os.path.join("/tmp", "uploads")
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# ---------------- DATABASE ----------------
-DB_NAME = os.path.join(BASE_DIR, "database.db")
 
-
+# ---------------- DATABASE CONNECTION ----------------
 def get_connection():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_NAME, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
 
-# ---------------- INIT DB (SAFE FOR RENDER) ----------------
+# ---------------- INIT DATABASE ----------------
 def init_db():
     try:
         conn = get_connection()
@@ -96,7 +96,6 @@ def init_db():
         print("DB INIT ERROR:", e)
 
 
-# IMPORTANT FOR RENDER
 init_db()
 
 
@@ -137,11 +136,13 @@ def dashboard():
 
     conn.close()
 
-    return render_template("dashboard.html",
-                           projects_count=projects_count,
-                           skills_count=skills_count,
-                           assistants_count=assistants_count,
-                           discussions_count=discussions_count)
+    return render_template(
+        "dashboard.html",
+        projects_count=projects_count,
+        skills_count=skills_count,
+        assistants_count=assistants_count,
+        discussions_count=discussions_count
+    )
 
 
 # ---------------- LOGIN ----------------
@@ -173,8 +174,10 @@ def register():
             conn = get_connection()
             cur = conn.cursor()
 
-            cur.execute("""INSERT INTO users(name,email,password,role)
-            VALUES (?,?,?,?)""", (
+            cur.execute("""
+                INSERT INTO users(name,email,password,role)
+                VALUES (?,?,?,?)
+            """, (
                 request.form['name'],
                 request.form['email'],
                 generate_password_hash(request.form['password']),
@@ -220,9 +223,11 @@ def projects():
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     filenames.append(filename)
 
-            cur.execute("""INSERT INTO projects(
-                title, description, file, email, phone, whatsapp, uploader
-            ) VALUES (?,?,?,?,?,?,?)""", (
+            cur.execute("""
+                INSERT INTO projects(
+                    title, description, file, email, phone, whatsapp, uploader
+                ) VALUES (?,?,?,?,?,?,?)
+            """, (
                 request.form.get('title', ''),
                 request.form.get('description', ''),
                 ",".join(filenames),
@@ -264,6 +269,30 @@ def uploads():
     return render_template("uploads.html", projects=projects, skills=skills)
 
 
+# ---------------- SKILLS FIX ROUTE (IMPORTANT FIX) ----------------
+@app.route('/skills', methods=['POST'])
+@login_required
+def add_skill():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO skills(name,class_name,department,area,supervisor)
+        VALUES (?,?,?,?,?)
+    """, (
+        request.form.get('name', ''),
+        request.form.get('class', ''),
+        request.form.get('department', ''),
+        request.form.get('area', ''),
+        request.form.get('supervisor', '')
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('uploads'))
+
+
 # ---------------- ASSISTANT ----------------
 @app.route('/assistant', methods=['GET', 'POST'])
 @login_required
@@ -272,9 +301,12 @@ def assistant():
     cur = conn.cursor()
 
     if request.method == 'POST':
-        cur.execute("""INSERT INTO assistants(
-            type, innovator_name, phone_number, project_name, assistant_area, category
-        ) VALUES (?,?,?,?,?,?)""", (
+        cur.execute("""
+            INSERT INTO assistants(
+                type, innovator_name, phone_number,
+                project_name, assistant_area, category
+            ) VALUES (?,?,?,?,?,?)
+        """, (
             request.form.get('type', ''),
             request.form.get('innovator_name', ''),
             request.form.get('phone_number', ''),
@@ -306,11 +338,15 @@ def discussion():
         discussion_id = request.form.get('discussion_id')
 
         if discussion_id:
-            cur.execute("""INSERT INTO replies(discussion_id,user_name,message)
-            VALUES (?,?,?)""", (discussion_id, session['user'], message))
+            cur.execute("""
+                INSERT INTO replies(discussion_id,user_name,message)
+                VALUES (?,?,?)
+            """, (discussion_id, session['user'], message))
         else:
-            cur.execute("""INSERT INTO discussions(user_name,topic,message)
-            VALUES (?,?,?)""", (
+            cur.execute("""
+                INSERT INTO discussions(user_name,topic,message)
+                VALUES (?,?,?)
+            """, (
                 session['user'],
                 request.form.get('topic'),
                 message
@@ -331,9 +367,11 @@ def discussion():
 
     conn.close()
 
-    return render_template('discussion.html',
-                           discussions=discussions,
-                           replies_dict=replies_dict)
+    return render_template(
+        'discussion.html',
+        discussions=discussions,
+        replies_dict=replies_dict
+    )
 
 
 # ---------------- OTHER PAGES ----------------
@@ -361,7 +399,7 @@ def server_error(e):
     return str(e), 500
 
 
-# ---------------- RUN (RENDER READY) ----------------
+# ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
