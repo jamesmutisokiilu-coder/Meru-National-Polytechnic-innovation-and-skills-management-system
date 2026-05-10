@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard - Jemo Tech Solutions</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f4f6f9;
+}
+
+/* NAVBAR */
+.navbar{
+background:#0d47a1;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.navbar h2{
+color:white;
+}
+
+.navbar div{
+display:flex;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.navbar a{
+color:white;
+text-decoration:none;
+margin:8px;
+font-weight:bold;
+padding:6px 10px;
+border-radius:6px;
+transition:0.3s;
+}
+
+.navbar a:hover{
+background:rgba(255,255,255,0.2);
+}
+
+/* ADMIN BUTTON */
+.admin-btn{
+background:#ff9800;
+}
+
+.admin-btn:hover{
+background:#e68900;
+}
+
+/* LOGOUT */
+.logout{
+background:red;
+}
+
+.logout:hover{
+background:darkred;
+}
+
+/* CONTAINER */
+.container{
+padding:40px;
+}
+
+.welcome{
+text-align:center;
+margin-bottom:30px;
+color:#0d47a1;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+text-align:center;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card a{
+text-decoration:none;
+color:#0d47a1;
+font-weight:bold;
+font-size:18px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+
+<h2>Jemo Tech Dashboard</h2>
+
+<div>
+<a href="/services">Services</a>
+<a href="/portfolio">Portfolio</a>
+<a href="/blog">Blog</a>
+<a href="/support">Support</a>
+<a href="/training">Training</a>
+<a href="/downloads">Downloads</a>
+<a href="/booking">Booking</a>
+<a href="/about">About</a>
+<a href="/contact">Contact</a>
+
+<!-- ADMIN LOGIN BUTTON -->
+<a href="/admin" class="admin-btn">Admin Panel</a>
+
+<!-- LOGOUT -->
+<a href="/logout" class="logout">Logout</a>
+</div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+<h1 class="welcome">Welcome {{ username }}</h1>
+
+<div class="grid">
+
+<div class="card">
+<a href="/services">ICT Services</a>
+</div>
+
+<div class="card">
+<a href="/portfolio">Projects Portfolio</a>
+</div>
+
+<div class="card">
+<a href="/blog">Tech Blog</a>
+</div>
+
+<div class="card">
+<a href="/support">Support Helpdesk</a>
+</div>
+
+<div class="card">
+<a href="/training">Training Courses</a>
+</div>
+
+<div class="card">
+<a href="/downloads">Downloads</a>
+</div>
+
+<div class="card">
+<a href="/booking">Book Service</a>
+</div>
+
+<div class="card">
+<a href="/about">About Us</a>
+</div>
+
+<div class="card">
+<a href="/contact">Contact Us</a>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
