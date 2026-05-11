@@ -398,6 +398,16 @@ def about():
 def leadership():
     return render_template('leadership.html')
 
+# ---------------- BLOG ----------------
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+# ---------------- GALLERY PAGE ----------------
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
 
 # ---------------- ERROR ----------------
 @app.errorhandler(500)
