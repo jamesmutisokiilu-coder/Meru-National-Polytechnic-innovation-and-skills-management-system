@@ -219,7 +219,9 @@ body {
         <a href="{{ url_for('discussion') }}">💬 Discussion</a>
         <a href="{{ url_for('leadership') }}">👨‍💼 Leadership</a>
         <a href="{{ url_for('activities') }}">🎯 Activities</a>
+        <a href="{{ url_for('gallery') }}">🖼️gallery/a>
         <a href="{{ url_for('assistant') }}">🤝 Need Assistant</a>
+        <a href="{{ url_for('blog') }}">📰blog</a>    
         <a href="{{ url_for('contact') }}">📞 Contact</a>
         <a href="{{ url_for('about') }}">ℹ️ About</a>
         <a href="{{ url_for('logout') }}">🚪 Logout</a>
@@ -240,7 +242,9 @@ body {
         <a href="{{ url_for('discussion') }}"><div class="card">💬 Discussion</div></a>
         <a href="{{ url_for('leadership') }}"><div class="card">👨‍💼 Leadership</div></a>
         <a href="{{ url_for('activities') }}"><div class="card">🎯 Activities</div></a>
+        <a href="{{ url_for('gallery') }}"><div class="card">🖼️ gallery</div></a>
         <a href="{{ url_for('assistant') }}"><div class="card">🤝 Need Assistant</div></a>
+        <a href="{{ url_for('blog') }}"><div class="card">📰blog</div></a>
         <a href="{{ url_for('contact') }}"><div class="card">📞 Contact</div></a>
         <a href="{{ url_for('about') }}"><div class="card">ℹ️ About</div></a>
 
@@ -283,38 +287,7 @@ body {
 
     </div>
 
-    <!-- PHOTO GALLERY -->
-    <div class="gallery-section">
 
-        <h2>🏆 Innovation Achievements & Trophies</h2>
-
-        <div class="gallery-grid">
-
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/trophy.jpg') }}">
-                <p>Best Innovation Award</p>
-            </div>
-
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/students.jpeg') }}">
-                <p>Student Award</p>
-            </div>
-
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/event1.jpg') }}">
-                <p>National Tech Event</p>
-            </div>
-
-            <div class="gallery-card">
-                <img src="{{ url_for('static', filename='images/team1.jpg') }}">
-                <p>Winning Team</p>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 <!-- FOOTER -->
 <div class="footer">
