@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Innovation Gallery</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#f4f7fb;
+    color:#222;
+}
+
+/* HEADER */
+.header{
+    width:100%;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    padding:40px 20px;
+    text-align:center;
+    color:white;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+.header h1{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+.header p{
+    font-size:18px;
+    opacity:0.9;
+}
+
+/* CONTAINER */
+.container{
+    width:90%;
+    margin:auto;
+    padding:40px 0;
+}
+
+/* SECTION TITLE */
+.section-title{
+    text-align:center;
+    font-size:35px;
+    color:#1e3a8a;
+    margin-bottom:35px;
+    font-weight:bold;
+}
+
+/* GALLERY GRID */
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.12);
+    transition:0.4s;
+    position:relative;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(0,0,0,0.18);
+}
+
+/* IMAGE */
+.card img{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+    transition:0.5s;
+}
+
+.card:hover img{
+    transform:scale(1.05);
+}
+
+/* CONTENT */
+.card-content{
+    padding:20px;
+}
+
+.card-content h2{
+    color:#0f172a;
+    margin-bottom:10px;
+    font-size:24px;
+}
+
+.card-content p{
+    color:#555;
+    line-height:1.6;
+    font-size:15px;
+}
+
+/* BADGE */
+.badge{
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:gold;
+    color:#111;
+    padding:8px 14px;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:bold;
+    box-shadow:0 3px 10px rgba(0,0,0,0.2);
+}
+
+/* TROPHY SECTION */
+.trophy-section{
+    margin-top:70px;
+}
+
+.trophy-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.trophy-card{
+    background:white;
+    padding:30px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.trophy-card:hover{
+    transform:scale(1.04);
+}
+
+.trophy-icon{
+    font-size:70px;
+    margin-bottom:15px;
+}
+
+.trophy-card h3{
+    color:#1e3a8a;
+    margin-bottom:10px;
+}
+
+.trophy-card p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* FOOTER */
+.footer{
+    margin-top:60px;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+.footer p{
+    opacity:0.8;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .header h1{
+        font-size:32px;
+    }
+
+    .section-title{
+        font-size:28px;
+    }
+
+    .card img{
+        height:230px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+
+    <h1>🏆 Innovation Achievement Gallery</h1>
+
+    <p>
+        Explore global innovation achievements, projects,
+        trophies, competitions, and technology excellence.
+    </p>
+
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+    <h2 class="section-title">🚀 Innovation Achievements</h2>
+
+    <div class="gallery-grid">
+
+        <!-- CARD 1 -->
+        <div class="card">
+
+            <span class="badge">🏅 Winner</span>
+
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" alt="Innovation">
+
+            <div class="card-content">
+
+                <h2>AI Innovation Project</h2>
+
+                <p>
+                    Advanced artificial intelligence systems transforming
+                    education, healthcare, and business globally.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="card">
+
+            <span class="badge">🥇 Gold</span>
+
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop" alt="Technology">
+
+            <div class="card-content">
+
+                <h2>Skills Competition</h2>
+
+                <p>
+                    Students showcasing outstanding software development,
+                    robotics, networking, and engineering skills.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="card">
+
+            <span class="badge">🚀 Global</span>
+
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop" alt="Programming">
+
+            <div class="card-content">
+
+                <h2>Programming Excellence</h2>
+
+                <p>
+                    Modern programming innovations creating smart systems,
+                    automation, and future technologies.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="card">
+
+            <span class="badge">🏆 Champions</span>
+
+            <img src="/static/images/students.jpeg" alt="Innovation Team">
+
+            <div class="card-content">
+
+                <h2>Innovation Teamwork</h2>
+
+                <p>
+                    Collaborative innovation projects solving real-world
+                    problems using creativity and technology.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TROPHIES -->
+    <div class="trophy-section">
+
+        <h2 class="section-title">🏅 Awards & Trophies</h2>
+
+        <div class="trophy-grid">
+
+            <div class="trophy-card">
+
+                <div class="trophy-icon">🏆</div>
+
+                <h3>World Skills Award</h3>
+
+                <p>
+                    Recognizing outstanding global technical and
+                    vocational excellence.
+                </p>
+
+            </div>
+
+            <div class="trophy-card">
+
+                <div class="trophy-icon">🥇</div>
+
+                <h3>Innovation Gold Medal</h3>
+
+                <p>
+                    Awarded to exceptional innovation projects
+                    and groundbreaking research.
+                </p>
+
+            </div>
+
+            <div class="trophy-card">
+
+                <div class="trophy-icon">🚀</div>
+
+                <h3>Tech Excellence Trophy</h3>
+
+                <p>
+                    Celebrating modern technology solutions
+                    and digital transformation achievements.
+                </p>
+
+            </div>
+
+            <div class="trophy-card">
+
+                <div class="trophy-icon">💡</div>
+
+                <h3>Creative Innovation Award</h3>
+
+                <p>
+                    Honoring creativity, problem-solving,
+                    and entrepreneurial innovation.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+
+    <p>
+        © 2026 Innovation & Skills Management System | Gallery Showcase
+    </p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,527 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Innovation Blog</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#f4f7fb;
+    color:#333;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2070');
+    background-size:cover;
+    background-position:center;
+    height:450px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:white;
+    padding:20px;
+}
+
+.hero-content h1{
+    font-size:56px;
+    margin-bottom:15px;
+}
+
+.hero-content p{
+    font-size:21px;
+    max-width:850px;
+    margin:auto;
+    line-height:1.7;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:90%;
+    margin:35px auto;
+    display:flex;
+    justify-content:center;
+}
+
+.search-box form{
+    width:100%;
+    max-width:850px;
+    display:flex;
+    gap:10px;
+}
+
+.search-box input{
+    flex:1;
+    padding:16px;
+    border:none;
+    border-radius:50px;
+    font-size:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    outline:none;
+}
+
+.search-box button{
+    padding:16px 28px;
+    border:none;
+    border-radius:50px;
+    background:linear-gradient(90deg,#1565c0,#0d47a1);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.search-box button:hover{
+    transform:scale(1.03);
+}
+
+/* ================= BLOG GRID ================= */
+
+.blog-container{
+    width:92%;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+    gap:30px;
+    padding-bottom:50px;
+}
+
+/* ================= BLOG CARD ================= */
+
+.blog-card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 8px 22px rgba(0,0,0,0.12);
+    transition:0.3s;
+}
+
+.blog-card:hover{
+    transform:translateY(-10px);
+}
+
+.blog-card img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+}
+
+.blog-content{
+    padding:22px;
+}
+
+.blog-category{
+    display:inline-block;
+    background:#e3f2fd;
+    color:#1565c0;
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:13px;
+    margin-bottom:14px;
+    font-weight:bold;
+}
+
+.blog-content h2{
+    margin-bottom:14px;
+    color:#0d47a1;
+}
+
+.blog-content p{
+    line-height:1.8;
+    margin-bottom:18px;
+    color:#555;
+}
+
+.blog-info{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    color:#777;
+    margin-bottom:16px;
+}
+
+.read-btn{
+    display:inline-block;
+    padding:11px 20px;
+    background:linear-gradient(90deg,#1976d2,#0d47a1);
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.read-btn:hover{
+    background:linear-gradient(90deg,#0d47a1,#1565c0);
+}
+
+/* ================= FEATURE SECTION ================= */
+
+.extra-section{
+    width:92%;
+    margin:50px auto;
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+}
+
+.latest-news,
+.categories{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.latest-news h2,
+.categories h2{
+    margin-bottom:20px;
+    color:#0d47a1;
+}
+
+.news-item{
+    padding:16px 0;
+    border-bottom:1px solid #eee;
+    line-height:1.7;
+}
+
+.news-item:last-child{
+    border:none;
+}
+
+.categories ul{
+    list-style:none;
+}
+
+.categories li{
+    margin-bottom:14px;
+}
+
+.categories a{
+    text-decoration:none;
+    color:#1565c0;
+    font-weight:600;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    background:#0d47a1;
+    color:white;
+    text-align:center;
+    padding:30px;
+    margin-top:50px;
+}
+
+.socials{
+    margin-top:15px;
+}
+
+.socials i{
+    margin:0 10px;
+    font-size:22px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.socials i:hover{
+    color:#90caf9;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .extra-section{
+        grid-template-columns:1fr;
+    }
+
+    .hero-content h1{
+        font-size:40px;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .hero{
+        height:340px;
+    }
+
+    .hero-content h1{
+        font-size:32px;
+    }
+
+    .hero-content p{
+        font-size:16px;
+    }
+
+    .search-box form{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>🌍 Global Innovation & Skills Blog</h1>
+
+        <p>
+            Explore the latest innovations in artificial intelligence,
+            robotics, renewable energy, smart technologies, and world skills competitions.
+            Stay updated with international innovation awards, technology breakthroughs,
+            and modern digital skills shaping the future.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ================= ONLINE SEARCH ================= -->
+
+<div class="search-box">
+
+    <form action="https://www.google.com/search" method="GET" target="_blank">
+
+        <input
+        type="text"
+        name="q"
+        placeholder="🔍 Search anything online... AI, robotics, innovation awards, programming..."
+        required>
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+</div>
+
+<!-- ================= BLOG POSTS ================= -->
+
+<div class="blog-container">
+
+    <!-- BLOG 1 -->
+    <div class="blog-card">
+
+        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070">
+
+        <div class="blog-content">
+
+            <span class="blog-category">
+                Artificial Intelligence
+            </span>
+
+            <h2>AI Innovations Transforming the World</h2>
+
+            <div class="blog-info">
+                <span>🌍 Global Tech</span>
+                <span>📅 2026</span>
+            </div>
+
+            <p>
+                Artificial Intelligence is revolutionizing healthcare,
+                cybersecurity, education, and automation through smart systems,
+                machine learning, and robotics.
+            </p>
+
+            <a href="https://news.google.com/search?q=AI%20innovations" class="read-btn" target="_blank">
+                Read More
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- BLOG 2 -->
+    <div class="blog-card">
+
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070">
+
+        <div class="blog-content">
+
+            <span class="blog-category">
+                World Skills
+            </span>
+
+            <h2>Top Global Skills Competition Awards</h2>
+
+            <div class="blog-info">
+                <span>🏆 Skills Awards</span>
+                <span>📅 2026</span>
+            </div>
+
+            <p>
+                Discover international winners in software engineering,
+                graphic design, networking, robotics, and engineering competitions.
+            </p>
+
+            <a href="https://worldskills.org" class="read-btn" target="_blank">
+                Read More
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- BLOG 3 -->
+    <div class="blog-card">
+
+        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2070">
+
+        <div class="blog-content">
+
+            <span class="blog-category">
+                Robotics
+            </span>
+
+            <h2>Latest Robotics Innovations Worldwide</h2>
+
+            <div class="blog-info">
+                <span>🤖 Robotics</span>
+                <span>📅 2026</span>
+            </div>
+
+            <p>
+                Robotics technology continues to advance rapidly with
+                smart automation, industrial robots, and intelligent humanoid systems.
+            </p>
+
+            <a href="https://news.google.com/search?q=robotics%20innovation" class="read-btn" target="_blank">
+                Read More
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- BLOG 4 -->
+    <div class="blog-card">
+
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072">
+
+        <div class="blog-content">
+
+            <span class="blog-category">
+                Programming
+            </span>
+
+            <h2>Most In-Demand Tech Skills in 2026</h2>
+
+            <div class="blog-info">
+                <span>💻 Digital Skills</span>
+                <span>📅 2026</span>
+            </div>
+
+            <p>
+                Learn why Python, cybersecurity, cloud computing,
+                AI engineering, and web development are among the top global skills.
+            </p>
+
+            <a href="https://news.google.com/search?q=technology%20skills%202026" class="read-btn" target="_blank">
+                Read More
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= EXTRA SECTION ================= -->
+
+<div class="extra-section">
+
+    <!-- LATEST NEWS -->
+    <div class="latest-news">
+
+        <h2>📰 Latest Innovation Updates</h2>
+
+        <div class="news-item">
+            🚀 AI-powered robots are now being used in hospitals and industries worldwide.
+        </div>
+
+        <div class="news-item">
+            🌍 Renewable energy innovations continue transforming global power systems.
+        </div>
+
+        <div class="news-item">
+            🏆 International skills competitions recognize excellence in technology and engineering.
+        </div>
+
+        <div class="news-item">
+            💡 Smart agriculture technologies are improving food production and sustainability.
+        </div>
+
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="categories">
+
+        <h2>📂 Categories</h2>
+
+        <ul>
+            <li><a href="#">Artificial Intelligence</a></li>
+            <li><a href="#">World Skills Awards</a></li>
+            <li><a href="#">Programming</a></li>
+            <li><a href="#">Engineering</a></li>
+            <li><a href="#">Cybersecurity</a></li>
+            <li><a href="#">Robotics</a></li>
+            <li><a href="#">Renewable Energy</a></li>
+        </ul>
+
+    </div>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>🚀 Innovation & Skills Management System</h2>
+
+    <p>
+        Connecting creativity, technology, innovation, and global digital transformation.
+    </p>
+
+    <div class="socials">
+        <i class="fab fa-facebook"></i>
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-linkedin"></i>
+        <i class="fab fa-youtube"></i>
+    </div>
+
+</footer>
+
+</body>
+</html>
+```
