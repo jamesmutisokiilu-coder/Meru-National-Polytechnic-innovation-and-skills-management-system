@@ -1,101 +1,127 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import sqlite3, os
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
+import cloudinary
+import cloudinary.uploader
+import os
+
+# =========================================================
+# APP CONFIG
+# =========================================================
 
 app = Flask(__name__)
 
-# ---------------- SECRET KEY ----------------
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
-# ---------------- BASE DIR ----------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# =========================================================
+# DATABASE CONFIG (POSTGRESQL)
+# =========================================================
 
-# ---------------- RENDER SAFE STORAGE ----------------
-DB_NAME = os.path.join(BASE_DIR, "database.db")
-UPLOAD_FOLDER = os.path.join(BASE_DIR, "static/uploads")
+database_url = os.environ.get("DATABASE_URL")
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# Render PostgreSQL fix
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# ---------------- DATABASE ----------------
-def get_connection():
-    conn = sqlite3.connect(DB_NAME, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    return conn
+db = SQLAlchemy(app)
 
+# =========================================================
+# CLOUDINARY CONFIG
+# =========================================================
 
-# ---------------- INIT DB ----------------
-def init_db():
-    conn = get_connection()
-    cur = conn.cursor()
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 
-    cur.executescript("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        email TEXT UNIQUE,
-        password TEXT,
-        role TEXT
-    );
+# =========================================================
+# DATABASE MODELS
+# =========================================================
 
-    CREATE TABLE IF NOT EXISTS projects (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        description TEXT,
-        file TEXT,
-        email TEXT,
-        phone TEXT,
-        whatsapp TEXT,
-        uploader TEXT
-    );
+class User(db.Model):
+    __tablename__ = "users"
 
-    CREATE TABLE IF NOT EXISTS skills (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        class_name TEXT,
-        department TEXT,
-        area TEXT,
-        supervisor TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS assistants (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT,
-        innovator_name TEXT,
-        phone_number TEXT,
-        project_name TEXT,
-        assistant_area TEXT,
-        category TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS discussions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_name TEXT,
-        topic TEXT,
-        message TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS replies (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        discussion_id INTEGER,
-        user_name TEXT,
-        message TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    """)
-
-    conn.commit()
-    conn.close()
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    email = db.Column(db.String(200), unique=True)
+    password = db.Column(db.String(500))
+    role = db.Column(db.String(50))
 
 
-init_db()
+class Project(db.Model):
+    __tablename__ = "projects"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(300))
+    description = db.Column(db.Text)
+    file = db.Column(db.Text)
+    email = db.Column(db.String(200))
+    phone = db.Column(db.String(100))
+    whatsapp = db.Column(db.String(100))
+    uploader = db.Column(db.String(200))
 
 
-# ---------------- LOGIN REQUIRED ----------------
+class Skill(db.Model):
+    __tablename__ = "skills"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    class_name = db.Column(db.String(200))
+    department = db.Column(db.String(200))
+    area = db.Column(db.String(200))
+    supervisor = db.Column(db.String(200))
+
+
+class Assistant(db.Model):
+    __tablename__ = "assistants"
+
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(100))
+    innovator_name = db.Column(db.String(200))
+    phone_number = db.Column(db.String(100))
+    project_name = db.Column(db.String(300))
+    assistant_area = db.Column(db.String(300))
+    category = db.Column(db.String(200))
+
+
+class Discussion(db.Model):
+    __tablename__ = "discussions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(200))
+    topic = db.Column(db.String(300))
+    message = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+
+class Reply(db.Model):
+    __tablename__ = "replies"
+
+    id = db.Column(db.Integer, primary_key=True)
+    discussion_id = db.Column(db.Integer)
+    user_name = db.Column(db.String(200))
+    message = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+
+# =========================================================
+# CREATE DATABASE TABLES
+# =========================================================
+
+with app.app_context():
+    db.create_all()
+
+# =========================================================
+# LOGIN REQUIRED DECORATOR
+# =========================================================
+
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -104,54 +130,56 @@ def login_required(f):
         return f(*args, **kwargs)
     return wrapper
 
+# =========================================================
+# HOME
+# =========================================================
 
-# ---------------- HOME ----------------
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# =========================================================
+# DASHBOARD
+# =========================================================
 
-# ---------------- DASHBOARD ----------------
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    conn = get_connection()
-    cur = conn.cursor()
 
-    cur.execute("SELECT COUNT(*) FROM projects")
-    projects_count = cur.fetchone()[0]
+    projects_count = Project.query.count()
+    skills_count = Skill.query.count()
+    assistants_count = Assistant.query.count()
+    discussions_count = Discussion.query.count()
 
-    cur.execute("SELECT COUNT(*) FROM skills")
-    skills_count = cur.fetchone()[0]
+    return render_template(
+        "dashboard.html",
+        projects_count=projects_count,
+        skills_count=skills_count,
+        assistants_count=assistants_count,
+        discussions_count=discussions_count
+    )
 
-    cur.execute("SELECT COUNT(*) FROM assistants")
-    assistants_count = cur.fetchone()[0]
+# =========================================================
+# LOGIN
+# =========================================================
 
-    cur.execute("SELECT COUNT(*) FROM discussions")
-    discussions_count = cur.fetchone()[0]
-
-    conn.close()
-
-    return render_template("dashboard.html",
-                           projects_count=projects_count,
-                           skills_count=skills_count,
-                           assistants_count=assistants_count,
-                           discussions_count=discussions_count)
-
-
-# ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
     if request.method == 'POST':
-        conn = get_connection()
-        cur = conn.cursor()
 
-        cur.execute("SELECT * FROM users WHERE email=?", (request.form['email'],))
-        user = cur.fetchone()
-        conn.close()
+        user = User.query.filter_by(
+            email=request.form['email']
+        ).first()
 
-        if user and check_password_hash(user['password'], request.form['password']):
-            session['user'] = user['name']
+        if user and check_password_hash(
+            user.password,
+            request.form['password']
+        ):
+
+            session['user'] = user.name
+            session['email'] = user.email
+
             return redirect(url_for('dashboard'))
 
         flash("Invalid login")
@@ -159,264 +187,320 @@ def login():
 
     return render_template('login.html')
 
+# =========================================================
+# REGISTER
+# =========================================================
 
-# ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+
     if request.method == 'POST':
-        conn = get_connection()
-        cur = conn.cursor()
 
-        cur.execute("""
-            INSERT INTO users(name,email,password,role)
-            VALUES (?,?,?,?)
-        """, (
-            request.form['name'],
-            request.form['email'],
-            generate_password_hash(request.form['password']),
-            "user"
-        ))
+        existing_user = User.query.filter_by(
+            email=request.form['email']
+        ).first()
 
-        conn.commit()
-        conn.close()
+        if existing_user:
+            flash("Email already exists")
+            return redirect(url_for('register'))
+
+        new_user = User(
+            name=request.form['name'],
+            email=request.form['email'],
+            password=generate_password_hash(
+                request.form['password']
+            ),
+            role="user"
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash("Registration successful")
 
         return redirect(url_for('login'))
 
     return render_template('register.html')
 
+# =========================================================
+# LOGOUT
+# =========================================================
 
-# ---------------- LOGOUT ----------------
 @app.route('/logout')
 @login_required
 def logout():
+
     session.clear()
+
     return redirect(url_for('index'))
 
+# =========================================================
+# PROJECTS
+# =========================================================
 
-# ---------------- PROJECTS ----------------
 @app.route('/projects', methods=['GET', 'POST'])
 @login_required
 def projects():
-    conn = get_connection()
-    cur = conn.cursor()
 
     if request.method == 'POST':
+
         files = request.files.getlist('files')
-        filenames = []
+
+        uploaded_files = []
 
         for file in files:
+
             if file and file.filename:
+
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                filenames.append(filename)
 
-        cur.execute("""
-            INSERT INTO projects(title,description,file,email,phone,whatsapp,uploader)
-            VALUES (?,?,?,?,?,?,?)
-        """, (
-            request.form.get('title', ''),
-            request.form.get('description', ''),
-            ",".join(filenames),
-            request.form.get('email', ''),
-            request.form.get('phone', ''),
-            request.form.get('whatsapp', ''),
-            session['user']
-        ))
+                result = cloudinary.uploader.upload(
+                    file,
+                    resource_type="auto",
+                    folder="innovation_projects",
+                    public_id=filename
+                )
 
-        conn.commit()
-        conn.close()
+                uploaded_files.append(result['secure_url'])
+
+        project = Project(
+            title=request.form.get('title', ''),
+            description=request.form.get('description', ''),
+            file=",".join(uploaded_files),
+            email=request.form.get('email', ''),
+            phone=request.form.get('phone', ''),
+            whatsapp=request.form.get('whatsapp', ''),
+            uploader=session['user']
+        )
+
+        db.session.add(project)
+        db.session.commit()
+
+        flash("Project uploaded successfully")
 
         return redirect(url_for('uploads'))
 
-    conn.close()
     return render_template('projects.html')
 
+# =========================================================
+# UPLOADS
+# =========================================================
 
-# ---------------- UPLOADS ----------------
 @app.route('/uploads')
 @login_required
 def uploads():
-    conn = get_connection()
-    cur = conn.cursor()
 
-    cur.execute("SELECT * FROM projects ORDER BY id DESC")
-    projects = cur.fetchall()
+    projects = Project.query.order_by(Project.id.desc()).all()
+    skills = Skill.query.order_by(Skill.id.desc()).all()
 
-    cur.execute("SELECT * FROM skills ORDER BY id DESC")
-    skills = cur.fetchall()
+    return render_template(
+        "uploads.html",
+        projects=projects,
+        skills=skills
+    )
 
-    conn.close()
+# =========================================================
+# SKILLS
+# =========================================================
 
-    return render_template("uploads.html",
-                           projects=projects,
-                           skills=skills)
-
-
-# ---------------- SKILLS ----------------
 @app.route('/skills', methods=['POST'])
 @login_required
 def skills():
-    conn = get_connection()
-    cur = conn.cursor()
 
-    cur.execute("""
-        INSERT INTO skills(name,class_name,department,area,supervisor)
-        VALUES (?,?,?,?,?)
-    """, (
-        request.form.get('name', ''),
-        request.form.get('class', ''),
-        request.form.get('department', ''),
-        request.form.get('area', ''),
-        request.form.get('supervisor', '')
-    ))
+    skill = Skill(
+        name=request.form.get('name', ''),
+        class_name=request.form.get('class', ''),
+        department=request.form.get('department', ''),
+        area=request.form.get('area', ''),
+        supervisor=request.form.get('supervisor', '')
+    )
 
-    conn.commit()
-    conn.close()
+    db.session.add(skill)
+    db.session.commit()
+
+    flash("Skill added successfully")
 
     return redirect(url_for('uploads'))
 
+# =========================================================
+# DELETE PROJECT
+# =========================================================
 
-# ---------------- DELETE PROJECT (ADDED FIX) ----------------
 @app.route('/delete_project/<int:project_id>', methods=['POST'])
 @login_required
 def delete_project(project_id):
-    conn = get_connection()
-    cur = conn.cursor()
 
-    cur.execute("DELETE FROM projects WHERE id=?", (project_id,))
-    conn.commit()
-    conn.close()
+    project = Project.query.get_or_404(project_id)
+
+    db.session.delete(project)
+    db.session.commit()
+
+    flash("Project deleted")
 
     return redirect(url_for('uploads'))
 
+# =========================================================
+# DELETE SKILL
+# =========================================================
 
-# ---------------- DELETE SKILL (ADDED FIX) ----------------
 @app.route('/delete_skill/<int:skill_id>', methods=['POST'])
 @login_required
 def delete_skill(skill_id):
-    conn = get_connection()
-    cur = conn.cursor()
 
-    cur.execute("DELETE FROM skills WHERE id=?", (skill_id,))
-    conn.commit()
-    conn.close()
+    skill = Skill.query.get_or_404(skill_id)
+
+    db.session.delete(skill)
+    db.session.commit()
+
+    flash("Skill deleted")
 
     return redirect(url_for('uploads'))
 
+# =========================================================
+# ASSISTANT
+# =========================================================
 
-# ---------------- ASSISTANT ----------------
 @app.route('/assistant', methods=['GET', 'POST'])
 @login_required
 def assistant():
-    conn = get_connection()
-    cur = conn.cursor()
 
     if request.method == 'POST':
-        cur.execute("""
-            INSERT INTO assistants(type,innovator_name,phone_number,project_name,assistant_area,category)
-            VALUES (?,?,?,?,?,?)
-        """, (
-            request.form.get('type', ''),
-            request.form.get('innovator_name', ''),
-            request.form.get('phone_number', ''),
-            request.form.get('project_name', ''),
-            request.form.get('assistant_area', ''),
-            request.form.get('category', '')
-        ))
 
-        conn.commit()
+        assistant = Assistant(
+            type=request.form.get('type', ''),
+            innovator_name=request.form.get('innovator_name', ''),
+            phone_number=request.form.get('phone_number', ''),
+            project_name=request.form.get('project_name', ''),
+            assistant_area=request.form.get('assistant_area', ''),
+            category=request.form.get('category', '')
+        )
+
+        db.session.add(assistant)
+        db.session.commit()
+
+        flash("Assistant request added")
+
         return redirect(url_for('assistant'))
 
-    cur.execute("SELECT * FROM assistants ORDER BY id DESC")
-    assistants = cur.fetchall()
+    assistants = Assistant.query.order_by(
+        Assistant.id.desc()
+    ).all()
 
-    conn.close()
+    return render_template(
+        'assistant.html',
+        assistants=assistants
+    )
 
-    return render_template('assistant.html', assistants=assistants)
+# =========================================================
+# DISCUSSION
+# =========================================================
 
-
-# ---------------- DISCUSSION ----------------
 @app.route('/discussion', methods=['GET', 'POST'])
 @login_required
 def discussion():
-    conn = get_connection()
-    cur = conn.cursor()
 
     if request.method == 'POST':
+
         message = request.form.get('message')
         discussion_id = request.form.get('discussion_id')
 
         if discussion_id:
-            cur.execute("""
-                INSERT INTO replies(discussion_id,user_name,message)
-                VALUES (?,?,?)
-            """, (discussion_id, session['user'], message))
-        else:
-            cur.execute("""
-                INSERT INTO discussions(user_name,topic,message)
-                VALUES (?,?,?)
-            """, (
-                session['user'],
-                request.form.get('topic'),
-                message
-            ))
 
-        conn.commit()
+            reply = Reply(
+                discussion_id=discussion_id,
+                user_name=session['user'],
+                message=message
+            )
+
+            db.session.add(reply)
+
+        else:
+
+            discussion = Discussion(
+                user_name=session['user'],
+                topic=request.form.get('topic'),
+                message=message
+            )
+
+            db.session.add(discussion)
+
+        db.session.commit()
+
         return redirect(url_for('discussion'))
 
-    cur.execute("SELECT * FROM discussions ORDER BY id DESC")
-    discussions = cur.fetchall()
+    discussions = Discussion.query.order_by(
+        Discussion.id.desc()
+    ).all()
 
-    cur.execute("SELECT * FROM replies ORDER BY id ASC")
-    replies = cur.fetchall()
+    replies = Reply.query.order_by(
+        Reply.id.asc()
+    ).all()
 
     replies_dict = {}
+
     for r in replies:
-        replies_dict.setdefault(r['discussion_id'], []).append(r)
+        replies_dict.setdefault(
+            r.discussion_id,
+            []
+        ).append(r)
 
-    conn.close()
+    return render_template(
+        'discussion.html',
+        discussions=discussions,
+        replies_dict=replies_dict
+    )
 
-    return render_template('discussion.html',
-                           discussions=discussions,
-                           replies_dict=replies_dict)
+# =========================================================
+# OTHER PAGES
+# =========================================================
 
-
-# ---------------- OTHER PAGES ----------------
 @app.route('/activities')
 def activities():
     return render_template('activities.html')
+
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 @app.route('/leadership')
 def leadership():
     return render_template('leadership.html')
 
-# ---------------- BLOG ----------------
+
 @app.route('/blog')
 def blog():
     return render_template('blog.html')
 
-# ---------------- GALLERY PAGE ----------------
+
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
 
+# =========================================================
+# ERROR HANDLER
+# =========================================================
 
-# ---------------- ERROR ----------------
 @app.errorhandler(500)
 def server_error(e):
     print("SERVER ERROR:", e)
     return str(e), 500
 
+# =========================================================
+# RUN
+# =========================================================
 
-# ---------------- RUN ----------------
 if __name__ == "__main__":
+
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+
+    app.run(
+        host="0.0.0.0",
+        port=port
+    )
