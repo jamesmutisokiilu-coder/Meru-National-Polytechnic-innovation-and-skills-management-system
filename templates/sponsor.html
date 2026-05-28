@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor & Sponsorship Portal</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f3f6fb;
+            color:#222;
+        }
+
+        header{
+            background:linear-gradient(135deg,#0d1b2a,#1b263b);
+            color:white;
+            padding:40px 20px;
+            text-align:center;
+        }
+
+        header h1{
+            font-size:40px;
+            margin-bottom:10px;
+        }
+
+        header p{
+            font-size:18px;
+            opacity:0.9;
+        }
+
+        .container{
+            width:90%;
+            max-width:1200px;
+            margin:40px auto;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:30px;
+        }
+
+        .form-section,
+        .display-section{
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .section-title{
+            margin-bottom:25px;
+        }
+
+        .section-title h2{
+            color:#0d1b2a;
+            margin-bottom:10px;
+        }
+
+        .section-title p{
+            color:#666;
+            line-height:1.6;
+        }
+
+        form{
+            display:flex;
+            flex-direction:column;
+        }
+
+        input,
+        select,
+        textarea{
+            padding:14px;
+            margin-bottom:18px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:16px;
+            outline:none;
+            transition:0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus{
+            border-color:#00b894;
+            box-shadow:0 0 8px rgba(0,184,148,0.2);
+        }
+
+        textarea{
+            resize:none;
+            height:120px;
+        }
+
+        button{
+            padding:15px;
+            background:#00b894;
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-size:17px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#019875;
+            transform:translateY(-2px);
+        }
+
+        .sponsor-card{
+            background:#f9fbff;
+            border-left:5px solid #00b894;
+            padding:20px;
+            margin-bottom:20px;
+            border-radius:10px;
+            transition:0.3s;
+        }
+
+        .sponsor-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .sponsor-card h3{
+            color:#0d1b2a;
+            margin-bottom:10px;
+        }
+
+        .sponsor-card p{
+            color:#555;
+            line-height:1.6;
+            margin-bottom:8px;
+        }
+
+        .amount{
+            color:#00b894;
+            font-weight:bold;
+            font-size:18px;
+        }
+
+        .badge{
+            display:inline-block;
+            background:#0d1b2a;
+            color:white;
+            padding:6px 12px;
+            border-radius:20px;
+            font-size:13px;
+            margin-top:8px;
+        }
+
+        footer{
+            text-align:center;
+            padding:25px;
+            background:#0d1b2a;
+            color:white;
+            margin-top:40px;
+        }
+
+        @media(max-width:900px){
+
+            .container{
+                grid-template-columns:1fr;
+            }
+
+            header h1{
+                font-size:30px;
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Investor & Sponsorship Portal</h1>
+        <p>
+            Support innovation projects and skills development programs.
+        </p>
+    </header>
+
+    <div class="container">
+
+        <!-- FORM SECTION -->
+
+        <div class="form-section">
+
+            <div class="section-title">
+                <h2>Submit Sponsorship</h2>
+                <p>
+                    Fill in the form below to sponsor an innovation or skills project.
+                </p>
+                <P>MPESA( 0710329922 )</P>
+            </div>
+
+            <form id="sponsorForm">
+
+                <input type="text"
+                       id="fullname"
+                       placeholder="Full Name"
+                       required>
+
+                <input type="email"
+                       id="email"
+                       placeholder="Email Address"
+                       required>
+
+                <input type="text"
+                       id="organization"
+                       placeholder="Company / Organization">
+
+                <select id="sponsorshipType" required>
+
+                    <option value="">Select Sponsorship Type</option>
+                    <option>Innovation Project</option>
+                    <option>Skills Development</option>
+                    <option>Startup Funding</option>
+                    <option>Technology Event</option>
+                    <option>Student Competition</option>
+
+                </select>
+
+                <input type="number"
+                       id="amount"
+                       placeholder="Sponsorship Amount"
+                       required>
+
+                <textarea id="message"
+                          placeholder="Additional Message"></textarea>
+
+                <button type="submit">
+                    Submit Sponsorship
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- DISPLAY SECTION -->
+
+        <div class="display-section">
+
+            <div class="section-title">
+                <h2>Recent Sponsorships</h2>
+                <p>
+                    Submitted sponsorships will appear below automatically.
+                </p>
+            </div>
+
+            <div id="sponsorshipList">
+
+                <!-- Dynamic Sponsorships Appear Here -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        <p>
+            © 2026 Innovation & Skills Management System
+        </p>
+    </footer>
+
+
+    <script>
+
+        const sponsorForm = document.getElementById('sponsorForm');
+        const sponsorshipList = document.getElementById('sponsorshipList');
+
+        sponsorForm.addEventListener('submit', function(e){
+
+            e.preventDefault();
+
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const organization = document.getElementById('organization').value;
+            const sponsorshipType = document.getElementById('sponsorshipType').value;
+            const amount = document.getElementById('amount').value;
+            const message = document.getElementById('message').value;
+
+            const sponsorCard = document.createElement('div');
+            sponsorCard.classList.add('sponsor-card');
+
+            sponsorCard.innerHTML = `
+
+                <h3>${fullname}</h3>
+
+                <p><strong>Email:</strong> ${email}</p>
+
+                <p><strong>Organization:</strong> ${organization}</p>
+
+                <p><strong>Sponsorship Type:</strong> ${sponsorshipType}</p>
+
+                <p class="amount">KES ${amount}</p>
+
+                <p>${message}</p>
+
+                <span class="badge">New Sponsor</span>
+
+            `;
+
+            sponsorshipList.prepend(sponsorCard);
+
+            sponsorForm.reset();
+
+        });
+
+    </script>
+
+</body>
+</html>
+
+
