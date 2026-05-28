@@ -67,6 +67,16 @@
             line-height:1.6;
         }
 
+        .mpesa-box{
+            background:#e8fff6;
+            border-left:5px solid #00b894;
+            padding:15px;
+            margin-top:15px;
+            border-radius:8px;
+            color:#0d1b2a;
+            font-weight:bold;
+        }
+
         form{
             display:flex;
             flex-direction:column;
@@ -119,6 +129,7 @@
             margin-bottom:20px;
             border-radius:10px;
             transition:0.3s;
+            position:relative;
         }
 
         .sponsor-card:hover{
@@ -153,6 +164,19 @@
             margin-top:8px;
         }
 
+        .delete-btn{
+            position:absolute;
+            top:15px;
+            right:15px;
+            background:red;
+            color:white;
+            border:none;
+            padding:6px 12px;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:13px;
+        }
+
         footer{
             text-align:center;
             padding:25px;
@@ -174,15 +198,20 @@
         }
 
     </style>
+
 </head>
 <body>
 
     <header>
+
         <h1>Investor & Sponsorship Portal</h1>
+
         <p>
             Support innovation projects and skills development programs.
         </p>
+
     </header>
+
 
     <div class="container">
 
@@ -191,12 +220,20 @@
         <div class="form-section">
 
             <div class="section-title">
+
                 <h2>Submit Sponsorship</h2>
+
                 <p>
-                    Fill in the form below to sponsor an innovation or skills project.
+                    Fill in the form below to sponsor an innovation
+                    or skills project.
                 </p>
-                <P>MPESA( 0710329922 )</P>
+
+                <div class="mpesa-box">
+                    M-PESA NUMBER: 0710329922
+                </div>
+
             </div>
+
 
             <form id="sponsorForm">
 
@@ -216,7 +253,10 @@
 
                 <select id="sponsorshipType" required>
 
-                    <option value="">Select Sponsorship Type</option>
+                    <option value="">
+                        Select Sponsorship Type
+                    </option>
+
                     <option>Innovation Project</option>
                     <option>Skills Development</option>
                     <option>Startup Funding</option>
@@ -242,22 +282,22 @@
         </div>
 
 
+
         <!-- DISPLAY SECTION -->
 
         <div class="display-section">
 
             <div class="section-title">
+
                 <h2>Recent Sponsorships</h2>
+
                 <p>
-                    Submitted sponsorships will appear below automatically.
+                    Sponsorships remain saved even after refreshing.
                 </p>
-            </div>
-
-            <div id="sponsorshipList">
-
-                <!-- Dynamic Sponsorships Appear Here -->
 
             </div>
+
+            <div id="sponsorshipList"></div>
 
         </div>
 
@@ -265,58 +305,174 @@
 
 
     <footer>
+
         <p>
             © 2026 Innovation & Skills Management System
         </p>
+
     </footer>
+
 
 
     <script>
 
-        const sponsorForm = document.getElementById('sponsorForm');
-        const sponsorshipList = document.getElementById('sponsorshipList');
+        const sponsorForm =
+            document.getElementById('sponsorForm');
+
+        const sponsorshipList =
+            document.getElementById('sponsorshipList');
+
+
+
+        // LOAD SAVED SPONSORSHIPS
+
+        window.onload = function(){
+
+            let sponsors =
+                JSON.parse(localStorage.getItem('sponsors')) || [];
+
+            sponsors.forEach(function(sponsor,index){
+
+                displaySponsor(sponsor,index);
+
+            });
+
+        };
+
+
+
+        // SUBMIT FORM
 
         sponsorForm.addEventListener('submit', function(e){
 
             e.preventDefault();
 
-            const fullname = document.getElementById('fullname').value;
-            const email = document.getElementById('email').value;
-            const organization = document.getElementById('organization').value;
-            const sponsorshipType = document.getElementById('sponsorshipType').value;
-            const amount = document.getElementById('amount').value;
-            const message = document.getElementById('message').value;
+            const sponsor = {
 
-            const sponsorCard = document.createElement('div');
-            sponsorCard.classList.add('sponsor-card');
+                fullname:
+                    document.getElementById('fullname').value,
 
-            sponsorCard.innerHTML = `
+                email:
+                    document.getElementById('email').value,
 
-                <h3>${fullname}</h3>
+                organization:
+                    document.getElementById('organization').value,
 
-                <p><strong>Email:</strong> ${email}</p>
+                sponsorshipType:
+                    document.getElementById('sponsorshipType').value,
 
-                <p><strong>Organization:</strong> ${organization}</p>
+                amount:
+                    document.getElementById('amount').value,
 
-                <p><strong>Sponsorship Type:</strong> ${sponsorshipType}</p>
+                message:
+                    document.getElementById('message').value
 
-                <p class="amount">KES ${amount}</p>
+            };
 
-                <p>${message}</p>
 
-                <span class="badge">New Sponsor</span>
+            let sponsors =
+                JSON.parse(localStorage.getItem('sponsors')) || [];
 
-            `;
 
-            sponsorshipList.prepend(sponsorCard);
+            sponsors.unshift(sponsor);
+
+
+            localStorage.setItem(
+                'sponsors',
+                JSON.stringify(sponsors)
+            );
+
+
+            sponsorshipList.innerHTML = "";
+
+
+            sponsors.forEach(function(sponsor,index){
+
+                displaySponsor(sponsor,index);
+
+            });
+
 
             sponsorForm.reset();
 
         });
 
+
+
+        // DISPLAY SPONSOR FUNCTION
+
+        function displaySponsor(sponsor,index){
+
+            const sponsorCard =
+                document.createElement('div');
+
+            sponsorCard.classList.add('sponsor-card');
+
+
+            sponsorCard.innerHTML = `
+
+                <button class="delete-btn"
+                        onclick="deleteSponsor(${index})">
+
+                    Delete
+
+                </button>
+
+                <h3>${sponsor.fullname}</h3>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${sponsor.email}
+                </p>
+
+                <p>
+                    <strong>Organization:</strong>
+                    ${sponsor.organization}
+                </p>
+
+                <p>
+                    <strong>Sponsorship Type:</strong>
+                    ${sponsor.sponsorshipType}
+                </p>
+
+                <p class="amount">
+                    KES ${sponsor.amount}
+                </p>
+
+                <p>${sponsor.message}</p>
+
+                <span class="badge">
+                    Sponsored
+                </span>
+
+            `;
+
+            sponsorshipList.appendChild(sponsorCard);
+
+        }
+
+
+
+        // DELETE FUNCTION
+
+        function deleteSponsor(index){
+
+            let sponsors =
+                JSON.parse(localStorage.getItem('sponsors')) || [];
+
+            sponsors.splice(index,1);
+
+            localStorage.setItem(
+                'sponsors',
+                JSON.stringify(sponsors)
+            );
+
+            location.reload();
+
+        }
+
     </script>
 
 </body>
 </html>
-
-
+```
