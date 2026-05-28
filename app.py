@@ -463,6 +463,10 @@ def activities():
 def contact():
     return render_template('contact.html')
 
+@app.route('/sponsor')
+def sponsor():
+    return render_template('sponsor.html')
+
 
 @app.route('/about')
 def about():
