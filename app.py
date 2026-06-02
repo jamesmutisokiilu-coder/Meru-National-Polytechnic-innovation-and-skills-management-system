@@ -52,7 +52,7 @@ class User(db.Model):
     name = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(500))
-    role = db.Column(db.String(50))
+   
 
 
 class Project(db.Model):
