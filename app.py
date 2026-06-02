@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
+from sqlalchemy import text
 import cloudinary
 import cloudinary.uploader
 import os
@@ -12,16 +13,14 @@ import os
 # =========================================================
 
 app = Flask(__name__)
-
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
 # =========================================================
-# DATABASE CONFIG (POSTGRESQL)
+# DATABASE CONFIG
 # =========================================================
 
 database_url = os.environ.get("DATABASE_URL")
 
-# Render PostgreSQL fix
 if database_url and database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
@@ -29,6 +28,29 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
+# =========================================================
+# AUTO FIX DATABASE (IMPORTANT FIX)
+# =========================================================
+
+with app.app_context():
+    try:
+        db.session.execute(text("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS name VARCHAR(200)
+        """))
+
+        db.session.execute(text("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS role VARCHAR(50)
+        """))
+
+        db.session.commit()
+
+        print("DB schema checked successfully.")
+
+    except Exception as e:
+        print("DB auto-fix skipped:", e)
 
 # =========================================================
 # CLOUDINARY CONFIG
@@ -42,7 +64,7 @@ cloudinary.config(
 )
 
 # =========================================================
-# DATABASE MODELS
+# MODELS
 # =========================================================
 
 class User(db.Model):
@@ -52,7 +74,7 @@ class User(db.Model):
     name = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(500))
-   
+    role = db.Column(db.String(50))
 
 
 class Project(db.Model):
@@ -110,16 +132,15 @@ class Reply(db.Model):
     message = db.Column(db.Text)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-
 # =========================================================
-# CREATE DATABASE TABLES
+# CREATE TABLES
 # =========================================================
 
 with app.app_context():
     db.create_all()
 
 # =========================================================
-# LOGIN REQUIRED DECORATOR
+# LOGIN REQUIRED
 # =========================================================
 
 def login_required(f):
@@ -145,19 +166,7 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-
-    projects_count = Project.query.count()
-    skills_count = Skill.query.count()
-    assistants_count = Assistant.query.count()
-    discussions_count = Discussion.query.count()
-
-    return render_template(
-        "dashboard.html",
-        projects_count=projects_count,
-        skills_count=skills_count,
-        assistants_count=assistants_count,
-        discussions_count=discussions_count
-    )
+    return render_template("dashboard.html")
 
 # =========================================================
 # LOGIN
@@ -165,17 +174,11 @@ def dashboard():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
 
-        user = User.query.filter_by(
-            email=request.form['email']
-        ).first()
+        user = User.query.filter_by(email=request.form['email']).first()
 
-        if user and check_password_hash(
-            user.password,
-            request.form['password']
-        ):
+        if user and check_password_hash(user.password, request.form['password']):
 
             session['user'] = user.name
             session['email'] = user.email
@@ -193,7 +196,6 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
     if request.method == 'POST':
 
         existing_user = User.query.filter_by(
@@ -207,9 +209,7 @@ def register():
         new_user = User(
             name=request.form['name'],
             email=request.form['email'],
-            password=generate_password_hash(
-                request.form['password']
-            ),
+            password=generate_password_hash(request.form['password']),
             role="user"
         )
 
@@ -217,7 +217,6 @@ def register():
         db.session.commit()
 
         flash("Registration successful")
-
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -229,9 +228,7 @@ def register():
 @app.route('/logout')
 @login_required
 def logout():
-
     session.clear()
-
     return redirect(url_for('index'))
 
 # =========================================================
@@ -245,13 +242,10 @@ def projects():
     if request.method == 'POST':
 
         files = request.files.getlist('files')
-
         uploaded_files = []
 
         for file in files:
-
             if file and file.filename:
-
                 filename = secure_filename(file.filename)
 
                 result = cloudinary.uploader.upload(
@@ -277,7 +271,6 @@ def projects():
         db.session.commit()
 
         flash("Project uploaded successfully")
-
         return redirect(url_for('uploads'))
 
     return render_template('projects.html')
@@ -289,15 +282,10 @@ def projects():
 @app.route('/uploads')
 @login_required
 def uploads():
-
     projects = Project.query.order_by(Project.id.desc()).all()
     skills = Skill.query.order_by(Skill.id.desc()).all()
 
-    return render_template(
-        "uploads.html",
-        projects=projects,
-        skills=skills
-    )
+    return render_template("uploads.html", projects=projects, skills=skills)
 
 # =========================================================
 # SKILLS
@@ -319,7 +307,6 @@ def skills():
     db.session.commit()
 
     flash("Skill added successfully")
-
     return redirect(url_for('uploads'))
 
 # =========================================================
@@ -331,12 +318,10 @@ def skills():
 def delete_project(project_id):
 
     project = Project.query.get_or_404(project_id)
-
     db.session.delete(project)
     db.session.commit()
 
     flash("Project deleted")
-
     return redirect(url_for('uploads'))
 
 # =========================================================
@@ -348,12 +333,10 @@ def delete_project(project_id):
 def delete_skill(skill_id):
 
     skill = Skill.query.get_or_404(skill_id)
-
     db.session.delete(skill)
     db.session.commit()
 
     flash("Skill deleted")
-
     return redirect(url_for('uploads'))
 
 # =========================================================
@@ -379,17 +362,10 @@ def assistant():
         db.session.commit()
 
         flash("Assistant request added")
-
         return redirect(url_for('assistant'))
 
-    assistants = Assistant.query.order_by(
-        Assistant.id.desc()
-    ).all()
-
-    return render_template(
-        'assistant.html',
-        assistants=assistants
-    )
+    assistants = Assistant.query.order_by(Assistant.id.desc()).all()
+    return render_template('assistant.html', assistants=assistants)
 
 # =========================================================
 # DISCUSSION
@@ -405,44 +381,30 @@ def discussion():
         discussion_id = request.form.get('discussion_id')
 
         if discussion_id:
-
             reply = Reply(
                 discussion_id=discussion_id,
                 user_name=session['user'],
                 message=message
             )
-
             db.session.add(reply)
 
         else:
-
             discussion = Discussion(
                 user_name=session['user'],
                 topic=request.form.get('topic'),
                 message=message
             )
-
             db.session.add(discussion)
 
         db.session.commit()
-
         return redirect(url_for('discussion'))
 
-    discussions = Discussion.query.order_by(
-        Discussion.id.desc()
-    ).all()
-
-    replies = Reply.query.order_by(
-        Reply.id.asc()
-    ).all()
+    discussions = Discussion.query.order_by(Discussion.id.desc()).all()
+    replies = Reply.query.order_by(Reply.id.asc()).all()
 
     replies_dict = {}
-
     for r in replies:
-        replies_dict.setdefault(
-            r.discussion_id,
-            []
-        ).append(r)
+        replies_dict.setdefault(r.discussion_id, []).append(r)
 
     return render_template(
         'discussion.html',
@@ -458,7 +420,6 @@ def discussion():
 def activities():
     return render_template('activities.html')
 
-
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
@@ -467,21 +428,17 @@ def contact():
 def sponsor():
     return render_template('sponsor.html')
 
-
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 @app.route('/leadership')
 def leadership():
     return render_template('leadership.html')
 
-
 @app.route('/blog')
 def blog():
     return render_template('blog.html')
-
 
 @app.route('/gallery')
 def gallery():
@@ -501,10 +458,5 @@ def server_error(e):
 # =========================================================
 
 if __name__ == "__main__":
-
     port = int(os.environ.get("PORT", 5000))
-
-    app.run(
-        host="0.0.0.0",
-        port=port
-    )
+    app.run(host="0.0.0.0", port=port)
