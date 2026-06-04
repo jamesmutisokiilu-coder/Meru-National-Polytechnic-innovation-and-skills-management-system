@@ -6,7 +6,6 @@ from functools import wraps
 import cloudinary
 import cloudinary.uploader
 import os
-from sqlalchemy import text
 
 # =========================================================
 # APP CONFIG
@@ -129,7 +128,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return wrapper
 
-
 # =========================================================
 # ROUTES
 # =========================================================
@@ -153,24 +151,27 @@ def dashboard():
 def login():
     if request.method == 'POST':
 
-        user = User.query.filter_by(email=request.form['email']).first()
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-        if user and check_password_hash(user.password, request.form['password']):
+        user = User.query.filter_by(email=email).first()
 
-            session['user'] = user.username   # FIXED
+        if user and check_password_hash(user.password, password):
+
+            session['user'] = user.username
             session['email'] = user.email
             session['role'] = user.role
 
             return redirect(url_for('dashboard'))
 
-        flash("Invalid login")
+        flash("Invalid login credentials")
         return redirect(url_for('login'))
 
     return render_template('login.html')
 
 
 # =========================================================
-# REGISTER (FIXED)
+# REGISTER (FIXED + SAFE)
 # =========================================================
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -178,9 +179,20 @@ def register():
     try:
         if request.method == 'POST':
 
-            email = request.form.get('email')
             username = request.form.get('username')
+            email = request.form.get('email')
             password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
+
+            # 🔥 FIX 1: prevent NULL username crash
+            if not username or not email or not password:
+                flash("All fields are required")
+                return redirect(url_for('register'))
+
+            # 🔥 FIX 2: password match check
+            if password != confirm_password:
+                flash("Passwords do not match")
+                return redirect(url_for('register'))
 
             existing_user = User.query.filter_by(email=email).first()
 
@@ -220,7 +232,7 @@ def logout():
 
 
 # =========================================================
-# OTHER ROUTES (UNCHANGED BUT SAFE)
+# PROJECTS
 # =========================================================
 
 @app.route('/projects', methods=['GET', 'POST'])
@@ -275,6 +287,7 @@ def uploads():
 @app.route('/skills', methods=['POST'])
 @login_required
 def skills():
+
     skill = Skill(
         name=request.form.get('name', ''),
         class_name=request.form.get('class', ''),
@@ -287,26 +300,6 @@ def skills():
     db.session.commit()
 
     flash("Skill added successfully")
-    return redirect(url_for('uploads'))
-
-
-@app.route('/delete_project/<int:project_id>', methods=['POST'])
-@login_required
-def delete_project(project_id):
-    project = Project.query.get_or_404(project_id)
-    db.session.delete(project)
-    db.session.commit()
-    flash("Project deleted")
-    return redirect(url_for('uploads'))
-
-
-@app.route('/delete_skill/<int:skill_id>', methods=['POST'])
-@login_required
-def delete_skill(skill_id):
-    skill = Skill.query.get_or_404(skill_id)
-    db.session.delete(skill)
-    db.session.commit()
-    flash("Skill deleted")
     return redirect(url_for('uploads'))
 
 
