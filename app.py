@@ -71,10 +71,28 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    email = db.Column(db.String(200), unique=True)
-    password = db.Column(db.String(500))
-    role = db.Column(db.String(50))
+
+    username = db.Column(
+        db.String(100),
+        unique=True,
+        nullable=False
+    )
+
+    email = db.Column(
+        db.String(200),
+        unique=True,
+        nullable=False
+    )
+
+    password = db.Column(
+        db.String(500),
+        nullable=False
+    )
+
+    role = db.Column(
+        db.String(50),
+        default="user"
+    )
 
 
 class Project(db.Model):
@@ -208,14 +226,14 @@ def register():
                 return redirect(url_for('register'))
 
             new_user = User(
-                username=request.form['username'],
-                name=request.form['name'],
-                email=request.form['email'],
-                password=generate_password_hash(
-                    request.form['password']
-                ),
-                role="user"
-            )
+            username=request.form.get('username'),
+            name=request.form.get('username'),
+            email=request.form.get('email'),
+            password=generate_password_hash(
+                request.form.get('password')
+            ),
+            role="user"
+        )
 
             db.session.add(new_user)
             db.session.commit()
