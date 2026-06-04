@@ -196,30 +196,35 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
+    try:
+        if request.method == 'POST':
 
-        existing_user = User.query.filter_by(
-            email=request.form['email']
-        ).first()
+            existing_user = User.query.filter_by(
+                email=request.form['email']
+            ).first()
 
-        if existing_user:
-            flash("Email already exists")
-            return redirect(url_for('register'))
+            if existing_user:
+                flash("Email already exists")
+                return redirect(url_for('register'))
 
-        new_user = User(
-            name=request.form['name'],
-            email=request.form['email'],
-            password=generate_password_hash(request.form['password']),
-            role="user"
-        )
+            new_user = User(
+                name=request.form['name'],
+                email=request.form['email'],
+                password=generate_password_hash(request.form['password']),
+                role="user"
+            )
 
-        db.session.add(new_user)
-        db.session.commit()
+            db.session.add(new_user)
+            db.session.commit()
 
-        flash("Registration successful")
-        return redirect(url_for('login'))
+            flash("Registration successful")
+            return redirect(url_for('login'))
 
-    return render_template('register.html')
+        return render_template('register.html')
+
+    except Exception as e:
+        print("REGISTER ERROR:", e)
+        return str(e)
 
 # =========================================================
 # LOGOUT
