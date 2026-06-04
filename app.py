@@ -78,10 +78,14 @@ def login_required(f):
 def index():
     return render_template("index.html")
 
-@app.route("/dashboard")
+@app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    try:
+        return render_template('dashboard.html', user=session.get('user'))
+    except Exception as e:
+        print("DASHBOARD ERROR:", e)
+        return "Dashboard error"
 
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
