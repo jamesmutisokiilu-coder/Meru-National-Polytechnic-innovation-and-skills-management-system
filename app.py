@@ -161,11 +161,14 @@ def dashboard():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+
         user = User.query.filter_by(email=request.form['email']).first()
 
         if user and check_password_hash(user.password, request.form['password']):
-            session['user'] = user.name
+
+            session['user'] = user.username   # ✅ FIXED
             session['email'] = user.email
+
             return redirect(url_for('dashboard'))
 
         flash("Invalid login")
