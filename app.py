@@ -71,6 +71,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(200))
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(500))
@@ -208,9 +209,12 @@ def register():
                 return redirect(url_for('register'))
 
             new_user = User(
+                username=request.form['username'],
                 name=request.form['name'],
                 email=request.form['email'],
-                password=generate_password_hash(request.form['password']),
+                password=generate_password_hash(
+                    request.form['password']
+                ),
                 role="user"
             )
 
