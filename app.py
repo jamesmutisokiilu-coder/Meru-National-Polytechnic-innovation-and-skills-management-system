@@ -178,18 +178,21 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        existing_user = User.query.filter_by(email=request.form['email']).first()
+
+        existing_user = User.query.filter_by(
+            email=request.form['email']
+        ).first()
 
         if existing_user:
             flash("Email already exists")
             return redirect(url_for('register'))
 
-    new_user = User(
-    username=request.form['name'],
-    email=request.form['email'],
-    password=generate_password_hash(request.form['password']),
-    role="user"
-)
+        new_user = User(
+            username=request.form['username'],   # ✅ FIXED
+            email=request.form['email'],
+            password=generate_password_hash(request.form['password']),
+            role="user"
+        )
 
         db.session.add(new_user)
         db.session.commit()
