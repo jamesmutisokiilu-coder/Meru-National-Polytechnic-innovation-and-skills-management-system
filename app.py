@@ -1,31 +1,56 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from functools import wraps
+from sqlalchemy import text
 import cloudinary
 import cloudinary.uploader
 import os
 
+# =========================================================
+# APP CONFIG
+# =========================================================
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
-# ================= SECURITY =================
-app.secret_key = "supersecretkey123"
-
-# ================= DATABASE =================
+# =========================================================
+# DATABASE CONFIG
+# =========================================================
 database_url = os.environ.get("DATABASE_URL")
 
 if database_url and database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
-
-if not database_url:
-    database_url = "sqlite:///app.db"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-# ================= CLOUDINARY =================
+# =========================================================
+# AUTO FIX DATABASE
+# =========================================================
+with app.app_context():
+    try:
+        db.session.execute(text("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS name VARCHAR(200)
+        """))
+
+        db.session.execute(text("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS role VARCHAR(50)
+        """))
+
+        db.session.commit()
+        print("DB schema checked successfully.")
+
+    except Exception as e:
+        print("DB auto-fix skipped:", e)
+
+# =========================================================
+# CLOUDINARY CONFIG
+# =========================================================
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
@@ -33,22 +58,35 @@ cloudinary.config(
     secure=True
 )
 
-# ================= MODELS =================
+# =========================================================
+# MODELS
+# =========================================================
 class User(db.Model):
+    __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(200), unique=True, nullable=False)
-    password = db.Column(db.String(500), nullable=False)
-    role = db.Column(db.String(50), default="user")
+    name = db.Column(db.String(200))
+    email = db.Column(db.String(200), unique=True)
+    password = db.Column(db.String(500))
+    role = db.Column(db.String(50))
+
 
 class Project(db.Model):
+    __tablename__ = "projects"
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300))
     description = db.Column(db.Text)
     file = db.Column(db.Text)
+    email = db.Column(db.String(200))
+    phone = db.Column(db.String(100))
+    whatsapp = db.Column(db.String(100))
     uploader = db.Column(db.String(200))
 
+
 class Skill(db.Model):
+    __tablename__ = "skills"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     class_name = db.Column(db.String(200))
@@ -56,6 +94,40 @@ class Skill(db.Model):
     area = db.Column(db.String(200))
     supervisor = db.Column(db.String(200))
 
+
+class Assistant(db.Model):
+    __tablename__ = "assistants"
+
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(100))
+    innovator_name = db.Column(db.String(200))
+    phone_number = db.Column(db.String(100))
+    project_name = db.Column(db.String(300))
+    assistant_area = db.Column(db.String(300))
+    category = db.Column(db.String(200))
+
+
+class Discussion(db.Model):
+    __tablename__ = "discussions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(200))
+    topic = db.Column(db.String(300))
+    message = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+
+class Reply(db.Model):
+    __tablename__ = "replies"
+
+    id = db.Column(db.Integer, primary_key=True)
+    discussion_id = db.Column(db.Integer)
+    user_name = db.Column(db.String(200))
+    message = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+
+# Create tables
 with app.app_context():
     db.create_all()
 
@@ -86,41 +158,46 @@ def dashboard():
 
 
 # ---------------- LOGIN ----------------
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
 
-        user = User(
-            username=request.form.get("username"),
-            email=request.form.get("email"),
-            password=generate_password_hash(request.form.get("password"))
+        if user and check_password_hash(user.password, request.form['password']):
+            session['user'] = user.name
+            session['email'] = user.email
+            return redirect(url_for('dashboard'))
+
+        flash("Invalid login")
+        return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+
+# ---------------- REGISTER ----------------
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        existing_user = User.query.filter_by(email=request.form['email']).first()
+
+        if existing_user:
+            flash("Email already exists")
+            return redirect(url_for('register'))
+
+        new_user = User(
+            name=request.form['name'],
+            email=request.form['email'],
+            password=generate_password_hash(request.form['password']),
+            role="user"
         )
 
-        db.session.add(user)
+        db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for("login"))
+        flash("Registration successful")
+        return redirect(url_for('login'))
 
-    return render_template("register.html")
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-
-        user = User.query.filter_by(email=request.form.get("email")).first()
-
-        if not user or not check_password_hash(user.password, request.form.get("password")):
-            flash("Invalid login")
-            return redirect(url_for("login"))
-
-        session.clear()
-        session["user"] = user.username
-        session["email"] = user.email
-
-        return redirect(url_for("dashboard"))
-
-    return render_template("login.html")
-
+    return render_template('register.html')
 
 
 # ---------------- LOGOUT ----------------
