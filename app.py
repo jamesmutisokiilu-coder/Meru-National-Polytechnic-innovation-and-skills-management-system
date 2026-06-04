@@ -65,7 +65,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
+    username = db.Column(db.String(200))  # CHANGE THIS BACK
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(500))
     role = db.Column(db.String(50))
@@ -184,12 +184,12 @@ def register():
             flash("Email already exists")
             return redirect(url_for('register'))
 
-        new_user = User(
-            name=request.form['name'],
-            email=request.form['email'],
-            password=generate_password_hash(request.form['password']),
-            role="user"
-        )
+    new_user = User(
+    username=request.form['name'],
+    email=request.form['email'],
+    password=generate_password_hash(request.form['password']),
+    role="user"
+)
 
         db.session.add(new_user)
         db.session.commit()
