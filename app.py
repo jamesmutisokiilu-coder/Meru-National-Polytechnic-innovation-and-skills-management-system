@@ -219,18 +219,22 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
+        print("LOGIN ATTEMPT:", email)
+
         user = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password, password):
+        if not user:
+            flash("You are not registered. Please sign up first.")
+            return redirect(url_for('register'))
 
-            session['user'] = user.username
-            session['email'] = user.email
-            session['role'] = user.role
+        if not check_password_hash(user.password, password):
+            flash("Wrong password")
+            return redirect(url_for('login'))
 
-            return redirect(url_for('dashboard'))
+        session['user'] = user.username
+        session['email'] = user.email
 
-        flash("Invalid login credentials")
-        return redirect(url_for('login'))
+        return redirect(url_for('dashboard'))
 
     return render_template('login.html')
 
