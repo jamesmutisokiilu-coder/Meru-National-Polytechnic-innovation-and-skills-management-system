@@ -180,32 +180,28 @@ def login():
 
 
 # ---------------- REGISTER ----------------
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    if request.method == 'POST':
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
 
-        existing_user = User.query.filter_by(
-            email=request.form['email']
-        ).first()
+    if not username or not email or not password:
+        return "Missing fields", 400
 
-        if existing_user:
-            flash("Email already exists")
-            return redirect(url_for('register'))
+    hashed_password = generate_password_hash(password)
 
-        new_user = User(
-            username=request.form['username'],   # ✅ FIXED
-            email=request.form['email'],
-            password=generate_password_hash(request.form['password']),
-            role="user"
-        )
+    new_user = User(
+        username=username,
+        email=email,
+        password=hashed_password,
+        role="user"
+    )
 
-        db.session.add(new_user)
-        db.session.commit()
+    db.session.add(new_user)
+    db.session.commit()
 
-        flash("Registration successful")
-        return redirect(url_for('login'))
-
-    return render_template('register.html')
+    return redirect('/login')
 
 
 # ---------------- LOGOUT ----------------
