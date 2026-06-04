@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
+from sqlalchemy import text
 import cloudinary
 import cloudinary.uploader
 import os
@@ -10,14 +11,12 @@ import os
 # =========================================================
 # APP CONFIG
 # =========================================================
-
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
 # =========================================================
 # DATABASE CONFIG
 # =========================================================
-
 database_url = os.environ.get("DATABASE_URL")
 
 if database_url and database_url.startswith("postgres://"):
@@ -29,9 +28,29 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 # =========================================================
+# AUTO FIX DATABASE
+# =========================================================
+with app.app_context():
+    try:
+        db.session.execute(text("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS name VARCHAR(200)
+        """))
+
+        db.session.execute(text("""
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS role VARCHAR(50)
+        """))
+
+        db.session.commit()
+        print("DB schema checked successfully.")
+
+    except Exception as e:
+        print("DB auto-fix skipped:", e)
+
+# =========================================================
 # CLOUDINARY CONFIG
 # =========================================================
-
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
@@ -42,15 +61,14 @@ cloudinary.config(
 # =========================================================
 # MODELS
 # =========================================================
-
 class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    email = db.Column(db.String(200), unique=True, nullable=False)
-    password = db.Column(db.String(500), nullable=False)
-    role = db.Column(db.String(50), default="user")
+    name = db.Column(db.String(200))
+    email = db.Column(db.String(200), unique=True)
+    password = db.Column(db.String(500))
+    role = db.Column(db.String(50))
 
 
 class Project(db.Model):
@@ -108,17 +126,14 @@ class Reply(db.Model):
     message = db.Column(db.Text)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-# =========================================================
-# CREATE TABLES
-# =========================================================
 
+# Create tables
 with app.app_context():
     db.create_all()
 
 # =========================================================
-# LOGIN REQUIRED
+# LOGIN REQUIRED DECORATOR
 # =========================================================
-
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -127,76 +142,52 @@ def login_required(f):
         return f(*args, **kwargs)
     return wrapper
 
-# =========================================================
-# BASIC PAGES
-# =========================================================
 
+# =========================================================
+# ROUTES
+# =========================================================
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template("dashboard.html")
 
-@app.route('/activities')
-def activities():
-    return render_template('activities.html')
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+# ---------------- LOGIN ----------------
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
+        if user and check_password_hash(user.password, request.form['password']):
+            session['user'] = user.name
+            session['email'] = user.email
+            return redirect(url_for('dashboard'))
 
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
+        flash("Invalid login")
+        return redirect(url_for('login'))
 
-@app.route('/gallery')
-def gallery():
-    return render_template('gallery.html')
+    return render_template('login.html')
 
-@app.route('/leadership')
-def leadership():
-    return render_template('leadership.html')
 
-@app.route('/sponsor')
-def sponsor():
-    return render_template('sponsor.html')
-
-# =========================================================
-# REGISTER
-# =========================================================
-
+# ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        existing_user = User.query.filter_by(email=request.form['email']).first()
 
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
-
-        if not username or not email or not password:
-            flash("All fields are required")
-            return redirect(url_for('register'))
-
-        if password != confirm_password:
-            flash("Passwords do not match")
-            return redirect(url_for('register'))
-
-        if User.query.filter_by(email=email).first():
+        if existing_user:
             flash("Email already exists")
             return redirect(url_for('register'))
 
         new_user = User(
-            username=username,
-            email=email,
-            password=generate_password_hash(password),
+            name=request.form['name'],
+            email=request.form['email'],
+            password=generate_password_hash(request.form['password']),
             role="user"
         )
 
@@ -208,51 +199,20 @@ def register():
 
     return render_template('register.html')
 
-# =========================================================
-# LOGIN
-# =========================================================
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        user = User.query.filter_by(email=email).first()
-
-        if user and check_password_hash(user.password, password):
-
-            session['user'] = user.username
-            session['email'] = user.email
-            session['role'] = user.role
-
-            return redirect(url_for('dashboard'))
-
-        flash("Invalid login credentials")
-        return redirect(url_for('login'))
-
-    return render_template('login.html')
-
-# =========================================================
-# LOGOUT
-# =========================================================
-
+# ---------------- LOGOUT ----------------
 @app.route('/logout')
+@login_required
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# =========================================================
-# PROJECTS
-# =========================================================
 
+# ---------------- PROJECTS ----------------
 @app.route('/projects', methods=['GET', 'POST'])
 @login_required
 def projects():
-
     if request.method == 'POST':
-
         files = request.files.getlist('files')
         uploaded_files = []
 
@@ -287,31 +247,26 @@ def projects():
 
     return render_template('projects.html')
 
-# =========================================================
-# UPLOADS
-# =========================================================
 
+# ---------------- UPLOADS ----------------
 @app.route('/uploads')
 @login_required
 def uploads():
     projects = Project.query.order_by(Project.id.desc()).all()
     skills = Skill.query.order_by(Skill.id.desc()).all()
-    return render_template('uploads.html', projects=projects, skills=skills)
+    return render_template("uploads.html", projects=projects, skills=skills)
 
-# =========================================================
-# SKILLS
-# =========================================================
 
-@app.route('/skills', methods=['POST'])
+# ---------------- ADD SKILL ----------------
+@app.route('/add_skill', methods=['POST'])
 @login_required
-def skills():
-
+def add_skill():
     skill = Skill(
-        name=request.form.get('name'),
-        class_name=request.form.get('class'),
-        department=request.form.get('department'),
-        area=request.form.get('area'),
-        supervisor=request.form.get('supervisor')
+        name=request.form.get('name', ''),
+        class_name=request.form.get('class', ''),
+        department=request.form.get('department', ''),
+        area=request.form.get('area', ''),
+        supervisor=request.form.get('supervisor', '')
     )
 
     db.session.add(skill)
@@ -320,26 +275,46 @@ def skills():
     flash("Skill added successfully")
     return redirect(url_for('uploads'))
 
-# =========================================================
-# ASSISTANT
-# =========================================================
 
+# ---------------- DELETE PROJECT ----------------
+@app.route('/delete_project/<int:project_id>', methods=['POST'])
+@login_required
+def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    db.session.delete(project)
+    db.session.commit()
+
+    flash("Project deleted")
+    return redirect(url_for('uploads'))
+
+
+# ---------------- DELETE SKILL ----------------
+@app.route('/delete_skill/<int:skill_id>', methods=['POST'])
+@login_required
+def delete_skill(skill_id):
+    skill = Skill.query.get_or_404(skill_id)
+    db.session.delete(skill)
+    db.session.commit()
+
+    flash("Skill deleted")
+    return redirect(url_for('uploads'))
+
+
+# ---------------- ASSISTANT ----------------
 @app.route('/assistant', methods=['GET', 'POST'])
 @login_required
 def assistant():
-
     if request.method == 'POST':
-
-        assistant_obj = Assistant(
-            type=request.form.get('type'),
-            innovator_name=request.form.get('innovator_name'),
-            phone_number=request.form.get('phone_number'),
-            project_name=request.form.get('project_name'),
-            assistant_area=request.form.get('assistant_area'),
-            category=request.form.get('category')
+        new_assistant = Assistant(
+            type=request.form.get('type', ''),
+            innovator_name=request.form.get('innovator_name', ''),
+            phone_number=request.form.get('phone_number', ''),
+            project_name=request.form.get('project_name', ''),
+            assistant_area=request.form.get('assistant_area', ''),
+            category=request.form.get('category', '')
         )
 
-        db.session.add(assistant_obj)
+        db.session.add(new_assistant)
         db.session.commit()
 
         flash("Assistant request added")
@@ -348,33 +323,29 @@ def assistant():
     assistants = Assistant.query.order_by(Assistant.id.desc()).all()
     return render_template('assistant.html', assistants=assistants)
 
-# =========================================================
-# DISCUSSION
-# =========================================================
 
+# ---------------- DISCUSSION ----------------
 @app.route('/discussion', methods=['GET', 'POST'])
 @login_required
 def discussion():
-
     if request.method == 'POST':
-
         message = request.form.get('message')
         discussion_id = request.form.get('discussion_id')
 
         if discussion_id:
             reply = Reply(
-                discussion_id=discussion_id,
+                discussion_id=int(discussion_id),
                 user_name=session['user'],
                 message=message
             )
             db.session.add(reply)
         else:
-            discussion = Discussion(
+            new_discussion = Discussion(
                 user_name=session['user'],
                 topic=request.form.get('topic'),
                 message=message
             )
-            db.session.add(discussion)
+            db.session.add(new_discussion)
 
         db.session.commit()
         return redirect(url_for('discussion'))
@@ -386,14 +357,59 @@ def discussion():
     for r in replies:
         replies_dict.setdefault(r.discussion_id, []).append(r)
 
-    return render_template('discussion.html',
+    return render_template(
+        'discussion.html',
         discussions=discussions,
         replies_dict=replies_dict
     )
 
-# =========================================================
-# RUN
-# =========================================================
 
+# ---------------- STATIC PAGES ----------------
+@app.route('/activities')
+def activities():
+    return render_template('activities.html')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
+@app.route('/sponsor')
+def sponsor():
+    return render_template('sponsor.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/leadership')
+def leadership():
+    return render_template('leadership.html')
+
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
+
+# ---------------- ERROR HANDLER ----------------
+@app.errorhandler(500)
+def server_error(e):
+    print("SERVER ERROR:", e)
+    return "Internal Server Error", 500
+
+
+# =========================================================
+# RUN APP
+# =========================================================
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
