@@ -81,11 +81,7 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    try:
-        return render_template('dashboard.html', user=session.get('user'))
-    except Exception as e:
-        print("DASHBOARD ERROR:", e)
-        return "Dashboard error"
+    return render_template('dashboard.html')
 
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
