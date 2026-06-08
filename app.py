@@ -180,28 +180,49 @@ def login():
 
 
 # ---------------- REGISTER ----------------
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
 
-    if not username or not email or not password:
-        return "Missing fields", 400
+    if request.method == 'POST':
 
-    hashed_password = generate_password_hash(password)
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-    new_user = User(
-        username=username,
-        email=email,
-        password=hashed_password,
-        role="user"
-    )
+        print("FORM DATA:", request.form)
 
-    db.session.add(new_user)
-    db.session.commit()
+        if not username or not email or not password:
+            flash("All fields are required")
+            return redirect(url_for('register'))
 
-    return redirect('/login')
+        # Check if email already exists
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_email:
+            flash("Email already registered")
+            return redirect(url_for('register'))
+
+        # Check if username already exists
+        existing_username = User.query.filter_by(username=username).first()
+        if existing_username:
+            flash("Username already taken")
+            return redirect(url_for('register'))
+
+        hashed_password = generate_password_hash(password)
+
+        new_user = User(
+            username=username,
+            email=email,
+            password=hashed_password,
+            role="user"
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash("Registration successful. Please login.")
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
 
 
 # ---------------- LOGOUT ----------------
