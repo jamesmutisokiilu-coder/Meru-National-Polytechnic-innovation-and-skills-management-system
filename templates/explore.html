@@ -1,0 +1,1260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Explore | Kenya Innovation & Skills Hub</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root {
+    --blue: #2b8ef1;
+    --brown: #8b5e3c;
+    --white: #ffffff;
+    --light: #ffffff;
+    --dark: #263443;
+    --gray: #687477;
+    --blue-light: #eaf4ff;
+    --brown-light: #f6eee8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--white);
+    color: var(--dark);
+}
+
+a {
+    text-decoration: none;
+}
+
+/* NAVIGATION */
+
+.navbar {
+    background: var(--white);
+    color: var(--dark);
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.07);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+    color: var(--blue);
+}
+
+.logo span {
+    color: var(--brown);
+}
+
+.nav-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: var(--dark);
+    font-size: 14px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.nav-links a:hover {
+    color: var(--blue);
+}
+
+/* HERO */
+
+.hero {
+    padding: 90px 7%;
+    background: linear-gradient(120deg, var(--blue), #176fc1);
+    color: var(--white);
+}
+
+.hero-content {
+    max-width: 850px;
+}
+
+.hero h1 {
+    font-size: 46px;
+    margin-bottom: 18px;
+    line-height: 1.2;
+}
+
+.hero h1 span {
+    color: var(--white);
+    text-decoration: underline;
+    text-decoration-color: var(--brown);
+}
+
+.hero p {
+    color: var(--white);
+    line-height: 1.9;
+    max-width: 680px;
+    font-size: 16px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 14px 23px;
+    border-radius: 7px;
+    display: inline-block;
+    font-weight: bold;
+    transition: .3s;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.btn-blue {
+    background: var(--white);
+    color: var(--blue);
+}
+
+.btn-outline {
+    border: 2px solid var(--white);
+    color: var(--white);
+}
+
+/* GENERAL */
+
+.container {
+    width: 86%;
+    max-width: 1250px;
+    margin: auto;
+}
+
+.section {
+    padding: 75px 0;
+}
+
+.section-heading {
+    margin-bottom: 35px;
+}
+
+.section-heading h2 {
+    font-size: 30px;
+    margin-bottom: 12px;
+    color: var(--dark);
+}
+
+.section-heading span {
+    color: var(--blue);
+}
+
+.section-heading p {
+    color: var(--gray);
+    line-height: 1.8;
+    max-width: 750px;
+}
+
+.section-heading::after {
+    content: "";
+    display: block;
+    width: 65px;
+    height: 4px;
+    background: var(--brown);
+    margin-top: 17px;
+    border-radius: 5px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 23px;
+}
+
+/* CARDS */
+
+.card {
+    background: var(--white);
+    border: 1px solid #e6eaf0;
+    border-radius: 12px;
+    padding: 26px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    transition: .3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    border-color: var(--blue);
+    box-shadow: 0 10px 25px rgba(43,142,241,.12);
+}
+
+.card-icon {
+    width: 55px;
+    height: 55px;
+    background: var(--blue-light);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border-radius: 11px;
+    margin-bottom: 18px;
+}
+
+.card:nth-child(2) .card-icon {
+    background: var(--brown-light);
+    color: var(--brown);
+}
+
+.card h3 {
+    margin-bottom: 12px;
+    font-size: 19px;
+}
+
+.card p {
+    color: var(--gray);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.card-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: var(--blue);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.card-link:hover {
+    color: var(--brown);
+}
+
+/* REGISTRATION */
+
+.registration {
+    background: var(--white);
+    border: 1px solid #e6eaf0;
+    border-radius: 14px;
+    padding: 35px;
+    box-shadow: 0 5px 25px rgba(0,0,0,.05);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 9px;
+    font-size: 14px;
+    color: var(--dark);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #dce2e8;
+    border-radius: 7px;
+    outline: none;
+    background: var(--white);
+    color: var(--dark);
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(43,142,241,.1);
+}
+
+.form-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.submit-btn {
+    background: var(--blue);
+    color: var(--white);
+    padding: 15px 27px;
+    border: none;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: .3s;
+}
+
+.submit-btn:hover {
+    background: var(--brown);
+}
+
+/* SOFTWARE CATEGORY */
+
+.category-title {
+    margin-bottom: 22px;
+    font-size: 21px;
+    color: var(--brown);
+}
+
+.category-title i {
+    color: var(--blue);
+    margin-right: 8px;
+}
+
+.software-section {
+    background: #f8fbff;
+}
+
+/* RESOURCE LINKS */
+
+.resource-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 17px;
+}
+
+.resource {
+    background: var(--white);
+    border: 1px solid #e5eaf0;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: .3s;
+}
+
+.resource:hover {
+    border-color: var(--blue);
+    transform: translateY(-3px);
+}
+
+.resource i {
+    color: var(--brown);
+    font-size: 27px;
+}
+
+.resource h4 {
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.resource a {
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.resource a:hover {
+    color: var(--brown);
+}
+
+/* MEET */
+
+.meet-section {
+    background: var(--blue);
+    color: var(--white);
+    padding: 75px 7%;
+}
+
+.meet-content {
+    max-width: 850px;
+    margin: auto;
+    text-align: center;
+}
+
+.meet-content h2 {
+    font-size: 32px;
+    margin-bottom: 17px;
+}
+
+.meet-content p {
+    color: var(--white);
+    line-height: 1.9;
+}
+
+.meet-button {
+    display: inline-block;
+    background: var(--white);
+    color: var(--blue);
+    padding: 16px 28px;
+    border-radius: 7px;
+    margin-top: 25px;
+    font-weight: bold;
+    transition: .3s;
+}
+
+.meet-button:hover {
+    background: var(--brown);
+    color: var(--white);
+    transform: translateY(-3px);
+}
+
+/* FOOTER */
+
+footer {
+    background: var(--white);
+    color: var(--dark);
+    padding: 38px 7%;
+    text-align: center;
+    border-top: 3px solid var(--blue);
+}
+
+footer h3 {
+    color: var(--blue);
+    margin-bottom: 12px;
+}
+
+footer p {
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 2;
+}
+
+/* FLASH MESSAGES */
+
+.flash-container {
+    width: 86%;
+    max-width: 1250px;
+    margin: 20px auto;
+}
+
+.flash-message {
+    padding: 15px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-left: 5px solid var(--blue);
+    background: var(--blue-light);
+    color: var(--dark);
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 700px) {
+
+    .hero {
+        padding: 65px 7%;
+    }
+
+    .hero h1 {
+        font-size: 33px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        justify-content: center;
+        position: relative;
+    }
+
+    .nav-links {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .nav-links a {
+        font-size: 13px;
+    }
+
+    .container {
+        width: 90%;
+    }
+
+    .registration {
+        padding: 22px;
+    }
+
+    .section-heading h2 {
+        font-size: 25px;
+    }
+
+    .meet-content h2 {
+        font-size: 26px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        <i class=""></i>
+        MNP <span>Innovation and Skills Hub</span>
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="#register">Become an Innovator</a>
+
+        <a href="#software">Software</a>
+
+        <a href="#learning">Learning</a>
+
+        <a href="#meet">Online Classes</a>
+
+    </div>
+
+</nav>
+
+
+<!-- FLASH MESSAGES -->
+
+<div class="flash-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% for category, message in messages %}
+
+            <div class="flash-message">
+                <i class="fas fa-info-circle"></i>
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+</div>
+
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Explore. Learn. <span>Innovate.</span>
+        </h1>
+
+        <p>
+            Welcome to the Kenya Innovation & Skills Hub.
+            Discover innovation opportunities, register your projects,
+            access professional software, download learning materials
+            and participate in online training sessions.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#register" class="btn btn-blue">
+                <i class="fas fa-user-plus"></i>
+                Register as Innovator
+            </a>
+
+            <a href="#software" class="btn btn-outline">
+                <i class="fas fa-download"></i>
+                Explore Software
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- REGISTRATION -->
+
+<section class="section" id="register">
+
+<div class="container">
+
+    <div class="section-heading">
+
+        <h2>Become an <span>Innovator</span></h2>
+
+        <p>
+            Are you developing an innovative idea, project or solution?
+            Register yourself in the Kenya Innovation & Skills Hub
+            and become part of the innovation community.
+        </p>
+
+    </div>
+
+    <div class="registration">
+
+        <form action="{{ url_for('innovator_register') }}" method="POST">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Full Name *</label>
+
+                    <input type="text"
+                    name="full_name"
+                    placeholder="Enter your full name"
+                    required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Email Address *</label>
+
+                    <input type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Phone Number *</label>
+
+                    <input type="tel"
+                    name="phone"
+                    placeholder="e.g. 07XXXXXXXX"
+                    required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>County</label>
+
+                    <input type="text"
+                    name="county"
+                    placeholder="Your county">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Institution / Organization</label>
+
+                    <input type="text"
+                    name="institution"
+                    placeholder="School, college or organization">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Innovation Field *</label>
+
+                    <select name="field" required>
+
+                        <option value="">Select your field</option>
+
+                        <option>Information Communication Technology</option>
+
+                        <option>Electrical Engineering</option>
+
+                        <option>Automotive Engineering</option>
+
+                        <option>Mechanical Engineering</option>
+
+                        <option>Agriculture and Agritech</option>
+
+                        <option>Artificial Intelligence</option>
+
+                        <option>Robotics and Automation</option>
+
+                        <option>Renewable Energy</option>
+
+                        <option>Other</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Innovation / Project Name</label>
+
+                    <input type="text"
+                    name="innovation_name"
+                    placeholder="Enter your innovation or project name">
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Describe Your Innovation or Idea</label>
+
+                    <textarea
+                    name="description"
+                    placeholder="Tell us about your innovation, problem being solved and how it works..."></textarea>
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Innovation Stage</label>
+
+                    <select name="stage">
+
+                        <option value="">Select project stage</option>
+
+                        <option>Idea Stage</option>
+
+                        <option>Research Stage</option>
+
+                        <option>Prototype Development</option>
+
+                        <option>Testing Stage</option>
+
+                        <option>Completed Innovation</option>
+
+                        <option>Commercialized</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <button type="submit" class="submit-btn">
+
+                <i class="fas fa-user-plus"></i>
+
+                Register as Innovator
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- SOFTWARE DOWNLOADS -->
+
+<section class="section software-section" id="software">
+
+<div class="container">
+
+    <div class="section-heading">
+
+        <h2>Innovation <span>Software Centre</span></h2>
+
+        <p>
+            Access useful engineering and development tools
+            for designing, developing and testing your innovations.
+            Select a category to access the official software website.
+        </p>
+
+    </div>
+
+
+    <!-- ELECTRICAL -->
+
+    <h3 class="category-title">
+
+        <i class="fas fa-bolt"></i>
+
+        Electrical Engineering Software
+
+    </h3>
+
+    <div class="grid">
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-microchip"></i>
+            </div>
+
+            <h3>KiCad</h3>
+
+            <p>
+                Design electronic circuits, schematics and
+                professional printed circuit boards (PCB).
+            </p>
+
+            <a href="https://www.kicad.org/download/"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Software →
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-plug"></i>
+            </div>
+
+            <h3>QElectroTech</h3>
+
+            <p>
+                Create electrical diagrams, industrial
+                wiring diagrams and electrical designs.
+            </p>
+
+            <a href="https://qelectrotech.org/"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Access Software →
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+
+            <h3>Arduino IDE</h3>
+
+            <p>
+                Develop and program electronic projects,
+                microcontrollers and embedded systems.
+            </p>
+
+            <a href="https://www.arduino.cc/en/software/"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Software →
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- AUTOMOTIVE -->
+
+    <h3 class="category-title" style="margin-top:45px;">
+
+        <i class="fas fa-car"></i>
+
+        Automotive Engineering Software
+
+    </h3>
+
+    <div class="grid">
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-car-side"></i>
+            </div>
+
+            <h3>FreeCAD</h3>
+
+            <p>
+                Design automotive components, mechanical
+                parts and 3D engineering models.
+            </p>
+
+            <a href="https://www.freecad.org/downloads.php"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Software →
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+
+            <h3>OpenModelica</h3>
+
+            <p>
+                Simulate engineering systems, mechanical
+                systems and dynamic models.
+            </p>
+
+            <a href="https://openmodelica.org/"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Access Software →
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-drafting-compass"></i>
+            </div>
+
+            <h3>LibreCAD</h3>
+
+            <p>
+                Create 2D technical drawings, workshop
+                designs and engineering plans.
+            </p>
+
+            <a href="https://librecad.org/"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Software →
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ICT -->
+
+    <h3 class="category-title" style="margin-top:45px;">
+
+        <i class="fas fa-laptop-code"></i>
+
+        ICT & Software Development
+
+    </h3>
+
+    <div class="grid">
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-code"></i>
+            </div>
+
+            <h3>Visual Studio Code</h3>
+
+            <p>
+                A powerful code editor for Python,
+                HTML, CSS, JavaScript and web development.
+            </p>
+
+            <a href="https://code.visualstudio.com/download"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Software →
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fab fa-python"></i>
+            </div>
+
+            <h3>Python</h3>
+
+            <p>
+                Develop applications, automation tools,
+                artificial intelligence and data solutions.
+            </p>
+
+            <a href="https://www.python.org/downloads/"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Software →
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+
+            <h3>Git & GitHub</h3>
+
+            <p>
+                Manage source code, collaborate with developers
+                and publish software projects.
+            </p>
+
+            <a href="https://git-scm.com/downloads"
+            target="_blank" rel="noopener"
+            class="card-link">
+                Download Git →
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- LEARNING MATERIALS -->
+
+<section class="section" id="learning">
+
+<div class="container">
+
+    <div class="section-heading">
+
+        <h2>Learning <span>Resource Centre</span></h2>
+
+        <p>
+            Improve your technical knowledge through free
+            learning materials, documentation, guides and tutorials.
+        </p>
+
+    </div>
+
+    <div class="resource-list">
+
+        <div class="resource">
+
+            <i class="fas fa-file-pdf"></i>
+
+            <div>
+
+                <h4>Python Learning Guide</h4>
+
+                <a href="https://docs.python.org/3/tutorial/"
+                target="_blank" rel="noopener">
+                    Read Learning Material →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-file-pdf"></i>
+
+            <div>
+
+                <h4>Arduino Documentation</h4>
+
+                <a href="https://docs.arduino.cc/"
+                target="_blank" rel="noopener">
+                    Access Tutorials →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-file-pdf"></i>
+
+            <div>
+
+                <h4>Electrical Engineering</h4>
+
+                <a href="https://www.allaboutcircuits.com/textbook/"
+                target="_blank" rel="noopener">
+                    Read Textbooks →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-file-pdf"></i>
+
+            <div>
+
+                <h4>Automotive Learning</h4>
+
+                <a href="https://openstax.org/subjects/science"
+                target="_blank" rel="noopener">
+                    Explore Science Materials →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-book"></i>
+
+            <div>
+
+                <h4>Web Development</h4>
+
+                <a href="https://developer.mozilla.org/en-US/docs/Learn_web_development"
+                target="_blank" rel="noopener">
+                    Start Learning →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-book-open"></i>
+
+            <div>
+
+                <h4>Free Engineering Books</h4>
+
+                <a href="https://open.umn.edu/opentextbooks"
+                target="_blank" rel="noopener">
+                    Explore Free Books →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-book"></i>
+
+            <div>
+
+                <h4>KiCad Learning Materials</h4>
+
+                <a href="https://docs.kicad.org/"
+                target="_blank" rel="noopener">
+                    Read Documentation →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="resource">
+
+            <i class="fas fa-book"></i>
+
+            <div>
+
+                <h4>FreeCAD Tutorials</h4>
+
+                <a href="https://wiki.freecad.org/"
+                target="_blank" rel="noopener">
+                    Explore Tutorials →
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- GOOGLE MEET -->
+
+<section class="meet-section" id="meet">
+
+    <div class="meet-content">
+
+        <i class="fas fa-video"
+        style="font-size:48px;margin-bottom:22px;"></i>
+
+        <h2>Online Learning & Virtual Classes</h2>
+
+        <p>
+            Join innovation training sessions, technical workshops,
+            mentorship programmes and collaborative learning
+            through Google Meet.
+        </p>
+
+        <a href="https://meet.google.com/"
+        target="_blank" rel="noopener"
+        class="meet-button">
+
+            <i class="fas fa-video"></i>
+
+            Open Google Meet
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <h3>
+        <i class="fas fa-lightbulb"></i>
+        MNP Innovation & Skills Hub
+    </h3>
+
+    <p>
+        Empowering Innovators | Promoting Skills |
+        Supporting Technology | Transforming Kenya
+    </p>
+
+    <p>
+        © 2026 Kenya Innovation & Skills Hub.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+</html>

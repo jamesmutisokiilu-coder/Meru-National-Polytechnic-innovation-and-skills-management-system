@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research | MNP Innovation and Skills Hub</title>
+
+    <style>
+        :root {
+            --blue: #2b8ef1;
+            --blue-dark: #176dc5;
+            --brown: #8b5e3c;
+            --brown-dark: #70472d;
+            --dark: #172b43;
+            --light: #f4f8fc;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: #263445;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            background: white;
+            padding: 17px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,.07);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            color: var(--dark);
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: var(--blue);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            padding: 9px 15px;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: .3s ease;
+        }
+
+        nav a:hover {
+            color: white;
+            background: var(--blue);
+        }
+
+        nav a:last-child {
+            background: var(--blue);
+            color: white;
+        }
+
+        nav a:last-child:hover {
+            background: var(--blue-dark);
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            width: 88%;
+            max-width: 1100px;
+            margin: 45px auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+            font-size: 29px;
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 65px;
+            height: 4px;
+            background: var(--blue);
+            margin: 10px auto 0;
+            border-radius: 10px;
+        }
+
+        /* RESEARCH CARDS */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+
+        .research-card {
+            background: white;
+            padding: 27px;
+            border-radius: 13px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+            border-bottom: 4px solid var(--blue);
+            transition: .3s ease;
+        }
+
+        .research-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(43,142,241,.14);
+        }
+
+        .research-card h3 {
+            color: var(--blue);
+            margin-bottom: 10px;
+            font-size: 19px;
+        }
+
+        .research-card p {
+            font-size: 14px;
+            color: #617080;
+        }
+
+        /* CHAT ASSISTANT */
+        .assistant {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,.07);
+            max-width: 850px;
+            margin: 50px auto;
+            border-top: 4px solid var(--blue);
+        }
+
+        .assistant h2 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        .assistant-intro {
+            color: #687789;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .chat-box {
+            background: #f5f8fc;
+            border: 1px solid #e1e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            height: 320px;
+            overflow-y: auto;
+            margin-bottom: 18px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            max-width: 88%;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .bot {
+            background: #e4efff;
+            color: #183c65;
+            border-left: 3px solid var(--blue);
+            margin-right: auto;
+        }
+
+        .user {
+            background: var(--blue);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 3px;
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-controls input {
+            flex: 1;
+            min-width: 0;
+            padding: 15px 17px;
+            border: 1px solid #ccd6e2;
+            border-radius: 9px;
+            outline: none;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        .chat-controls input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(43,142,241,.12);
+        }
+
+        /* ALL BUTTONS */
+        button, .chatgpt-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            color: white;
+            border: none;
+            padding: 14px 22px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all .3s ease;
+            box-shadow: 0 4px 12px rgba(43,142,241,.2);
+        }
+
+        button:hover, .chatgpt-button:hover {
+            background: linear-gradient(135deg, var(--blue-dark), #10559c);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(43,142,241,.3);
+        }
+
+        button:active, .chatgpt-button:active {
+            transform: scale(.97);
+        }
+
+        /* CHATGPT SECTION */
+        .chatgpt-section {
+            background: #fff;
+            padding: 38px 25px;
+            text-align: center;
+            border-radius: 16px;
+            margin: 40px auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,.05);
+            border-top: 4px solid var(--brown);
+        }
+
+        .chatgpt-section h2 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 25px;
+        }
+
+        .chatgpt-section p {
+            color: #687789;
+            margin-bottom: 23px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chatgpt-button {
+            background: linear-gradient(135deg, var(--brown), var(--brown-dark));
+            padding: 15px 28px;
+            font-size: 15px;
+            box-shadow: 0 5px 15px rgba(139,94,60,.2);
+        }
+
+        .chatgpt-button:hover {
+            background: linear-gradient(135deg, var(--brown-dark), #55331f);
+            box-shadow: 0 8px 20px rgba(139,94,60,.3);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 60px;
+            border-top: 4px solid var(--blue);
+        }
+
+        footer p {
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media(max-width: 650px) {
+            header {
+                flex-direction: column;
+                gap: 13px;
+                padding: 17px 4%;
+            }
+
+            nav {
+                justify-content: center;
+                gap: 3px;
+            }
+
+            nav a {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .assistant {
+                padding: 22px 16px;
+            }
+
+            .chat-controls {
+                flex-direction: column;
+            }
+
+            .chat-controls input,
+            .chat-controls button {
+                width: 100%;
+            }
+
+            .chatgpt-section {
+                padding: 28px 18px;
+            }
+
+            .chatgpt-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        MNP <span>Innovation & Skills Hub</span>
+    </div>
+
+    <nav>
+        <a href="/index">Home</a>
+        <a href="/about">About</a>
+        <a href="/innovations">Innovations</a>
+        <a href="/research">Research</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2 class="section-title">Explore Research Areas</h2>
+
+    <div class="research-grid">
+
+        <div class="research-card">
+            <h3>Artificial Intelligence</h3>
+            <p>Explore machine learning, intelligent systems,
+            automation and AI applications.</p>
+        </div>
+
+        <div class="research-card">
+            <h3>Internet of Things</h3>
+            <p>Research connected devices, smart sensors,
+            monitoring systems and automation.</p>
+        </div>
+
+        <div class="research-card">
+            <h3>Agricultural Technology</h3>
+            <p>Explore smart farming, aquaculture, irrigation
+            and agricultural innovation.</p>
+        </div>
+
+        <div class="research-card">
+            <h3>Renewable Energy</h3>
+            <p>Research solar energy, energy efficiency
+            and sustainable power solutions.</p>
+        </div>
+
+        <div class="research-card">
+            <h3>Engineering & Robotics</h3>
+            <p>Explore robotics, electronics, embedded systems
+            and engineering solutions.</p>
+        </div>
+
+        <div class="research-card">
+            <h3>Digital Technology</h3>
+            <p>Discover software development, cybersecurity,
+            databases and digital transformation.</p>
+        </div>
+
+    </div>
+
+    <section class="assistant">
+
+        <h2>Research Question Assistant</h2>
+
+        <p class="assistant-intro">
+            Ask a question about research and technology.
+            The assistant can answer selected introductory questions.
+        </p>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message bot">
+                Hello! Welcome to the MNP Research Assistant.
+                Ask me about AI, IoT, robotics, smart aquaculture,
+                renewable energy or software development.
+            </div>
+        </div>
+
+        <div class="chat-controls">
+            <input
+                type="text"
+                id="question"
+                placeholder="Type your research question..."
+                onkeydown="if(event.key === 'Enter') askQuestion()"
+            >
+
+            <button onclick="askQuestion()">
+                Ask Question
+            </button>
+        </div>
+
+    </section>
+
+    <section class="chatgpt-section">
+
+        <h2>Need More Advanced Research?</h2>
+
+        <p>
+            Open ChatGPT to explore complex research topics,
+            generate ideas, understand concepts and get assistance
+            with research questions.
+        </p>
+
+        <a
+            href="https://chatgpt.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="chatgpt-button"
+        >
+            Open ChatGPT
+        </a>
+
+    </section>
+
+</div>
+
+<footer>
+    <p>&copy; 2026 Meru National Polytechnic Innovation and Skills Hub.</p>
+    <p>Innovating Today, Transforming Tomorrow.</p>
+</footer>
+
+<script>
+    function askQuestion() {
+
+        const input = document.getElementById("question");
+        const chatBox = document.getElementById("chatBox");
+
+        const originalQuestion = input.value.trim();
+        const question = originalQuestion.toLowerCase();
+
+        if (!question) {
+            input.focus();
+            return;
+        }
+
+        const userMessage = document.createElement("div");
+        userMessage.className = "message user";
+        userMessage.textContent = originalQuestion;
+
+        chatBox.appendChild(userMessage);
+
+        let answer = "I do not have a prepared answer for that question yet. Try asking about AI, IoT, robotics, smart aquaculture, renewable energy or software development. For more advanced answers, use the Open ChatGPT button.";
+
+        if (question.includes("artificial intelligence") || question.includes("what is ai") || question.includes(" ai")) {
+            answer = "Artificial Intelligence (AI) is a branch of computer science that enables machines to perform tasks that normally require human intelligence, such as learning, problem-solving and decision-making.";
+        }
+
+        else if (question.includes("iot") || question.includes("internet of things")) {
+            answer = "The Internet of Things (IoT) refers to physical devices connected to the internet that collect and exchange data. Examples include smart irrigation systems, environmental sensors and smart aquaculture monitoring systems.";
+        }
+
+        else if (question.includes("aquaculture") || question.includes("fish farming")) {
+            answer = "Smart aquaculture uses technologies such as sensors, automation and IoT to monitor fish-farming conditions. It can help monitor water temperature, pH, dissolved oxygen and water quality, improving fish health and farm productivity.";
+        }
+
+        else if (question.includes("robotics") || question.includes("robot")) {
+            answer = "Robotics is a field of engineering and technology concerned with designing, building and programming robots to perform tasks. It combines electronics, mechanical engineering and computer programming.";
+        }
+
+        else if (question.includes("renewable energy") || question.includes("solar energy")) {
+            answer = "Renewable energy comes from naturally replenished sources such as sunlight, wind and water. Solar panels convert sunlight into electrical energy and can support sustainable power generation.";
+        }
+
+        else if (question.includes("programming") || question.includes("software development")) {
+            answer = "Software development is the process of designing, creating, testing and maintaining computer applications. Common programming languages include Python, JavaScript, Java and C++.";
+        }
+
+        else if (question.includes("research")) {
+            answer = "Research is a systematic process of investigating a subject, collecting information, analysing evidence and developing conclusions or solutions to a problem.";
+        }
+
+        else if (question.includes("innovation")) {
+            answer = "Innovation is the process of developing and applying new ideas, products or methods to solve problems, improve existing systems or create value.";
+        }
+
+        const botMessage = document.createElement("div");
+        botMessage.className = "message bot";
+        botMessage.textContent = answer;
+
+        chatBox.appendChild(botMessage);
+
+        input.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+        input.focus();
+    }
+</script>
+
+</body>
+</html>

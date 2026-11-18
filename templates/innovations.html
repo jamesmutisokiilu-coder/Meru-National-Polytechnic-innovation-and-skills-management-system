@@ -1,0 +1,1104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Student and Staff Innovations Gallery - Meru National Polytechnic Innovation and Skills Hub">
+<title>Innovations Gallery | MNP Innovation & Skills Hub</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+    --brand-primary:#8b5e3c;
+    --brand-primary-dark:#6e482d;
+    --brand-primary-light:rgba(139,94,60,.08);
+    --brand-accent:#2b8ef1;
+    --brand-accent-dark:#1b6ec4;
+    --brand-accent-light:rgba(43,142,241,.08);
+    --surface-bg:#fff;
+    --surface-alt:#f8fafc;
+    --text-heading:#0f172a;
+    --text-body:#475569;
+    --text-muted:#64748b;
+    --border-light:#e2e8f0;
+    --radius-sm:8px;
+    --radius-md:16px;
+    --radius-lg:24px;
+    --radius-full:9999px;
+    --transition:all .3s ease;
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html { scroll-behavior:smooth; }
+
+body {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--surface-bg);
+    color:var(--text-body);
+    line-height:1.6;
+    overflow-x:hidden;
+}
+
+a { text-decoration:none; color:inherit; }
+
+button,input,select,textarea { font-family:inherit; }
+
+.container {
+    width:90%;
+    max-width:1240px;
+    margin:auto;
+}
+
+.section-padding { padding:60px 0 90px; }
+
+header {
+    position:sticky;
+    top:0;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(16px);
+    z-index:1000;
+    border-bottom:1px solid var(--border-light);
+}
+
+.navbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    min-height:85px;
+    gap:20px;
+}
+
+.brand-logo { display:flex; align-items:center; }
+
+.logo-text {
+    font-size:1.2rem;
+    font-weight:800;
+    color:var(--text-heading);
+}
+
+.logo-text span { color:var(--brand-accent); }
+
+.nav-menu {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav-btn-link {
+    padding:9px 16px;
+    border-radius:var(--radius-full);
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--text-body);
+    border:1px solid var(--border-light);
+    background:var(--surface-alt);
+    transition:var(--transition);
+}
+
+.nav-btn-link:hover,
+.nav-btn-link.active {
+    background:var(--brand-primary);
+    color:white;
+    border-color:var(--brand-primary);
+}
+
+.btn-custom {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    padding:12px 24px;
+    border-radius:var(--radius-full);
+    font-size:.95rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:var(--transition);
+    border:none;
+}
+
+.btn-earth { background:var(--brand-primary); color:white; }
+.btn-earth:hover { background:var(--brand-primary-dark); transform:translateY(-2px); }
+.btn-blue { background:var(--brand-accent); color:white; }
+
+.page-hero {
+    padding:65px 0;
+    background:linear-gradient(135deg,var(--brand-primary-light),var(--brand-accent-light));
+    text-align:center;
+    border-bottom:1px solid var(--border-light);
+}
+
+.page-hero h1 {
+    font-size:2.5rem;
+    color:var(--text-heading);
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.page-hero p { font-size:1rem; max-width:650px; margin:auto; }
+
+.tab-toggles {
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+.tab-btn {
+    padding:12px 24px;
+    border-radius:var(--radius-full);
+    background:white;
+    border:1px solid var(--border-light);
+    font-weight:700;
+    cursor:pointer;
+    transition:var(--transition);
+    color:var(--text-heading);
+}
+
+.tab-btn.active {
+    background:var(--brand-primary);
+    color:white;
+    border-color:var(--brand-primary);
+}
+
+.form-section-container {
+    display:none;
+    max-width:750px;
+    margin:auto;
+    background:white;
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-lg);
+    padding:40px;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.form-section-container.active { display:block; }
+
+.form-section-container h3 {
+    font-size:1.4rem;
+    color:var(--text-heading);
+    margin-bottom:25px;
+    font-weight:800;
+}
+
+.form-group { margin-bottom:20px; }
+
+.form-group label {
+    display:block;
+    font-size:.9rem;
+    font-weight:700;
+    color:var(--text-heading);
+    margin-bottom:7px;
+}
+
+.form-control {
+    width:100%;
+    padding:13px 15px;
+    border-radius:var(--radius-sm);
+    border:1px solid var(--border-light);
+    font-size:.95rem;
+    color:var(--text-heading);
+    background:white;
+    outline:none;
+    transition:var(--transition);
+}
+
+.form-control:focus {
+    border-color:var(--brand-accent);
+    box-shadow:0 0 0 3px var(--brand-accent-light);
+}
+
+.form-help {
+    display:block;
+    margin-top:7px;
+    color:var(--text-muted);
+    font-size:.8rem;
+}
+
+.preview-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:12px;
+    margin-top:15px;
+}
+
+.preview-item {
+    background:var(--surface-alt);
+    border:1px solid var(--border-light);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.preview-item img {
+    width:100%;
+    height:140px;
+    object-fit:contain;
+    background:#f1f5f9;
+}
+
+.preview-item p {
+    padding:6px;
+    font-size:.75rem;
+    overflow-wrap:anywhere;
+}
+
+.gallery-section-container { display:none; }
+.gallery-section-container.active { display:block; }
+
+.section-header {
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.section-header h2 {
+    font-size:2rem;
+    color:var(--text-heading);
+    font-weight:800;
+}
+
+.section-tag {
+    color:var(--brand-primary);
+    font-weight:800;
+    font-size:.85rem;
+}
+
+.innovations-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:30px;
+    align-items:start;
+}
+
+.innovation-card {
+    background:white;
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    transition:var(--transition);
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 4px 10px rgba(0,0,0,.03);
+    min-width:0;
+}
+
+.innovation-card:hover {
+    transform:translateY(-4px);
+    border-color:var(--brand-accent);
+    box-shadow:0 15px 30px rgba(43,142,241,.12);
+}
+
+.innovation-images {
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    background:#f1f5f9;
+}
+
+.innovation-img-holder {
+    width:100%;
+    min-height:200px;
+    max-height:650px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px;
+    background:#f1f5f9;
+    overflow:hidden;
+}
+
+.innovation-img {
+    display:block;
+    width:100%;
+    height:auto;
+    max-height:630px;
+    object-fit:contain;
+    object-position:center;
+    cursor:zoom-in;
+    border-radius:5px;
+}
+
+.innovation-img:hover { opacity:.95; }
+
+.image-count {
+    padding:8px 15px;
+    background:#e2e8f0;
+    color:#334155;
+    font-size:.8rem;
+    font-weight:700;
+}
+
+.innovation-body {
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+}
+
+.innovation-body h3 {
+    font-size:1.3rem;
+    color:var(--text-heading);
+    margin-bottom:10px;
+    font-weight:800;
+    overflow-wrap:anywhere;
+}
+
+.innovation-body p {
+    font-size:.92rem;
+    margin-bottom:18px;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+}
+
+.uploader-meta {
+    font-size:.83rem;
+    color:var(--text-muted);
+    margin-bottom:16px;
+    font-weight:600;
+}
+
+.category-label {
+    display:inline-block;
+    padding:6px 12px;
+    background:var(--brand-accent-light);
+    color:var(--brand-accent-dark);
+    border-radius:20px;
+    font-size:.78rem;
+    font-weight:800;
+    margin-bottom:15px;
+    align-self:flex-start;
+}
+
+.contact-btns-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-bottom:18px;
+}
+
+.contact-btn {
+    padding:9px 5px;
+    border-radius:8px;
+    font-size:.78rem;
+    font-weight:700;
+    text-align:center;
+    border:1px solid var(--border-light);
+    background:var(--surface-alt);
+    color:var(--text-heading);
+    transition:var(--transition);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-width:0;
+}
+
+.contact-btn:hover {
+    background:var(--brand-accent);
+    color:white;
+    border-color:var(--brand-accent);
+}
+
+.no-projects-msg {
+    grid-column:1/-1;
+    text-align:center;
+    padding:70px 20px;
+    color:var(--text-muted);
+    font-size:1rem;
+    background:var(--surface-alt);
+    border-radius:var(--radius-md);
+}
+
+.notice {
+    display:none;
+    padding:14px 17px;
+    border-radius:9px;
+    margin-bottom:20px;
+    font-size:.9rem;
+}
+
+.notice.show { display:block; }
+.notice.success { background:#e7f7ed; color:#166534; }
+.notice.error { background:#feecec; color:#b91c1c; }
+
+.submit-btn:disabled {
+    opacity:.65;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.lightbox {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.94);
+    z-index:3000;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+}
+
+.lightbox.active { display:flex; }
+
+.lightbox img {
+    max-width:95%;
+    max-height:90vh;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    border-radius:8px;
+}
+
+.lightbox-close {
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:35px;
+    color:white;
+    cursor:pointer;
+    background:transparent;
+    border:none;
+}
+
+.lightbox-caption {
+    position:absolute;
+    bottom:12px;
+    color:white;
+    font-size:.9rem;
+    text-align:center;
+}
+
+footer {
+    background:#0f172a;
+    color:#94a3b8;
+    padding:45px 0 25px;
+    text-align:center;
+    margin-top:30px;
+}
+
+footer p { font-size:.88rem; }
+
+@media(max-width:768px) {
+    .navbar {
+        flex-direction:column;
+        padding:15px 0;
+        gap:15px;
+    }
+
+    .nav-menu {
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .nav-btn-link { font-size:.75rem; padding:8px 10px; }
+    .page-hero h1 { font-size:1.8rem; }
+    .form-section-container { padding:22px; }
+    .innovations-grid { grid-template-columns:1fr; }
+    .innovation-img-holder { max-height:550px; }
+    .innovation-img { max-height:530px; }
+    .section-header h2 { font-size:1.5rem; }
+}
+
+@media(max-width:400px) {
+    .contact-btns-grid { grid-template-columns:1fr; }
+    .tab-btn { width:100%; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="container navbar">
+        <a href="/index" class="brand-logo">
+            <div class="logo-text">MNP <span>SkillsHub</span></div>
+        </a>
+
+        <nav class="nav-menu">
+            <a href="/index" class="nav-btn-link"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/innovations" class="nav-btn-link active"><i class="fa-solid fa-rocket"></i> Innovations</a>
+            <a href="/about" class="nav-btn-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
+            <a href="/contact" class="nav-btn-link"><i class="fa-solid fa-envelope"></i> Contact Us</a>
+        </nav>
+    </div>
+</header>
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Innovations & Skills Centre</h1>
+        <p>Innovating Today for a Better Tomorrow</p>
+
+        <div class="tab-toggles">
+            <button type="button" class="tab-btn active" onclick="switchTab('uploadTab',this)">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Upload Project / Entry
+            </button>
+
+            <button type="button" class="tab-btn" onclick="switchTab('galleryTab',this)">
+                <i class="fa-solid fa-rocket"></i>
+                View Innovations
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+<div class="container">
+
+    <div id="uploadTab" class="form-section-container active">
+
+        <h3>
+            <i class="fa-solid fa-cloud-arrow-up" style="color:var(--brand-primary);"></i>
+            Upload Project & Skills Competition Entry
+        </h3>
+
+        <div id="formNotice" class="notice" role="alert" aria-live="polite"></div>
+
+        <form id="projectForm" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label for="upTitle">Project Title / Competition Title</label>
+                <input type="text" name="title" id="upTitle" class="form-control"
+                       placeholder="e.g. Smart Aquaponics System" required maxlength="200">
+            </div>
+
+            <div class="form-group">
+                <label for="upName">Student / Staff Name</label>
+                <input type="text" name="name" id="upName" class="form-control"
+                       placeholder="Enter your full name" required maxlength="150">
+            </div>
+
+            <div class="form-group">
+                <label for="upDept">Class / Department</label>
+                <input type="text" name="department" id="upDept" class="form-control"
+                       placeholder="e.g. Diploma in Electrical Engineering" required maxlength="150">
+            </div>
+
+            <div class="form-group">
+                <label for="upCategory">Area of Competition / Category</label>
+                <select name="category" id="upCategory" class="form-control" required>
+                    <option value="">Select Area</option>
+                    <option>Web Development</option>
+                    <option>Mobile App Development</option>
+                    <option>Electrical Engineering</option>
+                    <option>Mechanical Engineering</option>
+                    <option>Graphic Design</option>
+                    <option>Networking</option>
+                    <option>AgriTech & Aquaculture</option>
+                    <option>Robotics & Automation</option>
+                    <option>Renewable Energy</option>
+                    <option>Artificial Intelligence</option>
+                    <option>Other Innovations</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="upDesc">Project Description</label>
+                <textarea name="description" id="upDesc" class="form-control"
+                          rows="5" placeholder="Describe your project, benefits, challenges and technical specifications..."
+                          required maxlength="5000"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="upImages">Upload Project Images</label>
+                <input type="file" name="images" id="upImages" class="form-control"
+                       accept="image/jpeg,image/png,image/gif,image/webp" multiple required>
+                <small class="form-help">
+                    You can upload multiple JPG, PNG, GIF or WebP images. Images will be displayed without cropping.
+                </small>
+                <div id="imagePreview" class="preview-grid"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="upEmail">Email Address</label>
+                <input type="email" name="email" id="upEmail" class="form-control"
+                       placeholder="student@example.com" required maxlength="150">
+            </div>
+
+            <div class="form-group">
+                <label for="upPhone">Phone Number</label>
+                <input type="tel" name="phone" id="upPhone" class="form-control"
+                       placeholder="+254 700 000 000" required maxlength="30">
+            </div>
+
+            <div class="form-group">
+                <label for="upWhatsapp">WhatsApp Number</label>
+                <input type="tel" name="whatsapp" id="upWhatsapp" class="form-control"
+                       placeholder="+254 700 000 000" required maxlength="30">
+            </div>
+
+            <button type="submit" id="submitBtn"
+                    class="btn-custom btn-earth submit-btn" style="width:100%;margin-top:10px;">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                Submit Innovation
+            </button>
+
+        </form>
+    </div>
+
+    <div id="galleryTab" class="gallery-section-container">
+
+        <div class="section-header">
+            <span class="section-tag">OUR INNOVATIONS</span>
+            <h2>Student & Staff Projects</h2>
+            <p>Discover innovative projects developed at Meru National Polytechnic.</p>
+        </div>
+
+        <div id="galleryGrid" class="innovations-grid">
+            <div class="no-projects-msg">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading innovations...
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+<div class="lightbox" id="lightbox">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close image">&times;</button>
+    <img src="" alt="Innovation image" id="lightboxImage">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>© <span id="year"></span> Meru National Polytechnic | Innovation & Skills Hub</p>
+        <p>Transforming Ideas into Solutions</p>
+    </div>
+</footer>
+
+<script>
+/*
+=========================================================
+FLASK API CONFIGURATION
+=========================================================
+The upload form submits to the existing /innovations route.
+The gallery expects a JSON endpoint at /api/innovations.
+*/
+
+const UPLOAD_URL = "/innovations";
+const GALLERY_URL = "/api/innovations";
+
+const form = document.getElementById("projectForm");
+const fileInput = document.getElementById("upImages");
+const preview = document.getElementById("imagePreview");
+const submitBtn = document.getElementById("submitBtn");
+const notice = document.getElementById("formNotice");
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+function switchTab(tabId,button) {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    document.querySelectorAll(".form-section-container,.gallery-section-container")
+        .forEach(section => {
+            section.classList.remove("active");
+        });
+
+    button.classList.add("active");
+    document.getElementById(tabId).classList.add("active");
+
+    if (tabId === "galleryTab") {
+        loadGallery();
+    }
+}
+
+function showNotice(message,type) {
+    notice.textContent = message;
+    notice.className = "notice show " + type;
+    notice.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g,char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+    })[char]);
+}
+
+function safeImageURL(image) {
+    if (!image) return "";
+
+    const value = String(image).trim();
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (value.startsWith("/")) {
+        return value;
+    }
+
+    return "/static/uploads/" +
+        value.split("/").map(part => encodeURIComponent(part)).join("/");
+}
+
+/*
+=========================================================
+IMAGE PREVIEW
+=========================================================
+*/
+
+fileInput.addEventListener("change",() => {
+    preview.innerHTML = "";
+
+    const files = Array.from(fileInput.files || []);
+
+    files.forEach(file => {
+        if (!file.type.startsWith("image/")) return;
+
+        const reader = new FileReader();
+
+        reader.onload = event => {
+            const item = document.createElement("div");
+            item.className = "preview-item";
+
+            const img = document.createElement("img");
+            img.src = event.target.result;
+            img.alt = file.name;
+
+            const name = document.createElement("p");
+            name.textContent = file.name;
+
+            item.append(img,name);
+            preview.appendChild(item);
+        };
+
+        reader.readAsDataURL(file);
+    });
+});
+
+/*
+=========================================================
+INNOVATION FORM SUBMISSION
+=========================================================
+*/
+
+form.addEventListener("submit",async event => {
+    event.preventDefault();
+
+    if (!form.reportValidity()) return;
+
+    const files = Array.from(fileInput.files || []);
+
+    if (!files.length) {
+        showNotice("Please select at least one project image.","error");
+        return;
+    }
+
+    if (files.some(file => !file.type.startsWith("image/"))) {
+        showNotice("Only image files are allowed.","error");
+        return;
+    }
+
+    const formData = new FormData(form);
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+    try {
+        const response = await fetch(UPLOAD_URL,{
+            method:"POST",
+            body:formData,
+            credentials:"same-origin",
+            headers:{
+                "Accept":"application/json"
+            }
+        });
+
+        const contentType = response.headers.get("content-type") || "";
+
+        if (!contentType.includes("application/json")) {
+            const responseText = await response.text();
+
+            console.error("Unexpected server response:",{
+                status:response.status,
+                url:response.url,
+                response:responseText
+            });
+
+            throw new Error(
+                `Server returned an unexpected response (HTTP ${response.status}). ` +
+                "Check that the Flask /innovations route returns JSON and does not redirect to the admin login page."
+            );
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message ||
+                result.error ||
+                "Unable to submit your innovation."
+            );
+        }
+
+        showNotice(
+            result.message ||
+            "Your innovation has been submitted successfully. The administrator has been notified.",
+            "success"
+        );
+
+        form.reset();
+        preview.innerHTML = "";
+
+        await loadGallery();
+
+    } catch(error) {
+        showNotice(error.message,"error");
+        console.error("Innovation submission error:",error);
+
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML =
+            '<i class="fa-solid fa-cloud-arrow-up"></i> Submit Innovation';
+    }
+});
+
+/*
+=========================================================
+LOAD INNOVATIONS GALLERY
+=========================================================
+*/
+
+async function loadGallery() {
+    const grid = document.getElementById("galleryGrid");
+
+    grid.innerHTML = `
+        <div class="no-projects-msg">
+            <i class="fas fa-spinner fa-spin"></i>
+            Loading innovations...
+        </div>
+    `;
+
+    try {
+        const response = await fetch(GALLERY_URL,{
+            method:"GET",
+            credentials:"same-origin",
+            headers:{
+                "Accept":"application/json"
+            }
+        });
+
+        const contentType = response.headers.get("content-type") || "";
+
+        if (!contentType.includes("application/json")) {
+            throw new Error(
+                "The gallery endpoint did not return JSON. Check the Flask /api/innovations route."
+            );
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Unable to load innovations."
+            );
+        }
+
+        const projects = Array.isArray(data)
+            ? data
+            : (data.innovations || data.projects || []);
+
+        if (!projects.length) {
+            grid.innerHTML = `
+                <div class="no-projects-msg">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No approved innovations are available yet.</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = projects.map(project => {
+            const images = Array.isArray(project.images)
+                ? project.images
+                : (project.image ? [project.image] : []);
+
+            const imageHTML = images.map(image => {
+                const imageURL = safeImageURL(image);
+
+                if (!imageURL) return "";
+
+                return `
+                    <div class="innovation-img-holder">
+                        <img class="innovation-img"
+                             src="${escapeHTML(imageURL)}"
+                             alt="${escapeHTML(project.name || project.title || "Innovation image")}"
+                             loading="lazy"
+                             onclick="openLightbox(this.src,this.alt)">
+                    </div>
+                `;
+            }).join("");
+
+            const email = project.email || "";
+            const phone = project.phone || "";
+            const whatsapp = project.whatsapp || phone;
+
+            const whatsappNumber = String(whatsapp).replace(/[^0-9]/g,"");
+
+            const title = project.name || project.title || "Untitled Innovation";
+            const uploader = project.uploader ||
+                             project.student_name ||
+                             project.name_of_student ||
+                             "";
+
+            const category = project.category || "Innovation";
+            const description = project.description || "";
+            const department = project.department || "";
+            const date = project.date || project.created_at || "";
+
+            return `
+                <article class="innovation-card">
+
+                    <div class="innovation-images">
+                        ${imageHTML || `
+                            <div class="innovation-img-holder">
+                                No images available
+                            </div>
+                        `}
+
+                        <div class="image-count">
+                            <i class="fas fa-images"></i>
+                            ${images.length} image(s)
+                        </div>
+                    </div>
+
+                    <div class="innovation-body">
+
+                        <span class="category-label">
+                            ${escapeHTML(category)}
+                        </span>
+
+                        <h3>${escapeHTML(title)}</h3>
+
+                        <p>${escapeHTML(description)}</p>
+
+                        <div class="uploader-meta">
+
+                            ${uploader ? `
+                                <i class="fas fa-user"></i>
+                                ${escapeHTML(uploader)}
+                                <br>
+                            ` : ""}
+
+                            ${department ? `
+                                <i class="fas fa-building"></i>
+                                ${escapeHTML(department)}
+                                <br>
+                            ` : ""}
+
+                            ${date ? `
+                                <i class="fas fa-calendar"></i>
+                                ${escapeHTML(date)}
+                            ` : ""}
+
+                        </div>
+
+                        <div class="contact-btns-grid">
+
+                            ${email ? `
+                                <a class="contact-btn"
+                                   href="mailto:${escapeHTML(email)}">
+                                    <i class="fas fa-envelope"></i> Email
+                                </a>
+                            ` : ""}
+
+                            ${phone ? `
+                                <a class="contact-btn"
+                                   href="tel:${escapeHTML(phone)}">
+                                    <i class="fas fa-phone"></i> Call
+                                </a>
+                            ` : ""}
+
+                            ${whatsappNumber ? `
+                                <a class="contact-btn"
+                                   href="https://wa.me/${escapeHTML(whatsappNumber)}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                </a>
+                            ` : ""}
+
+                        </div>
+
+                    </div>
+
+                </article>
+            `;
+        }).join("");
+
+    } catch(error) {
+        grid.innerHTML = `
+            <div class="no-projects-msg">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>${escapeHTML(error.message)}</p>
+            </div>
+        `;
+
+        console.error("Gallery loading error:",error);
+    }
+}
+
+/*
+=========================================================
+IMAGE LIGHTBOX
+=========================================================
+*/
+
+function openLightbox(src,caption) {
+    document.getElementById("lightboxImage").src = src;
+    document.getElementById("lightboxCaption").textContent = caption;
+    document.getElementById("lightbox").classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").classList.remove("active");
+    document.getElementById("lightboxImage").src = "";
+    document.body.style.overflow = "";
+}
+
+document.getElementById("lightboxClose")
+    .addEventListener("click",closeLightbox);
+
+document.getElementById("lightbox").addEventListener("click",event => {
+    if (event.target.id === "lightbox") {
+        closeLightbox();
+    }
+});
+
+document.addEventListener("keydown",event => {
+    if (event.key === "Escape") {
+        closeLightbox();
+    }
+});
+
+/*
+=========================================================
+INITIAL GALLERY LOAD
+=========================================================
+*/
+
+loadGallery();
+
+</script>
+
+</body>
+</html>

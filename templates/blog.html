@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hub Blog & Global Technology Trends - Meru National Polytechnic Innovation and Skills Hub">
+    <title>Tech Blog & Global Trends | MNP Innovation & Skills Hub</title>
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==========================================
+           1. COLOR PALETTE & LIGHT THEME SYSTEM
+           ========================================== */
+        :root {
+            --brand-primary: #8b5e3c;      /* Warm Earth / Coffee Brown */
+            --brand-primary-dark: #6e482d;
+            --brand-primary-light: rgba(139, 94, 60, 0.08);
+            
+            --brand-accent: #2b8ef1;       /* Electric Tech Blue */
+            --brand-accent-dark: #1b6ec4;
+            --brand-accent-light: rgba(43, 142, 241, 0.08);
+            --brand-accent-glow: rgba(43, 142, 241, 0.2);
+            
+            --surface-bg: #ffffff;         /* Pure White Background */
+            --surface-alt: #f8fafc;        /* Soft Off-White Section Fill */
+            --surface-card: #ffffff;       /* Card Fill */
+            
+            --text-heading: #0f172a;       /* Dark Heading */
+            --text-body: #475569;          /* Readable Body Slate */
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;       /* Light Gray Border */
+            
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Global Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--surface-bg);
+            color: var(--text-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 50px auto;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--brand-primary-light);
+            border: 1px solid rgba(139, 94, 60, 0.25);
+            color: var(--brand-primary);
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 6px 18px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 2.3rem;
+            color: var(--text-heading);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        /* ==========================================
+           2. NAVIGATION HEADER
+           ========================================== */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 85px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .school-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-text {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            color: var(--brand-accent);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn-link {
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-body);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border-light);
+            background: var(--surface-alt);
+        }
+
+        .nav-btn-link:hover, .nav-btn-link.active {
+            color: #ffffff;
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        /* Buttons */
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .btn-earth {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(139, 94, 60, 0.3);
+        }
+        .btn-earth:hover {
+            background-color: var(--brand-primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-blue {
+            background-color: var(--brand-accent);
+            color: #ffffff;
+            box-shadow: 0 4px 14px var(--brand-accent-glow);
+        }
+        .btn-blue:hover {
+            background-color: var(--brand-accent-dark);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================
+           3. BLOG HERO & ONLINE TECH SEARCH WIDGET
+           ========================================== */
+        .blog-hero {
+            padding: 70px 0;
+            background: linear-gradient(135deg, var(--brand-primary-light), var(--brand-accent-light));
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .blog-hero h1 {
+            font-size: 2.8rem;
+            color: var(--text-heading);
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .blog-hero p {
+            font-size: 1.1rem;
+            color: var(--text-body);
+            max-width: 650px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* Live Tech Trends Online Search Bar */
+        .tech-search-box {
+            max-width: 650px;
+            margin: 0 auto;
+            background: var(--surface-card);
+            padding: 10px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            display: flex;
+            box-shadow: 0 10px 30px -10px rgba(43, 142, 241, 0.15);
+        }
+
+        .tech-search-box input {
+            flex-grow: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            background: transparent;
+            color: var(--text-heading);
+        }
+
+        /* ==========================================
+           4. FEATURED GLOBAL INVENTION / TREND BANNER
+           ========================================== */
+        .featured-trend-card {
+            background: var(--surface-alt);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            overflow: hidden;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+
+        .featured-content {
+            padding: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: var(--brand-accent-light);
+            color: var(--brand-accent);
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            width: fit-content;
+            margin-bottom: 15px;
+        }
+
+        .featured-content h3 {
+            font-size: 1.8rem;
+            color: var(--text-heading);
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .featured-content p {
+            color: var(--text-body);
+            margin-bottom: 25px;
+            font-size: 1.02rem;
+        }
+
+        .featured-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 320px;
+        }
+
+        /* ==========================================
+           5. BLOG POSTS GRID (CURRENT TRENDS & INVENTIONS)
+           ========================================== */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(43, 142, 241, 0.4);
+            box-shadow: 0 15px 30px -10px rgba(43, 142, 241, 0.15);
+        }
+
+        .blog-img {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .blog-body {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .blog-category {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--brand-primary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .blog-body h3 {
+            font-size: 1.3rem;
+            color: var(--text-heading);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .blog-body p {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .blog-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================
+           6. FOOTER
+           ========================================== */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            border-top: 1px solid var(--border-light);
+            padding: 50px 0 25px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .featured-trend-card {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         NAVIGATION HEADER
+         ========================================== -->
+    <header>
+        <div class="container navbar">
+            <a href="index.html" class="brand-logo">
+                <!-- <img src="logo.png" alt="Meru National Polytechnic Logo" class="school-logo"> -->
+                <div class="logo-text">
+                    MNP <span>SkillsHub</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="/index" class="nav-btn-link"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="/innovations" class="nav-btn-link"><i class="fa-solid fa-rocket"></i> Innovations</a>
+                <a href="/forum" class="nav-btn-link"><i class="fa-solid fa-comments"></i> Forum</a>
+                <a href="/blog" class="nav-btn-link active"><i class="fa-solid fa-newspaper"></i> Blog</a>
+                <a href="/about" class="nav-btn-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         BLOG HERO & ONLINE TREND SEARCH WIDGET
+         ========================================== -->
+    <section class="blog-hero">
+        <div class="container">
+            <h1>Tech Blog & Global Innovations</h1>
+            <p>Explore current trends in artificial intelligence, physical robotics, quantum computing, and breakthrough inventions worldwide.</p>
+            
+            <!-- Live Search Bar to look up online tech trends -->
+            <div class="tech-search-box">
+                <input type="text" id="techSearchQuery" placeholder="Search online current tech trends (e.g. humanoid robots, quantum chips)...">
+                <button class="btn-custom btn-blue" onclick="searchOnlineTrends()">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search Web
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         MAIN BLOG & TRENDS CONTAINER
+         ========================================== -->
+    <section class="section-padding">
+        <div class="container">
+            
+            <!-- FEATURED GLOBAL TREND BANNER -->
+            <div class="featured-trend-card">
+                <div class="featured-content">
+                    <span class="featured-badge">Global Breakthrough Trend</span>
+                    <h3>The Agentic AI & Physical Robotics Revolution</h3>
+                    <p>
+                        Artificial Intelligence has moved past simple question-answering tools into the realm of **multi-agent orchestration** and **Physical AI**. Worldwide, humanoid robots and autonomous drones are reshaping manufacturing, logistics, and precision agriculture, while agentic coding software empowers developers to build entire apps in record time.
+                    </p>
+                    <a href="#blog-grid" class="btn-custom btn-earth" style="width: fit-content;">Read Full Global Analysis</a>
+                </div>
+                <div class="featured-img">
+                    <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80" alt="Artificial Intelligence Robotics">
+                </div>
+            </div>
+
+            <!-- SECTION HEADER -->
+            <div class="section-header" id="blog-grid">
+                <span class="section-tag"><i class="fa-solid fa-globe"></i> Worldwide Inventions</span>
+                <h2>Latest Inventions & Emerging Technologies</h2>
+            </div>
+
+            <!-- BLOG POSTS GRID -->
+            <div class="blog-grid">
+                
+                <!-- Blog Item 1 -->
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" alt="Quantum Computing" class="blog-img">
+                    <div class="blog-body">
+                        <span class="blog-category">Quantum & Compute</span>
+                        <h3>Quantum Computing & Scalable Qubits</h3>
+                        <p>With silicon quantum processors scaling up, researchers worldwide are utilizing multi-state qubits to tackle complex molecular simulations and cryptography problems in seconds.</p>
+                        <div class="blog-footer">
+                            <span><i class="fa-regular fa-calendar"></i> November 2026</span>
+                            <span style="color:var(--brand-accent); font-weight:700;">Global Report</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blog Item 2 -->
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=600&q=80" alt="Renewable Energy Grid" class="blog-img">
+                    <div class="blog-body">
+                        <span class="blog-category">Clean Energy</span>
+                        <h3>Everything-to-Grid Energy Systems</h3>
+                        <p>New sodium-ion battery chemistries and smart coordination software are turning electric vehicles and smart buildings into active, real-time power grid stabilizers.</p>
+                        <div class="blog-footer">
+                            <span><i class="fa-regular fa-calendar"></i> October 2026</span>
+                            <span style="color:var(--brand-accent); font-weight:700;">WEF Trend</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blog Item 3 -->
+                <div class="blog-card">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80" alt="Biotech and Cancer Vaccines" class="blog-img">
+                    <div class="blog-body">
+                        <span class="blog-category">Biotech & Health</span>
+                        <h3>Personalized mRNA Cancer Vaccines</h3>
+                        <p>Synthesized directly from individual tumor mutations, personalized mRNA immunizations are achieving remarkable phase 3 trial results in oncology worldwide.</p>
+                        <div class="blog-footer">
+                            <span><i class="fa-regular fa-calendar"></i> October 2026</span>
+                            <span style="color:var(--brand-accent); font-weight:700;">Medical Breakthrough</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 The Meru National Polytechnic Innovation and Skills Hub. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE SEARCH SCRIPT -->
+    <script>
+        function searchOnlineTrends() {
+            const query = document.getElementById('techSearchQuery').value.trim();
+            if (!query) {
+                alert('Please enter a technology keyword to search online.');
+                return;
+            }
+            // Opens a Google search query in a new tab for real-time global technology trends
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + ' emerging technology trends 2026 innovations')}`;
+            window.open(searchUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

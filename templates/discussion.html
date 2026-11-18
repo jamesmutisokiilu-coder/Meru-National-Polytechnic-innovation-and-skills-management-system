@@ -1,0 +1,1220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Innovators Discussion Forum - Meru National Polytechnic Innovation & Skills Hub">
+    <title>Discussion Forum | MNP Innovation & Skills Hub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brown: #8b5e3c;
+            --brown-dark: #6e482d;
+            --brown-light: rgba(139,94,60,.08);
+            --blue: #2b8ef1;
+            --blue-dark: #1b6ec4;
+            --blue-light: rgba(43,142,241,.08);
+            --bg: #ffffff;
+            --surface: #f8fafc;
+            --heading: #0f172a;
+            --body: #475569;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 14px;
+            --transition: all .25s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--body);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, textarea, select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1240px;
+            margin: auto;
+        }
+
+        .section-padding {
+            padding: 55px 0 85px;
+        }
+
+        /* NAVIGATION */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,.96);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar {
+            min-height: 82px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--heading);
+            line-height: 1.3;
+        }
+
+        .logo-text span {
+            color: var(--blue);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .nav-btn-link {
+            padding: 9px 15px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: .85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: var(--transition);
+        }
+
+        .nav-btn-link:hover,
+        .nav-btn-link.active {
+            background: var(--brown);
+            border-color: var(--brown);
+            color: white;
+        }
+
+        /* BUTTONS */
+
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 11px 19px;
+            border-radius: 30px;
+            border: none;
+            font-size: .88rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .btn-earth {
+            background: var(--brown);
+            color: white;
+        }
+
+        .btn-earth:hover {
+            background: var(--brown-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-blue {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background: var(--blue-dark);
+            transform: translateY(-2px);
+        }
+
+        /* FLASH MESSAGES */
+
+        .flash-container {
+            width: 90%;
+            max-width: 1240px;
+            margin: 15px auto;
+        }
+
+        .flash-message {
+            padding: 13px 17px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: .9rem;
+            font-weight: 600;
+        }
+
+        .flash-message.success {
+            color: #047857;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+        }
+
+        .flash-message.error {
+            color: #b91c1c;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        /* HERO */
+
+        .forum-hero {
+            padding: 50px 0 30px;
+            background: linear-gradient(135deg,var(--brown-light),var(--blue-light));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .forum-hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .forum-hero h1 {
+            color: var(--heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .forum-hero p {
+            margin-top: 8px;
+            font-size: .96rem;
+        }
+
+        /* CATEGORY FILTERS */
+
+        .topic-selector-wrap {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 25px 0 5px;
+        }
+
+        .topic-pill {
+            white-space: nowrap;
+            padding: 9px 17px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--body);
+            font-size: .84rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .topic-pill:hover,
+        .topic-pill.active {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue);
+        }
+
+        /* MAIN LAYOUT */
+
+        .forum-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 28px;
+            margin-top: 35px;
+            align-items: start;
+        }
+
+        /* SIDEBAR */
+
+        .threads-sidebar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .sidebar-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: var(--heading);
+            font-size: 1.05rem;
+        }
+
+        .thread-item {
+            display: block;
+            width: 100%;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .thread-item:hover,
+        .thread-item.active {
+            border-color: var(--brown);
+            box-shadow: 0 4px 12px rgba(139,94,60,.12);
+            transform: translateY(-2px);
+        }
+
+        .thread-item.active {
+            border-left: 4px solid var(--brown);
+        }
+
+        .thread-tag {
+            color: var(--brown);
+            font-size: .7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .thread-title {
+            color: var(--heading);
+            font-size: .92rem;
+            font-weight: 800;
+            margin: 6px 0;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .thread-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: .75rem;
+            color: var(--muted);
+        }
+
+        .view-all {
+            display: block;
+            padding: 11px;
+            background: var(--blue-light);
+            border-radius: 9px;
+            color: var(--blue-dark);
+            font-weight: 700;
+            font-size: .85rem;
+            margin-bottom: 15px;
+        }
+
+        /* DISCUSSION VIEW */
+
+        .discussion-view {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            min-width: 0;
+        }
+
+        .op-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 22px;
+        }
+
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brown-light);
+            color: var(--brown);
+            border: 1px solid rgba(139,94,60,.2);
+            font-weight: 800;
+        }
+
+        .avatar.blue {
+            background: var(--blue-light);
+            color: var(--blue);
+            border-color: rgba(43,142,241,.2);
+        }
+
+        .author-info h4 {
+            color: var(--heading);
+            font-size: .95rem;
+        }
+
+        .author-info span {
+            color: var(--muted);
+            font-size: .78rem;
+        }
+
+        .op-title {
+            color: var(--heading);
+            font-size: 1.55rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            overflow-wrap: anywhere;
+        }
+
+        .op-text {
+            font-size: .98rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        /* REPLIES */
+
+        .replies-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 35px 0 20px;
+            color: var(--heading);
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .reply-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 19px;
+            margin-bottom: 15px;
+        }
+
+        .reply-header {
+            margin-bottom: 12px;
+        }
+
+        .reply-content {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-size: .94rem;
+            line-height: 1.7;
+        }
+
+        /* REPLY FORM */
+
+        .reply-box-container {
+            margin-top: 30px;
+            padding: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .reply-box-container h4 {
+            color: var(--heading);
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--heading);
+            font-weight: 700;
+            font-size: .86rem;
+            margin-bottom: 7px;
+        }
+
+        .form-control,
+        .reply-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: .92rem;
+            background: white;
+            color: var(--heading);
+            outline: none;
+        }
+
+        .form-control:focus,
+        .reply-textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--blue-light);
+        }
+
+        .reply-textarea {
+            min-height: 110px;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
+
+        /* MODAL */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.65);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+        }
+
+        .modal-card h3 {
+            color: var(--heading);
+            font-size: 1.4rem;
+            margin-bottom: 22px;
+            padding-right: 25px;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 22px;
+            top: 18px;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--muted);
+        }
+
+        /* EMPTY STATES */
+
+        .empty-state {
+            padding: 40px 15px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--blue);
+            margin-bottom: 15px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            text-align: center;
+            padding: 28px 15px;
+            font-size: .85rem;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 992px) {
+            .forum-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .threads-sidebar {
+                order: 1;
+            }
+
+            .discussion-view {
+                order: 2;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .navbar {
+                padding: 15px 0;
+                flex-wrap: wrap;
+            }
+
+            .nav-menu {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .nav-btn-link {
+                padding: 8px 11px;
+                font-size: .77rem;
+            }
+
+            .forum-hero h1 {
+                font-size: 1.7rem;
+            }
+
+            .forum-hero-content {
+                align-items: flex-start;
+            }
+
+            .discussion-view {
+                padding: 19px;
+            }
+
+            .op-title {
+                font-size: 1.3rem;
+            }
+
+            .modal-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<header>
+    <div class="container navbar">
+
+        <a href="{{ url_for('index') }}" class="brand-logo">
+            <div class="logo-text">
+                MNP <span>Innovation and Skills Hub</span>
+            </div>
+        </a>
+
+        <nav class="nav-menu">
+            <a href="{{ url_for('index') }}" class="nav-btn-link">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+
+            <a href="{{ url_for('innovations') }}" class="nav-btn-link">
+                <i class="fa-solid fa-rocket"></i> Innovations
+            </a>
+
+            <a href="{{ url_for('discussion') }}" class="nav-btn-link active">
+                <i class="fa-solid fa-comments"></i> Forum
+            </a>
+
+            <a href="{{ url_for('about') }}" class="nav-btn-link">
+                <i class="fa-solid fa-circle-info"></i> About Us
+            </a>
+
+            {% if session.get('admin_id') %}
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-btn-link">
+                <i class="fa-solid fa-gauge"></i> Admin
+            </a>
+            {% endif %}
+        </nav>
+
+    </div>
+</header>
+
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <i class="fa-solid fa-circle-info"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+<!-- HERO -->
+<section class="forum-hero">
+    <div class="container">
+
+        <div class="forum-hero-content">
+
+            <div>
+                <h1>Innovators Discussion Forum</h1>
+                <p>
+                    Share ideas, ask questions, discuss projects and
+                    collaborate with fellow innovators.
+                </p>
+            </div>
+
+            <button class="btn-custom btn-earth" onclick="openModal()">
+                <i class="fa-solid fa-plus"></i>
+                Start New Discussion
+            </button>
+
+        </div>
+
+        <!-- CATEGORY FILTERS -->
+        <div class="topic-selector-wrap">
+
+            <button class="topic-pill active"
+                    onclick="filterArea('all', this)">
+                <i class="fa-solid fa-border-all"></i>
+                All Areas
+            </button>
+
+            <button class="topic-pill"
+                    onclick="filterArea('Smart IoT & Embedded', this)">
+                <i class="fa-solid fa-microchip"></i>
+                Smart IoT & Embedded
+            </button>
+
+            <button class="topic-pill"
+                    onclick="filterArea('AgriTech & Automation', this)">
+                <i class="fa-solid fa-wheat-awn"></i>
+                AgriTech & Automation
+            </button>
+
+            <button class="topic-pill"
+                    onclick="filterArea('Renewable Energy', this)">
+                <i class="fa-solid fa-bolt"></i>
+                Renewable Energy
+            </button>
+
+            <button class="topic-pill"
+                    onclick="filterArea('Software & Mobile Apps', this)">
+                <i class="fa-solid fa-code"></i>
+                Software & Mobile Apps
+            </button>
+
+            <button class="topic-pill"
+                    onclick="filterArea('Mechanical & Fabrication', this)">
+                <i class="fa-solid fa-gears"></i>
+                Mechanical & Fabrication
+            </button>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- MAIN FORUM -->
+<section class="section-padding">
+    <div class="container forum-layout">
+
+        <!-- THREAD SIDEBAR -->
+        <aside class="threads-sidebar">
+
+            <h3 class="sidebar-heading">
+                <span>Active Discussions</span>
+                <i class="fa-solid fa-fire" style="color:var(--brown)"></i>
+            </h3>
+
+            <a href="{{ url_for('discussion') }}" class="view-all">
+                <i class="fa-solid fa-layer-group"></i>
+                View all discussions
+            </a>
+
+            <div id="threadsContainer">
+
+                {% if discussions %}
+
+                    {% for item in discussions %}
+
+                        <a href="{{ url_for('view_discussion', discussion_id=item['id']) }}"
+                           class="thread-item {% if active_discussion and active_discussion['id'] == item['id'] %}active{% endif %}"
+                           data-category="{{ item['category'] or 'General' }}">
+
+                            <div class="thread-tag">
+                                {{ item['category'] or 'General' }}
+                            </div>
+
+                            <div class="thread-title">
+                                {{ item['topic'] }}
+                            </div>
+
+                            <div class="thread-meta">
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    {{ item['name'] }}
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-comments"></i>
+                                    {{ item['reply_count'] or 0 }}
+                                </span>
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <i class="fa-regular fa-comments"></i>
+                        <p>No discussions available in this view.</p>
+                    </div>
+
+                {% endif %}
+
+                <p id="noFilteredThreads"
+                   class="empty-state"
+                   style="display:none;">
+                    No discussions found in this category.
+                </p>
+
+            </div>
+
+        </aside>
+
+
+        <!-- DISCUSSION CONTENT -->
+        <main class="discussion-view">
+
+            {% if active_discussion %}
+
+                <!-- ORIGINAL DISCUSSION -->
+
+                <div id="originalPostContainer">
+
+                    <div class="op-header">
+
+                        <div class="author-box">
+
+                            <div class="avatar">
+                                {{ (active_discussion['name'] or 'IN')[:2]|upper }}
+                            </div>
+
+                            <div class="author-info">
+                                <h4>{{ active_discussion['name'] }}</h4>
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    {{ active_discussion['date'] }}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <span class="thread-tag">
+                            {{ active_discussion['category'] or 'General' }}
+                        </span>
+
+                    </div>
+
+                    <h2 class="op-title">
+                        {{ active_discussion['topic'] }}
+                    </h2>
+
+                    <p class="op-text">{{ active_discussion['message'] }}</p>
+
+                </div>
+
+
+                <!-- REPLIES -->
+
+                <div class="replies-section-title">
+                    <i class="fa-solid fa-comments" style="color:var(--blue)"></i>
+                    Replies and Contributions
+                    ({{ replies|length }})
+                </div>
+
+                <div id="repliesContainer">
+
+                    {% for reply in replies %}
+
+                        <div class="reply-card">
+
+                            <div class="reply-header">
+
+                                <div class="author-box">
+
+                                    <div class="avatar blue">
+                                        {{ (reply['name'] or 'IN')[:2]|upper }}
+                                    </div>
+
+                                    <div class="author-info">
+                                        <h4>{{ reply['name'] }}</h4>
+                                        <span>
+                                            <i class="fa-regular fa-clock"></i>
+                                            {{ reply['date'] or 'Recently' }}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <p class="reply-content">{{ reply['reply'] }}</p>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="empty-state">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <p>No replies yet. Be the first to contribute.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- REPLY FORM -->
+
+                <div class="reply-box-container">
+
+                    <h4>
+                        <i class="fa-solid fa-reply" style="color:var(--blue)"></i>
+                        Contribute to this Discussion
+                    </h4>
+
+                    <form action="{{ url_for('post_discussion_reply', discussion_id=active_discussion['id']) }}"
+                          method="POST">
+
+                        <div class="form-group">
+                            <label for="replyName">Your name *</label>
+
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="replyName"
+                                name="name"
+                                placeholder="Enter your name"
+                                maxlength="100"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="replyEmail">Email address (optional)</label>
+
+                            <input
+                                class="form-control"
+                                type="email"
+                                id="replyEmail"
+                                name="email"
+                                placeholder="Enter your email"
+                                maxlength="150">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="replyMessage">Your reply *</label>
+
+                            <textarea
+                                name="message"
+                                id="replyMessage"
+                                class="reply-textarea"
+                                placeholder="Share your response, ideas or technical advice..."
+                                maxlength="5000"
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-custom btn-blue">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Post Reply
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+            {% else %}
+
+                <!-- WELCOME STATE -->
+
+                <div class="empty-state">
+
+                    <div class="avatar"
+                         style="margin:0 auto 20px;width:70px;height:70px;font-size:1.5rem;">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+
+                    <h2 class="op-title">
+                        Welcome to the Innovators Forum
+                    </h2>
+
+                    <p class="op-text">
+                        Select a discussion from the Active Discussions
+                        list to read and contribute your ideas, or start
+                        a new discussion.
+                    </p>
+
+                    <br>
+
+                    <button class="btn-custom btn-earth" onclick="openModal()">
+                        <i class="fa-solid fa-plus"></i>
+                        Start New Discussion
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+        </main>
+
+    </div>
+</section>
+
+
+<!-- NEW DISCUSSION MODAL -->
+<div class="modal-overlay" id="topicModal">
+
+    <div class="modal-card">
+
+        <button class="modal-close"
+                onclick="closeModal()"
+                type="button"
+                aria-label="Close dialog">
+            &times;
+        </button>
+
+        <h3>
+            <i class="fa-solid fa-pen-to-square"
+               style="color:var(--brown)"></i>
+            Start a New Discussion
+        </h3>
+
+        <form action="{{ url_for('discussion') }}" method="POST">
+
+            <div class="form-group">
+                <label for="newTopicName">Your name *</label>
+
+                <input
+                    type="text"
+                    id="newTopicName"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter your full name"
+                    maxlength="100"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="newTopicEmail">Email address</label>
+
+                <input
+                    type="email"
+                    id="newTopicEmail"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email address"
+                    maxlength="150">
+            </div>
+
+            <div class="form-group">
+                <label for="newTopicCategory">Discussion Area *</label>
+
+                <select
+                    id="newTopicCategory"
+                    name="category"
+                    class="form-control"
+                    required>
+
+                    <option value="">Select Discussion Area</option>
+
+                    <option value="Smart IoT & Embedded">
+                        Smart IoT & Embedded
+                    </option>
+
+                    <option value="AgriTech & Automation">
+                        AgriTech & Automation
+                    </option>
+
+                    <option value="Renewable Energy">
+                        Renewable Energy
+                    </option>
+
+                    <option value="Software & Mobile Apps">
+                        Software & Mobile Apps
+                    </option>
+
+                    <option value="Mechanical & Fabrication">
+                        Mechanical & Fabrication
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="newTopicTitle">Topic Title *</label>
+
+                <input
+                    type="text"
+                    id="newTopicTitle"
+                    name="topic"
+                    class="form-control"
+                    placeholder="Summarize your question or topic"
+                    maxlength="200"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="newTopicText">Discussion Details *</label>
+
+                <textarea
+                    id="newTopicText"
+                    name="message"
+                    class="form-control"
+                    rows="5"
+                    placeholder="Explain your project, question, idea or problem..."
+                    maxlength="10000"
+                    required></textarea>
+            </div>
+
+            <button type="submit"
+                    class="btn-custom btn-earth"
+                    style="width:100%;">
+
+                <i class="fa-solid fa-paper-plane"></i>
+                Publish Discussion
+
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <p>
+            &copy; 2026 Meru National Polytechnic Innovation and Skills Hub.
+            All Rights Reserved.
+        </p>
+    </div>
+</footer>
+
+
+<!-- JAVASCRIPT -->
+<script>
+
+    // OPEN NEW DISCUSSION MODAL
+    function openModal() {
+        const modal = document.getElementById("topicModal");
+
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+        setTimeout(() => {
+            document.getElementById("newTopicName").focus();
+        }, 100);
+    }
+
+
+    // CLOSE MODAL
+    function closeModal() {
+        const modal = document.getElementById("topicModal");
+
+        modal.classList.remove("show");
+        document.body.style.overflow = "";
+    }
+
+
+    // FILTER DISCUSSIONS
+    function filterArea(category, button) {
+
+        document.querySelectorAll(".topic-pill").forEach(pill => {
+            pill.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const cards = document.querySelectorAll(
+            "#threadsContainer .thread-item[data-category]"
+        );
+
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+
+            const cardCategory = card.dataset.category;
+
+            const show =
+                category === "all" ||
+                cardCategory === category;
+
+            card.style.display = show ? "block" : "none";
+
+            if (show) {
+                visibleCount++;
+            }
+
+        });
+
+        const emptyMessage = document.getElementById(
+            "noFilteredThreads"
+        );
+
+        if (emptyMessage) {
+            emptyMessage.style.display =
+                visibleCount === 0 ? "block" : "none";
+        }
+    }
+
+
+    // CLOSE MODAL WHEN CLICKING OUTSIDE
+    document.getElementById("topicModal").addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === this) {
+                closeModal();
+            }
+
+        }
+    );
+
+
+    // CLOSE MODAL WITH ESCAPE KEY
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "Escape") {
+            closeModal();
+        }
+
+    });
+
+
+    // CLOSE MODAL AFTER FORM SUBMISSION IS NOT NEEDED:
+    // Flask handles the POST and redirects back to the forum.
+
+</script>
+
+</body>
+</html>

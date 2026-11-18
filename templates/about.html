@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About The Meru National Polytechnic Innovation and Skills Hub — Overview, core values, and why we innovate.">
+    <title>About Us | MNP Innovation & Skills Hub</title>
+
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==========================================
+           1. COLOR PALETTE & LIGHT THEME SYSTEM
+           ========================================== */
+
+        :root {
+            --brand-primary: #8b5e3c;
+            --brand-primary-dark: #6e482d;
+            --brand-primary-light: rgba(139, 94, 60, 0.09);
+
+            --brand-accent: #2b8ef1;
+            --brand-accent-dark: #1b6ec4;
+            --brand-accent-light: rgba(43, 142, 241, 0.09);
+            --brand-accent-glow: rgba(43, 142, 241, 0.18);
+
+            --surface-bg: #ffffff;
+            --surface-alt: #f6f9fd;
+            --surface-card: #ffffff;
+
+            --text-heading: #10233f;
+            --text-body: #475569;
+            --text-muted: #718096;
+            --border-light: #e3eaf2;
+
+            --radius-sm: 10px;
+            --radius-md: 18px;
+            --radius-lg: 25px;
+            --radius-full: 9999px;
+
+            --shadow-sm: 0 5px 15px rgba(16, 35, 63, 0.05);
+            --shadow-md: 0 12px 30px rgba(16, 35, 63, 0.08);
+            --shadow-lg: 0 20px 45px rgba(43, 142, 241, 0.13);
+
+            --transition: all 0.35s ease;
+        }
+
+        /* GLOBAL RESET */
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--surface-bg);
+            color: var(--text-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: 0 auto;
+        }
+
+        .section-padding {
+            padding: 90px 0;
+        }
+
+        /* SECTION HEADER */
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px auto;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--brand-primary-light);
+            border: 1px solid rgba(139, 94, 60, 0.25);
+            color: var(--brand-primary);
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            color: var(--text-heading);
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -0.8px;
+        }
+
+        /* ==========================================
+           2. NAVIGATION HEADER
+           ========================================== */
+
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: 0 3px 18px rgba(16, 35, 63, 0.04);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 85px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .school-logo {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-text {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-heading);
+            line-height: 1.3;
+        }
+
+        .logo-text span {
+            color: var(--brand-accent);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn-link {
+            padding: 11px 23px;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-body);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid var(--border-light);
+            background: var(--surface-alt);
+        }
+
+        .nav-btn-link:hover,
+        .nav-btn-link.active {
+            color: #ffffff;
+            background: linear-gradient(120deg, var(--brand-primary), var(--brand-accent));
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(43, 142, 241, 0.2);
+        }
+
+        .nav-btn-link i {
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================
+           3. PAGE HERO BANNER
+           ========================================== */
+
+        .page-hero {
+            position: relative;
+            padding: 100px 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(139, 94, 60, 0.15), transparent 35%),
+                radial-gradient(circle at 90% 80%, rgba(43, 142, 241, 0.17), transparent 35%),
+                linear-gradient(135deg, #f5f8fd, #f9f3ee);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .page-hero::before,
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .page-hero::before {
+            width: 220px;
+            height: 220px;
+            border: 35px solid rgba(43, 142, 241, 0.07);
+            top: -100px;
+            left: -70px;
+        }
+
+        .page-hero::after {
+            width: 260px;
+            height: 260px;
+            border: 40px solid rgba(139, 94, 60, 0.07);
+            bottom: -150px;
+            right: -90px;
+        }
+
+        .page-hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-hero h1 {
+            font-size: clamp(2.3rem, 5vw, 3.2rem);
+            color: var(--text-heading);
+            font-weight: 800;
+            margin-bottom: 18px;
+            letter-spacing: -1.3px;
+        }
+
+        .page-hero h1::after {
+            content: "";
+            display: block;
+            width: 75px;
+            height: 5px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
+            margin: 20px auto 0;
+        }
+
+        .page-hero p {
+            font-size: 1.05rem;
+            color: var(--text-body);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================
+           4. MAIN CONTENT AREA
+           ========================================== */
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 38px;
+        }
+
+        .content-card {
+            position: relative;
+            background: var(--surface-card);
+            border: 1px solid var(--border-light);
+            padding: 45px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .content-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(43, 142, 241, 0.22);
+        }
+
+        .content-card h3 {
+            font-size: 1.55rem;
+            color: var(--text-heading);
+            margin-bottom: 23px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 800;
+        }
+
+        .content-card h3 i {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+            background: var(--brand-primary-light);
+            font-size: 21px;
+        }
+
+        .content-card p {
+            margin-bottom: 18px;
+            font-size: 0.98rem;
+            color: var(--text-body);
+        }
+
+        .content-card strong {
+            color: var(--brand-primary);
+        }
+
+        /* CORE VALUES GRID */
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 22px;
+            margin-top: 30px;
+        }
+
+        .value-item {
+            position: relative;
+            background: linear-gradient(145deg, #f8fbff, #ffffff);
+            border: 1px solid var(--border-light);
+            padding: 28px;
+            border-radius: var(--radius-md);
+            border-top: 4px solid var(--brand-accent);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .value-item:nth-child(even) {
+            border-top-color: var(--brand-primary);
+            background: linear-gradient(145deg, #fcf8f5, #ffffff);
+        }
+
+        .value-item::after {
+            content: "";
+            position: absolute;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            right: -35px;
+            bottom: -35px;
+            background: rgba(43, 142, 241, 0.05);
+        }
+
+        .value-item:hover {
+            transform: translateY(-7px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(43, 142, 241, 0.25);
+        }
+
+        .value-item h4 {
+            font-size: 1.08rem;
+            color: var(--text-heading);
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .value-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0;
+            line-height: 1.8;
+        }
+
+        /* WHY INNOVATE GRID */
+
+        .innovate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            margin-top: 30px;
+        }
+
+        .innovate-card {
+            position: relative;
+            background: linear-gradient(145deg, #f5f9ff, #ffffff);
+            border: 1px solid var(--border-light);
+            padding: 32px;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .innovate-card:nth-child(2) {
+            background: linear-gradient(145deg, #fbf5f0, #ffffff);
+        }
+
+        .innovate-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(43, 142, 241, 0.3);
+        }
+
+        .innovate-card i {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: var(--brand-accent-light);
+            font-size: 1.55rem;
+            color: var(--brand-accent);
+            margin-bottom: 22px;
+            transition: var(--transition);
+        }
+
+        .innovate-card:nth-child(2) i {
+            color: var(--brand-primary);
+            background: var(--brand-primary-light);
+        }
+
+        .innovate-card:hover i {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .innovate-card h4 {
+            font-size: 1.13rem;
+            color: var(--text-heading);
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .innovate-card p {
+            font-size: 0.92rem;
+            color: var(--text-body);
+            margin-bottom: 0;
+        }
+
+        /* ==========================================
+           5. FOOTER
+           ========================================== */
+
+        footer {
+            position: relative;
+            background: linear-gradient(115deg, #10233f, #152f4e);
+            color: #cbd5e1;
+            border-top: 4px solid var(--brand-accent);
+            padding: 55px 0 30px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+        }
+
+        footer p::first-letter {
+            color: var(--brand-accent);
+        }
+
+        /* ==========================================
+           6. RESPONSIVE DESIGN
+           ========================================== */
+
+        @media (max-width: 768px) {
+
+            .container {
+                width: 92%;
+            }
+
+            .navbar {
+                height: auto;
+                min-height: 80px;
+                padding: 14px 0;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .nav-menu {
+                gap: 8px;
+            }
+
+            .nav-btn-link {
+                padding: 9px 15px;
+                font-size: 0.82rem;
+            }
+
+            .page-hero {
+                padding: 75px 0;
+            }
+
+            .page-hero h1 {
+                font-size: 2.3rem;
+            }
+
+            .section-padding {
+                padding: 65px 0;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .content-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .values-grid,
+            .innovate-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 520px) {
+
+            .navbar {
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .brand-logo {
+                justify-content: center;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-btn-link {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+
+            .page-hero p {
+                font-size: 0.93rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .content-card {
+                padding: 23px;
+            }
+
+            .content-card h3 {
+                font-size: 1.12rem;
+                gap: 10px;
+            }
+
+            .content-card h3 i {
+                min-width: 40px;
+                width: 40px;
+                height: 40px;
+                font-size: 17px;
+            }
+
+            .values-grid,
+            .innovate-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .value-item,
+            .innovate-card {
+                padding: 25px;
+            }
+        }
+
+        /* REDUCED MOTION ACCESSIBILITY */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         NAVIGATION HEADER (Home & Innovations Buttons)
+         ========================================== -->
+
+    <header>
+        <div class="container navbar">
+
+            <a href="index.html" class="brand-logo">
+
+                <!-- <img src="logo.png" alt="Meru National Polytechnic Logo" class="school-logo"> -->
+
+                <div class="logo-text">
+                    MNP <span>Innovation and Skills Hub</span>
+                </div>
+
+            </a>
+
+            <!-- Two Navigation Buttons Requested -->
+
+            <nav class="nav-menu">
+
+                <a href="/index" class="nav-btn-link">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+
+                <a href="/innovations" class="nav-btn-link">
+                    <i class="fa-solid fa-rocket"></i> Innovations
+                </a>
+
+            </nav>
+
+        </div>
+    </header>
+
+
+    <!-- ==========================================
+         PAGE HERO BANNER
+         ========================================== -->
+
+    
+
+
+    <!-- ==========================================
+         MAIN CONTENT SECTION
+         ========================================== -->
+
+    <section class="section-padding">
+
+        <div class="container about-grid">
+
+            <!-- Description Card -->
+
+            <div class="content-card">
+
+                <h3>
+                    <i class="fa-solid fa-circle-info"></i>
+                    Overview of the Innovation Hub
+                </h3>
+
+                <p>
+                    The <strong>Meru National Polytechnic Innovation and Skills Hub</strong>
+                    is a dynamic center designed to bridge the gap between
+                    classroom theory and practical industrial application.
+                    Established to support technical, vocational, and
+                    entrepreneurial training, the hub serves as a
+                    collaborative incubator where students, faculty,
+                    and industry experts converge.
+                </p>
+
+                <p>
+                    Equipped with advanced makerspaces, rapid prototyping
+                    tools, IoT testing benches, and digital software suites,
+                    we provide an enabling environment for innovators to
+                    design, test, and scale market-ready prototypes that
+                    address real-world challenges in agriculture, energy,
+                    health, and engineering.
+                </p>
+
+            </div>
+
+
+            <!-- Core Values Card -->
+
+            <div class="content-card">
+
+                <h3>
+                    <i class="fa-solid fa-gem"></i>
+                    Our Core Values
+                </h3>
+
+                <p>
+                    These foundational principles dictate how we mentor
+                    innovators and execute our technical programs:
+                </p>
+
+                <div class="values-grid">
+
+                    <div class="value-item">
+
+                        <h4>1. Practical Ingenuity</h4>
+
+                        <p>
+                            Fostering hands-on problem-solving capabilities
+                            over passive theoretical learning.
+                        </p>
+
+                    </div>
+
+                    <div class="value-item">
+
+                        <h4>2. Integrity & Ethics</h4>
+
+                        <p>
+                            Upholding academic honesty, intellectual property
+                            respect, and professional standards.
+                        </p>
+
+                    </div>
+
+                    <div class="value-item">
+
+                        <h4>3. Collaboration</h4>
+
+                        <p>
+                            Encouraging multidisciplinary teamwork across
+                            engineering, ICT, and business departments.
+                        </p>
+
+                    </div>
+
+                    <div class="value-item">
+
+                        <h4>4. Sustainability</h4>
+
+                        <p>
+                            Driving eco-friendly innovations that create
+                            lasting social and economic value for society.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Why Innovate Card -->
+
+            <div class="content-card">
+
+                <h3>
+                    <i class="fa-solid fa-lightbulb"></i>
+                    Why We Innovate
+                </h3>
+
+                <p>
+                    Innovation is the core engine of industrial growth
+                    and self-reliance. Here is why we champion innovation
+                    at Meru National Polytechnic:
+                </p>
+
+                <div class="innovate-grid">
+
+                    <div class="innovate-card">
+
+                        <i class="fa-solid fa-briefcase"></i>
+
+                        <h4>Creating Employment</h4>
+
+                        <p>
+                            Transforming student projects into viable
+                            startups creates self-reliance and jobs
+                            for young graduates.
+                        </p>
+
+                    </div>
+
+                    <div class="innovate-card">
+
+                        <i class="fa-solid fa-gear"></i>
+
+                        <h4>Solving Local Challenges</h4>
+
+                        <p>
+                            Developing homegrown technological solutions
+                            tailored to agricultural and infrastructural
+                            needs in Kenya.
+                        </p>
+
+                    </div>
+
+                    <div class="innovate-card">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                        <h4>Bridging the Skills Gap</h4>
+
+                        <p>
+                            Equipping TVET learners with modern
+                            competencies demanded by today’s
+                            fast-evolving digital economy.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+
+    <footer>
+
+        <div class="container">
+
+            <p>
+                &copy; 2026 The Meru National Polytechnic Innovation
+                and Skills Hub. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>

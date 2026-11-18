@@ -1,0 +1,1973 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Innovation & Skills Hub</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+    --blue:#176fc1;
+    --blue-dark:#104b80;
+    --blue-light:#eaf3fc;
+    --brown:#805333;
+    --brown-dark:#624027;
+    --brown-light:#f5eee8;
+    --background:#f4f6f9;
+    --white:#fff;
+    --text:#26384d;
+    --muted:#788497;
+    --border:#e5eaf0;
+    --green:#198754;
+    --red:#dc3545;
+    --orange:#e99b24;
+    --shadow:0 5px 20px rgba(30,55,80,.06);
+}
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body {
+    font-family:Arial,sans-serif;
+    background:var(--background);
+    color:var(--text);
+}
+
+button,input {
+    font-family:inherit;
+}
+
+/* ================= TOP NAVIGATION ================= */
+
+.sidebar {
+    width:100%;
+    min-height:auto;
+    position:sticky;
+    top:0;
+    left:0;
+    background:linear-gradient(110deg,var(--blue-dark),var(--blue));
+    color:white;
+    padding:13px 25px;
+    z-index:1000;
+    box-shadow:0 4px 15px #00000018;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:5px 8px;
+    flex-shrink:0;
+}
+
+.brand-icon {
+    width:44px;
+    height:44px;
+    background:var(--brown);
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    font-size:21px;
+    box-shadow:0 3px 10px #00000025;
+}
+
+.brand h2 {
+    font-size:15px;
+    letter-spacing:.5px;
+}
+
+.brand small {
+    display:block;
+    margin-top:5px;
+    color:#dceafa;
+    font-size:10px;
+}
+
+.nav-label {
+    display:none;
+}
+
+.sidebar > .nav-link {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 13px;
+    margin:0;
+    border-radius:8px;
+    color:#e8f1fa;
+    text-decoration:none;
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+    white-space:nowrap;
+}
+
+.nav-link i {
+    width:auto;
+    text-align:center;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background:var(--brown);
+    color:white;
+}
+
+.sidebar-footer {
+    display:none;
+}
+
+.overlay {
+    display:none !important;
+}
+
+/* ================= MAIN CONTENT ================= */
+
+.main {
+    margin-left:0;
+    min-height:100vh;
+}
+
+.topbar {
+    min-height:76px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 30px;
+    position:sticky;
+    top:0;
+    z-index:900;
+    box-shadow:0 2px 8px #00000004;
+}
+
+.top-left {
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.topbar h3 {
+    font-size:17px;
+    color:var(--blue-dark);
+}
+
+.topbar p {
+    color:var(--muted);
+    font-size:11px;
+    margin-top:5px;
+}
+
+.menu-toggle {
+    display:none;
+}
+
+.top-actions {
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile-avatar {
+    height:40px;
+    width:40px;
+    border-radius:50%;
+    background:var(--blue-light);
+    color:var(--blue-dark);
+    display:grid;
+    place-items:center;
+}
+
+.profile strong {
+    display:block;
+    font-size:12px;
+}
+
+.profile small {
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* ================= NOTIFICATIONS ================= */
+
+.notification-wrap {
+    position:relative;
+}
+
+.notification-btn {
+    width:42px;
+    height:42px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:white;
+    color:var(--blue);
+    font-size:17px;
+    cursor:pointer;
+    position:relative;
+    transition:.2s;
+}
+
+.notification-btn:hover {
+    background:var(--blue-light);
+}
+
+.notification-count {
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:var(--red);
+    color:white;
+    border-radius:30px;
+    min-width:19px;
+    height:19px;
+    font-size:10px;
+    display:grid;
+    place-items:center;
+    border:2px solid white;
+}
+
+.notification-dropdown {
+    display:none;
+    position:absolute;
+    right:0;
+    top:52px;
+    width:min(360px,calc(100vw - 30px));
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:0 10px 35px #00000020;
+    overflow:hidden;
+}
+
+.notification-dropdown.show {
+    display:block;
+}
+
+.notification-heading {
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+}
+
+.notification-heading strong {
+    font-size:13px;
+}
+
+.notification-heading button {
+    background:none;
+    border:none;
+    color:var(--blue);
+    font-size:11px;
+    cursor:pointer;
+}
+
+.notification-list {
+    max-height:350px;
+    overflow-y:auto;
+}
+
+.notification-item {
+    display:block;
+    padding:13px 15px;
+    border-bottom:1px solid var(--border);
+    text-decoration:none;
+    color:var(--text);
+    cursor:pointer;
+}
+
+.notification-item:hover {
+    background:var(--blue-light);
+}
+
+.notification-item.unread {
+    background:#f0f7ff;
+    border-left:3px solid var(--blue);
+}
+
+.notification-item strong {
+    display:block;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.notification-item p {
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+.notification-item small {
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    margin-top:6px;
+}
+
+.empty-notifications {
+    padding:25px;
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+}
+
+/* ================= PAGE CONTENT ================= */
+
+.content {
+    padding:30px;
+    max-width:1600px;
+    margin:auto;
+}
+
+.welcome {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.welcome h1 {
+    font-size:25px;
+    color:var(--blue-dark);
+}
+
+.welcome p {
+    font-size:12px;
+    color:var(--muted);
+    margin-top:7px;
+}
+
+.date-label {
+    background:white;
+    border:1px solid var(--border);
+    border-left:4px solid var(--brown);
+    border-radius:9px;
+    padding:12px 16px;
+    font-size:12px;
+    color:var(--brown);
+    box-shadow:var(--shadow);
+}
+
+/* ================= STATISTICS ================= */
+
+.stats-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card {
+    background:white;
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:21px;
+    box-shadow:var(--shadow);
+    transition:.25s;
+    position:relative;
+    overflow:hidden;
+}
+
+.stat-card:hover {
+    transform:translateY(-4px);
+    box-shadow:0 9px 25px #00000010;
+}
+
+.stat-card:after {
+    content:"";
+    position:absolute;
+    width:5px;
+    height:100%;
+    top:0;
+    left:0;
+    background:var(--blue);
+}
+
+.stat-card:nth-child(2):after,
+.stat-card:nth-child(4):after {
+    background:var(--brown);
+}
+
+.stat-icon {
+    height:46px;
+    width:46px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    font-size:19px;
+}
+
+.blue-icon {
+    background:var(--blue-light);
+    color:var(--blue);
+}
+
+.brown-icon {
+    background:var(--brown-light);
+    color:var(--brown);
+}
+
+.green-icon {
+    background:#e6f5ec;
+    color:var(--green);
+}
+
+.orange-icon {
+    background:#fff3dd;
+    color:var(--orange);
+}
+
+.stat-card h2 {
+    font-size:29px;
+    margin-top:17px;
+    color:var(--blue-dark);
+}
+
+.stat-card p {
+    font-size:12px;
+    color:var(--muted);
+    margin-top:6px;
+}
+
+/* ================= SECTIONS AND PANELS ================= */
+
+.section {
+    display:none;
+}
+
+.section.active {
+    display:block;
+}
+
+.panel {
+    background:white;
+    border:1px solid var(--border);
+    border-radius:13px;
+    margin-bottom:23px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+
+.panel-header {
+    padding:20px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(to right,#fff,#fbfcfe);
+}
+
+.panel-header h3 {
+    font-size:15px;
+    color:var(--blue-dark);
+}
+
+.panel-header p {
+    font-size:11px;
+    color:var(--muted);
+    margin-top:6px;
+}
+
+/* ================= MANAGEMENT LIST ================= */
+
+.management-list {
+    padding:8px 20px;
+}
+
+.management-row {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:19px 10px;
+    border-bottom:1px solid var(--border);
+}
+
+.management-row:last-child {
+    border-bottom:none;
+}
+
+.management-icon {
+    flex-shrink:0;
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    font-size:19px;
+}
+
+.management-info {
+    flex:1;
+    min-width:0;
+}
+
+.management-info h4 {
+    font-size:13px;
+    margin-bottom:6px;
+    color:var(--blue-dark);
+}
+
+.management-info p {
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.management-action {
+    flex-shrink:0;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn {
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:11px;
+    font-weight:600;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    text-decoration:none;
+    transition:.2s;
+}
+
+.btn:hover {
+    opacity:.88;
+    transform:translateY(-1px);
+}
+
+.btn-blue {
+    background:var(--blue);
+    color:white;
+}
+
+.btn-brown {
+    background:var(--brown);
+    color:white;
+}
+
+.btn-light {
+    background:var(--blue-light);
+    color:var(--blue-dark);
+}
+
+.btn-green {
+    background:var(--green);
+    color:white;
+}
+
+.btn-red {
+    background:var(--red);
+    color:white;
+}
+
+.btn-small {
+    padding:7px 9px;
+    margin:2px;
+}
+
+/* ================= TABLES ================= */
+
+.table-wrap {
+    overflow-x:auto;
+}
+
+table {
+    border-collapse:collapse;
+    width:100%;
+    min-width:700px;
+}
+
+th,td {
+    padding:15px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+    font-size:11px;
+    vertical-align:middle;
+}
+
+th {
+    background:#f7f9fc;
+    color:var(--blue-dark);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    white-space:nowrap;
+}
+
+td {
+    color:#435066;
+    line-height:1.5;
+}
+
+tbody tr:hover {
+    background:#f8fbff;
+}
+
+.status {
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#edf1f5;
+    color:#586474;
+    font-size:10px;
+    white-space:nowrap;
+}
+
+.status.pending {
+    background:#fff3dc;
+    color:#a36a08;
+}
+
+.status.approved,
+.status.active,
+.status.read {
+    background:#e3f5e9;
+    color:#167443;
+}
+
+.status.rejected {
+    background:#fde8e8;
+    color:#c12f3a;
+}
+
+.empty {
+    text-align:center;
+    padding:30px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-input {
+    padding:11px 14px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    font-size:11px;
+    outline:none;
+    min-width:220px;
+    background:white;
+    transition:.2s;
+}
+
+.search-input:focus {
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px #176fc11a;
+}
+
+/* ================= FOOTER AND MESSAGES ================= */
+
+.footer {
+    padding:23px;
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+    border-top:1px solid var(--border);
+    background:white;
+}
+
+.message-box {
+    padding:13px 16px;
+    margin-bottom:18px;
+    border-radius:8px;
+    font-size:12px;
+    display:none;
+}
+
+.message-box.show {
+    display:block;
+}
+
+.message-box.error {
+    background:#fde8e8;
+    color:#a52630;
+}
+
+.message-box.success {
+    background:#e3f5e9;
+    color:#167443;
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+@media(max-width:1100px) {
+    .sidebar {
+        justify-content:flex-start;
+        gap:8px;
+        padding:12px 15px;
+    }
+
+    .brand {
+        width:100%;
+        padding-bottom:10px;
+        border-bottom:1px solid #ffffff30;
+    }
+
+    .sidebar > .nav-link {
+        padding:11px 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        position:relative;
+        top:auto;
+        gap:7px;
+        padding:12px;
+    }
+
+    .brand {
+        width:100%;
+    }
+
+    .sidebar > .nav-link {
+        flex:1 1 auto;
+        justify-content:flex-start;
+        font-size:10px;
+        padding:10px;
+    }
+
+    .topbar {
+        padding:13px 15px;
+        position:relative;
+        flex-wrap:wrap;
+        gap:12px;
+    }
+
+    .topbar h3 {
+        font-size:14px;
+    }
+
+    .top-actions {
+        gap:12px;
+    }
+
+    .profile-info {
+        display:none;
+    }
+
+    .content {
+        padding:20px 13px;
+    }
+
+    .welcome h1 {
+        font-size:20px;
+    }
+
+    .stats-grid {
+        gap:11px;
+    }
+
+    .stat-card {
+        padding:15px;
+    }
+
+    .stat-card h2 {
+        font-size:23px;
+    }
+
+    .management-list {
+        padding:5px 10px;
+    }
+
+    .management-row {
+        gap:11px;
+        padding:15px 5px;
+    }
+
+    .management-icon {
+        width:39px;
+        height:39px;
+        font-size:16px;
+    }
+
+    .management-info p {
+        font-size:10px;
+    }
+
+    .search-input {
+        width:100%;
+        min-width:0;
+    }
+
+    .panel-header {
+        padding:16px;
+    }
+}
+
+@media(max-width:420px) {
+    .stats-grid {
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .management-row {
+        flex-wrap:wrap;
+    }
+
+    .management-action {
+        width:100%;
+        padding-left:48px;
+    }
+
+    .management-action .btn {
+        width:100%;
+    }
+
+    .notification-dropdown {
+        right:-60px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= TOP NAVIGATION ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+        <!-- <div class="brand-icon">
+            <i class=""></i>
+        </div> -->
+        <div>
+            <h2>INNOVATION HUB</h2>
+            <small>Administration Panel</small>
+        </div>
+    </div>
+
+    <p class="nav-label">Main Menu</p>
+
+    <a class="nav-link active" data-section="overview">
+        <i class="fas fa-chart-pie"></i> Dashboard
+    </a>
+
+    <a class="nav-link" data-section="assistance">
+        <i class="fas fa-handshake-angle"></i> Assistance
+    </a>
+
+    <a class="nav-link" data-section="innovations">
+        <i class="fas fa-lightbulb"></i> Innovations
+    </a>
+
+    <a class="nav-link" data-section="responders">
+        <i class="fas fa-users"></i> Responders
+    </a>
+
+    <a class="nav-link" data-section="sponsorship">
+        <i class="fas fa-hand-holding-dollar"></i> Sponsorship
+    </a>
+
+    <a class="nav-link" data-section="support">
+        <i class="fas fa-hands-helping"></i> Support
+    </a>
+
+    <a class="nav-link" data-section="notifications">
+        <i class="fas fa-bell"></i> Notifications
+    </a>
+
+    <a class="nav-link" data-section="quicklinks">
+        <i class="fas fa-link"></i> Quick Links
+    </a>
+
+    <a class="nav-link" href="/admin_logout">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+
+    <div class="sidebar-footer">
+        Secure Administration
+    </div>
+
+</aside>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="main">
+
+<!-- ================= HEADER ================= -->
+
+<header class="topbar">
+
+    <div class="top-left">
+        <div>
+            <h3>Admin Control Centre</h3>
+            <p>Innovation & Skills Hub Management</p>
+        </div>
+    </div>
+
+    <div class="top-actions">
+
+        <div class="notification-wrap">
+
+            <button class="notification-btn" id="notificationBtn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count" id="notificationCount" hidden>0</span>
+            </button>
+
+            <div class="notification-dropdown" id="notificationDropdown">
+
+                <div class="notification-heading">
+                    <strong>Notifications</strong>
+                    <button id="markAllRead">Mark all as read</button>
+                </div>
+
+                <div class="notification-list" id="notificationList">
+                    <div class="empty-notifications">Loading notifications...</div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="profile-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+
+            <div class="profile-info">
+                <strong>{{ admin_username or 'Administrator' }}</strong>
+                <small>{{ admin_email or 'System Manager' }}</small>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="welcome">
+        <div>
+            <h1>Welcome, {{ admin_username or 'Administrator' }} 👋</h1>
+            <p>Manage and monitor activities within your Innovation & Skills Hub.</p>
+        </div>
+
+        <div class="date-label">
+            <i class="far fa-calendar"></i>
+            <span id="currentDate"></span>
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <!-- OVERVIEW -->
+
+    <section class="section active" id="overview">
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h2 id="innovationTotal">0</h2>
+                <p>Total Innovations</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon brown-icon">
+                    <i class="fas fa-handshake-angle"></i>
+                </div>
+                <h2 id="assistanceTotal">0</h2>
+                <p>Assistance Requests</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 id="approvedTotal">0</h2>
+                <p>Approved Innovations</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h2 id="pendingTotal">0</h2>
+                <p>Pending Items</p>
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <div>
+                    <h3><i class="fas fa-sliders-h"></i> Platform Management</h3>
+                    <p>Select an activity below to manage your platform.</p>
+                </div>
+            </div>
+
+            <div class="management-list">
+
+                <div class="management-row">
+                    <div class="management-icon blue-icon">
+                        <i class="fas fa-handshake-angle"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Need Assistance Requests</h4>
+                        <p>Review requests and update their statuses.</p>
+                    </div>
+                    <div class="management-action">
+                        <button class="btn btn-blue" data-go="assistance">Manage Requests <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="management-row">
+                    <div class="management-icon brown-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Uploaded Innovations</h4>
+                        <p>Review projects, approve submissions and reject unsuitable projects.</p>
+                    </div>
+                    <div class="management-action">
+                        <button class="btn btn-brown" data-go="innovations">Manage Innovations <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="management-row">
+                    <div class="management-icon blue-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Innovation Responders</h4>
+                        <p>View registered responders and their areas of expertise.</p>
+                    </div>
+                    <div class="management-action">
+                        <button class="btn btn-blue" data-go="responders">View Responders</button>
+                    </div>
+                </div>
+
+                <div class="management-row">
+                    <div class="management-icon brown-icon">
+                        <i class="fas fa-hand-holding-dollar"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Sponsorship Messages</h4>
+                        <p>View messages from potential sponsors and partners.</p>
+                    </div>
+                    <div class="management-action">
+                        <button class="btn btn-brown" data-go="sponsorship">View Messages</button>
+                    </div>
+                </div>
+
+                <div class="management-row">
+                    <div class="management-icon blue-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Support Requests</h4>
+                        <p>Review requests for financial, technical and other support.</p>
+                    </div>
+                    <div class="management-action">
+                        <button class="btn btn-blue" data-go="support">Manage Support</button>
+                    </div>
+                </div>
+
+                <div class="management-row">
+                    <div class="management-icon brown-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>System Notifications</h4>
+                        <p>Monitor new submissions and activities.</p>
+                    </div>
+                    <div class="management-action">
+                        <button class="btn btn-brown" data-go="notifications">View Notifications</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <div>
+                    <h3><i class="fas fa-clock"></i> Recent Assistance Requests</h3>
+                    <p>Latest requests received by the hub.</p>
+                </div>
+                <button class="btn btn-light" data-go="assistance">View All</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Requester</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentAssistance">
+                        <tr><td colspan="4" class="empty">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ASSISTANCE -->
+
+    <section class="section" id="assistance">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Need Assistance Management</h3>
+                    <p>Review and manage assistance requests.</p>
+                </div>
+                <input class="search-input" id="assistanceSearch" placeholder="Search requests...">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Requester</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assistanceTable">
+                        <tr><td colspan="8" class="empty">Loading requests...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- INNOVATIONS -->
+
+    <section class="section" id="innovations">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Innovation Management</h3>
+                    <p>Review and manage uploaded innovation projects.</p>
+                </div>
+                <input class="search-input" id="innovationSearch" placeholder="Search innovations...">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Innovation</th>
+                            <th>Department</th>
+                            <th>Problem</th>
+                            <th>Solution</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="innovationTable">
+                        <tr><td colspan="6" class="empty">Loading innovations...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- RESPONDERS -->
+
+    <section class="section" id="responders">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Registered Responders</h3>
+                    <p>View registered responders and their expertise.</p>
+                </div>
+                <input class="search-input" id="responderSearch" placeholder="Search responders...">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Expertise</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="responderTable">
+                        <tr><td colspan="6" class="empty">Loading responders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- SPONSORSHIP -->
+
+    <section class="section" id="sponsorship">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Sponsorship Messages</h3>
+                    <p>Messages from sponsors and potential partners.</p>
+                </div>
+                <input class="search-input" id="sponsorSearch" placeholder="Search messages...">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Organization</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sponsorTable">
+                        <tr><td colspan="8" class="empty">Loading messages...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- SUPPORT REQUESTS -->
+
+    <section class="section" id="support">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Support Requests</h3>
+                    <p>Manage support requests submitted to the hub.</p>
+                </div>
+                <input class="search-input" id="supportSearch" placeholder="Search support requests...">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sponsor</th>
+                            <th>Organization</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Innovation</th>
+                            <th>Support Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="supportTable">
+                        <tr><td colspan="9" class="empty">Loading support requests...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- NOTIFICATIONS -->
+
+    <section class="section" id="notifications">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>All Notifications</h3>
+                    <p>Updates from the Innovation & Skills Hub.</p>
+                </div>
+                <button class="btn btn-blue" id="markAllReadPage">
+                    <i class="fas fa-check-double"></i> Mark All as Read
+                </button>
+            </div>
+
+            <div class="notification-list" id="allNotifications">
+                <div class="empty-notifications">Loading notifications...</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- QUICK LINKS -->
+
+    <section class="section" id="quicklinks">
+
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <h3>Quick Links</h3>
+                    <p>Navigate to other areas of your website.</p>
+                </div>
+            </div>
+
+            <div class="management-list">
+
+                <div class="management-row">
+                    <div class="management-icon blue-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Public Website</h4>
+                        <p>Visit the public Innovation & Skills Hub homepage.</p>
+                    </div>
+                    <div class="management-action">
+                        <a href="/" class="btn btn-blue">Open Website <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+
+                <div class="management-row">
+                    <div class="management-icon brown-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="management-info">
+                        <h4>Logout</h4>
+                        <p>Securely end your administration session.</p>
+                    </div>
+                    <div class="management-action">
+                        <a href="/admin_logout" class="btn btn-brown">Logout</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    © <span id="year"></span> Meru National Polytechnic |
+    Innovation & Skills Hub
+</footer>
+
+</div>
+
+<script>
+const API = {
+    notifications: "/api/notifications",
+    assistance: "/api/admin/assistance",
+    innovations: "/api/admin/innovations",
+    responders: "/api/admin/responders",
+    sponsors: "/api/admin/sponsor-messages",
+    support: "/api/admin/support-requests"
+};
+
+let assistanceData = [];
+let innovationData = [];
+let responderData = [];
+let sponsorData = [];
+let supportData = [];
+let notificationData = [];
+
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const dropdown = document.getElementById("notificationDropdown");
+
+document.getElementById("currentDate").textContent =
+    new Date().toLocaleDateString("en-KE", {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+    });
+
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+    })[char]);
+}
+
+function showMessage(message, type="success") {
+    const box = document.getElementById("messageBox");
+    box.textContent = message;
+    box.className = "message-box show " + type;
+
+    setTimeout(() => {
+        box.className = "message-box";
+    }, 4000);
+}
+
+async function apiFetch(url, options={}) {
+    const response = await fetch(url, {
+        credentials:"same-origin",
+        ...options,
+        headers:{
+            "Accept":"application/json",
+            ...(options.headers || {})
+        }
+    });
+
+    if (response.status === 401 || response.redirected) {
+        window.location.href = "/admin_login";
+        throw new Error("Your session has expired.");
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+
+    if (!contentType.includes("application/json")) {
+        throw new Error("The server did not return JSON. Check the Flask terminal.");
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || data.message || "Request failed.");
+    }
+
+    return data;
+}
+
+function statusClass(status) {
+    const value = String(status || "").toLowerCase();
+
+    if (value === "approved" || value === "active" || value === "read") {
+        return "approved";
+    }
+
+    if (value === "rejected") return "rejected";
+
+    return "pending";
+}
+
+function statusBadge(status) {
+    return `<span class="status ${statusClass(status)}">${escapeHTML(status || "Pending")}</span>`;
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.toggle("active", section.id === sectionId);
+    });
+
+    document.querySelectorAll(".nav-link[data-section]").forEach(link => {
+        link.classList.toggle("active", link.dataset.section === sectionId);
+    });
+
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+
+    if (sectionId === "notifications") loadNotifications();
+    if (sectionId === "assistance") loadAssistance();
+    if (sectionId === "innovations") loadInnovations();
+    if (sectionId === "responders") loadResponders();
+    if (sectionId === "sponsorship") loadSponsors();
+    if (sectionId === "support") loadSupport();
+}
+
+document.querySelectorAll(".nav-link[data-section]").forEach(link => {
+    link.addEventListener("click", () => showSection(link.dataset.section));
+});
+
+document.querySelectorAll("[data-go]").forEach(button => {
+    button.addEventListener("click", () => showSection(button.dataset.go));
+});
+
+// ASSISTANCE
+
+async function loadAssistance() {
+    const tbody = document.getElementById("assistanceTable");
+
+    try {
+        assistanceData = await apiFetch(API.assistance);
+        renderAssistance();
+        updateStatistics();
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty">${escapeHTML(error.message)}</td></tr>`;
+        console.error(error);
+    }
+}
+
+function renderAssistance() {
+    const tbody = document.getElementById("assistanceTable");
+    const query = (document.getElementById("assistanceSearch").value || "").toLowerCase();
+
+    const records = assistanceData.filter(item =>
+        [item.name,item.email,item.phone,item.category,item.description,item.status]
+            .some(value => String(value || "").toLowerCase().includes(query))
+    );
+
+    if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty">No assistance requests found.</td></tr>';
+    } else {
+        tbody.innerHTML = records.map(item => `
+            <tr>
+                <td>${escapeHTML(item.name)}</td>
+                <td>${escapeHTML(item.email)}</td>
+                <td>${escapeHTML(item.phone)}</td>
+                <td>${escapeHTML(item.category)}</td>
+                <td>${escapeHTML(item.description)}</td>
+                <td>${statusBadge(item.status)}</td>
+                <td>${escapeHTML(item.date)}</td>
+                <td>
+                    <button class="btn btn-green btn-small" onclick="updateStatus('assistance',${Number(item.id)},'Approved')">Approve</button>
+                    <button class="btn btn-red btn-small" onclick="updateStatus('assistance',${Number(item.id)},'Rejected')">Reject</button>
+                    <button class="btn btn-light btn-small" onclick="updateStatus('assistance',${Number(item.id)},'Pending')">Pending</button>
+                </td>
+            </tr>
+        `).join("");
+    }
+
+    const recent = document.getElementById("recentAssistance");
+    const latest = [...assistanceData].slice(0,5);
+
+    recent.innerHTML = latest.length ? latest.map(item => `
+        <tr>
+            <td>${escapeHTML(item.name)}</td>
+            <td>${escapeHTML(item.category)}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td>${escapeHTML(item.date)}</td>
+        </tr>
+    `).join("") : '<tr><td colspan="4" class="empty">No assistance requests yet.</td></tr>';
+}
+
+// INNOVATIONS
+
+async function loadInnovations() {
+    const tbody = document.getElementById("innovationTable");
+
+    try {
+        innovationData = await apiFetch(API.innovations);
+        renderInnovations();
+        updateStatistics();
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty">${escapeHTML(error.message)}</td></tr>`;
+        console.error(error);
+    }
+}
+
+function renderInnovations() {
+    const tbody = document.getElementById("innovationTable");
+    const query = (document.getElementById("innovationSearch").value || "").toLowerCase();
+
+    const records = innovationData.filter(item =>
+        [item.name,item.department,item.problem,item.solution,item.description,item.status]
+            .some(value => String(value || "").toLowerCase().includes(query))
+    );
+
+    if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty">No innovations found.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = records.map(item => `
+        <tr>
+            <td>
+                <strong>${escapeHTML(item.name)}</strong>
+                ${item.image ? `<br><a target="_blank" rel="noopener" href="/static/uploads/${encodeURIComponent(item.image)}">View image</a>` : ""}
+            </td>
+            <td>${escapeHTML(item.department)}</td>
+            <td>${escapeHTML(item.problem)}</td>
+            <td>${escapeHTML(item.solution)}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td>
+                <button class="btn btn-green btn-small" onclick="updateStatus('innovations',${Number(item.id)},'Active')">Approve</button>
+                <button class="btn btn-red btn-small" onclick="updateStatus('innovations',${Number(item.id)},'Rejected')">Reject</button>
+                <button class="btn btn-light btn-small" onclick="updateStatus('innovations',${Number(item.id)},'Pending')">Pending</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+// RESPONDERS
+
+async function loadResponders() {
+    const tbody = document.getElementById("responderTable");
+
+    try {
+        responderData = await apiFetch(API.responders);
+        renderResponders();
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty">${escapeHTML(error.message)}</td></tr>`;
+        console.error(error);
+    }
+}
+
+function renderResponders() {
+    const tbody = document.getElementById("responderTable");
+    const query = (document.getElementById("responderSearch").value || "").toLowerCase();
+
+    const records = responderData.filter(item =>
+        [item.name,item.email,item.phone,item.expertise,item.description]
+            .some(value => String(value || "").toLowerCase().includes(query))
+    );
+
+    tbody.innerHTML = records.length ? records.map(item => `
+        <tr>
+            <td>${escapeHTML(item.name)}</td>
+            <td>${escapeHTML(item.email)}</td>
+            <td>${escapeHTML(item.phone)}</td>
+            <td>${escapeHTML(item.expertise)}</td>
+            <td>${escapeHTML(item.description)}</td>
+            <td>${escapeHTML(item.date)}</td>
+        </tr>
+    `).join("") : '<tr><td colspan="6" class="empty">No responders found.</td></tr>';
+}
+
+// SPONSOR MESSAGES
+
+async function loadSponsors() {
+    const tbody = document.getElementById("sponsorTable");
+
+    try {
+        sponsorData = await apiFetch(API.sponsors);
+        renderSponsors();
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty">${escapeHTML(error.message)}</td></tr>`;
+        console.error(error);
+    }
+}
+
+function renderSponsors() {
+    const tbody = document.getElementById("sponsorTable");
+    const query = (document.getElementById("sponsorSearch").value || "").toLowerCase();
+
+    const records = sponsorData.filter(item =>
+        [item.name,item.organization,item.email,item.subject,item.message,item.status]
+            .some(value => String(value || "").toLowerCase().includes(query))
+    );
+
+    tbody.innerHTML = records.length ? records.map(item => `
+        <tr>
+            <td>${escapeHTML(item.name)}</td>
+            <td>${escapeHTML(item.organization)}</td>
+            <td>${escapeHTML(item.email)}</td>
+            <td>${escapeHTML(item.subject)}</td>
+            <td>${escapeHTML(item.message)}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td>${escapeHTML(item.date)}</td>
+            <td>
+                <button class="btn btn-blue btn-small" onclick="markSponsorRead(${Number(item.id)})">Mark Read</button>
+            </td>
+        </tr>
+    `).join("") : '<tr><td colspan="8" class="empty">No sponsor messages found.</td></tr>';
+}
+
+async function markSponsorRead(id) {
+    try {
+        await apiFetch(`/api/admin/sponsor-messages/${id}/read`, {
+            method:"POST"
+        });
+
+        showMessage("Sponsor message marked as read.");
+        await loadSponsors();
+
+    } catch (error) {
+        showMessage(error.message,"error");
+    }
+}
+
+// SUPPORT REQUESTS
+
+async function loadSupport() {
+    const tbody = document.getElementById("supportTable");
+
+    try {
+        supportData = await apiFetch(API.support);
+        renderSupport();
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="9" class="empty">${escapeHTML(error.message)}</td></tr>`;
+        console.error(error);
+    }
+}
+
+function renderSupport() {
+    const tbody = document.getElementById("supportTable");
+    const query = (document.getElementById("supportSearch").value || "").toLowerCase();
+
+    const records = supportData.filter(item =>
+        [item.sponsor,item.organization,item.email,item.phone,item.innovation,item.type,item.message,item.status]
+            .some(value => String(value || "").toLowerCase().includes(query))
+    );
+
+    tbody.innerHTML = records.length ? records.map(item => `
+        <tr>
+            <td>${escapeHTML(item.sponsor)}</td>
+            <td>${escapeHTML(item.organization)}</td>
+            <td>${escapeHTML(item.email)}</td>
+            <td>${escapeHTML(item.phone)}</td>
+            <td>${escapeHTML(item.innovation)}</td>
+            <td>${escapeHTML(item.type)}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td>${escapeHTML(item.date)}</td>
+            <td>
+                <button class="btn btn-green btn-small" onclick="updateStatus('support-requests',${Number(item.id)},'Approved')">Approve</button>
+                <button class="btn btn-red btn-small" onclick="updateStatus('support-requests',${Number(item.id)},'Rejected')">Reject</button>
+                <button class="btn btn-light btn-small" onclick="updateStatus('support-requests',${Number(item.id)},'Pending')">Pending</button>
+            </td>
+        </tr>
+    `).join("") : '<tr><td colspan="9" class="empty">No support requests found.</td></tr>';
+}
+
+// UPDATE STATUSES
+
+async function updateStatus(type,id,status) {
+    const endpoints = {
+        assistance:`/api/admin/assistance/${id}/status`,
+        innovations:`/api/admin/innovations/${id}/status`,
+        "support-requests":`/api/admin/support-requests/${id}/status`
+    };
+
+    try {
+        await apiFetch(endpoints[type], {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({status})
+        });
+
+        showMessage("Status updated successfully.");
+
+        if (type === "assistance") await loadAssistance();
+        if (type === "innovations") await loadInnovations();
+        if (type === "support-requests") await loadSupport();
+
+    } catch (error) {
+        showMessage(error.message,"error");
+    }
+}
+
+// DASHBOARD STATISTICS
+
+function updateStatistics() {
+    document.getElementById("innovationTotal").textContent = innovationData.length;
+    document.getElementById("assistanceTotal").textContent = assistanceData.length;
+
+    const approved = innovationData.filter(item =>
+        String(item.status).toLowerCase() === "active"
+    ).length;
+
+    const pendingInnovations = innovationData.filter(item =>
+        String(item.status).toLowerCase() === "pending"
+    ).length;
+
+    const pendingAssistance = assistanceData.filter(item =>
+        String(item.status).toLowerCase() === "pending"
+    ).length;
+
+    document.getElementById("approvedTotal").textContent = approved;
+    document.getElementById("pendingTotal").textContent =
+        pendingInnovations + pendingAssistance;
+}
+
+// NOTIFICATIONS
+
+function createNotificationElement(item) {
+    const link = document.createElement("a");
+
+    link.className = "notification-item" +
+        (Number(item.is_read) === 0 ? " unread" : "");
+
+    const title = document.createElement("strong");
+    title.textContent = item.title || "New notification";
+
+    const message = document.createElement("p");
+    message.textContent = item.message || "";
+
+    const date = document.createElement("small");
+    date.textContent = item.created_at || "";
+
+    link.append(title,message,date);
+
+    link.addEventListener("click",async event => {
+        event.preventDefault();
+
+        if (Number(item.is_read) === 0) {
+            await markNotificationRead(item.id);
+        }
+
+        const target = item.url || "/admin_dashboard";
+
+        if (target.startsWith("/") && !target.startsWith("//")) {
+            window.location.href = target;
+        }
+    });
+
+    return link;
+}
+
+function renderNotifications() {
+    const unread = notificationData.filter(
+        item => Number(item.is_read) === 0
+    ).length;
+
+    const count = document.getElementById("notificationCount");
+
+    count.textContent = unread > 99 ? "99+" : unread;
+    count.hidden = unread === 0;
+
+    const list = document.getElementById("notificationList");
+    const all = document.getElementById("allNotifications");
+
+    list.replaceChildren();
+    all.replaceChildren();
+
+    if (!notificationData.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-notifications";
+        empty.textContent = "No notifications yet.";
+
+        list.appendChild(empty);
+        all.appendChild(empty.cloneNode(true));
+        return;
+    }
+
+    notificationData.forEach(item => {
+        list.appendChild(createNotificationElement(item));
+        all.appendChild(createNotificationElement(item));
+    });
+}
+
+async function loadNotifications() {
+    try {
+        const data = await apiFetch(API.notifications);
+
+        notificationData = Array.isArray(data.notifications)
+            ? data.notifications : [];
+
+        renderNotifications();
+
+    } catch (error) {
+        console.error("Notification error:",error);
+
+        document.getElementById("notificationList").textContent =
+            "Unable to load notifications.";
+
+        document.getElementById("allNotifications").textContent =
+            "Unable to load notifications.";
+    }
+}
+
+async function markNotificationRead(id) {
+    try {
+        await apiFetch(`/api/notifications/${encodeURIComponent(id)}/read`, {
+            method:"POST"
+        });
+
+        await loadNotifications();
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function markAllNotificationsRead() {
+    try {
+        await apiFetch("/api/notifications/read-all", {
+            method:"POST"
+        });
+
+        await loadNotifications();
+        showMessage("All notifications marked as read.");
+
+    } catch (error) {
+        showMessage(error.message,"error");
+    }
+}
+
+document.getElementById("notificationBtn").addEventListener("click",() => {
+    dropdown.classList.toggle("show");
+    loadNotifications();
+});
+
+document.getElementById("markAllRead").addEventListener(
+    "click",markAllNotificationsRead
+);
+
+document.getElementById("markAllReadPage").addEventListener(
+    "click",markAllNotificationsRead
+);
+
+document.addEventListener("click",event => {
+    if (!event.target.closest(".notification-wrap")) {
+        dropdown.classList.remove("show");
+    }
+});
+
+// SEARCH INPUTS
+
+document.getElementById("assistanceSearch").addEventListener("input",renderAssistance);
+document.getElementById("innovationSearch").addEventListener("input",renderInnovations);
+document.getElementById("responderSearch").addEventListener("input",renderResponders);
+document.getElementById("sponsorSearch").addEventListener("input",renderSponsors);
+document.getElementById("supportSearch").addEventListener("input",renderSupport);
+
+// INITIAL DATA LOADING
+
+async function initializeDashboard() {
+    await Promise.allSettled([
+        loadAssistance(),
+        loadInnovations(),
+        loadResponders(),
+        loadSponsors(),
+        loadSupport(),
+        loadNotifications()
+    ]);
+}
+
+initializeDashboard();
+
+// REFRESH NOTIFICATIONS EVERY 15 SECONDS
+
+setInterval(loadNotifications,15000);
+
+</script>
+
+</body>
+</html>
