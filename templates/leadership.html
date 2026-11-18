@@ -1,36 +1,673 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-body{font-family:Arial;background:#1e88e5;margin:0;padding:0}
-.navbar{background:#6f4e37;color:white;padding:15px;display:flex;justify-content:space-between}
-.navbar a{color:white;text-decoration:none;margin-left:15px;font-weight:bold}
-.container{width:60%;margin:auto;padding:30px;text-align:center}
-.card{background:white;padding:20px;border-radius:10px;margin:15px 0;box-shadow:0 5px 10px rgba(0,0,0,0.1)}
-.card h3{color:#1e3a8a}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Innovation Club Leadership | MNP</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --blue: #2b8ef1;
+            --brown: #8b5e3c;
+            --dark: #172337;
+            --light: #f5f8fc;
+            --white: #ffffff;
+            --text: #657185;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* NAVIGATION */
+
+        nav {
+            background: white;
+            padding: 17px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 3px 15px rgba(0,0,0,.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--blue);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .logo i {
+            background: var(--blue);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 13px;
+            font-weight: 500;
+            transition: .3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--blue);
+        }
+
+        /* HERO */
+
+        .hero {
+            background: linear-gradient(120deg, #12375d, #2b8ef1);
+            padding: 85px 7%;
+            text-align: center;
+            color: white;
+        }
+
+        .hero .tag {
+            display: inline-block;
+            background: rgba(255,255,255,.15);
+            padding: 9px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(29px, 5vw, 46px);
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 span {
+            color: #c7e4ff;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            font-size: 14px;
+            line-height: 1.9;
+            color: #e8f3ff;
+        }
+
+        .hero-line {
+            width: 75px;
+            height: 4px;
+            background: var(--brown);
+            margin: 25px auto 0;
+            border-radius: 10px;
+        }
+
+        /* SECTION */
+
+        .section {
+            padding: 65px 7%;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-heading small {
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-heading h2 {
+            font-size: 29px;
+            margin: 10px 0;
+        }
+
+        .section-heading p {
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        /* LEADERSHIP GRID */
+
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .leader-card {
+            background: white;
+            border-radius: 13px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 7px 25px rgba(0,0,0,.06);
+            border-bottom: 3px solid var(--blue);
+            transition: .3s;
+        }
+
+        .leader-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 12px 30px rgba(43,142,241,.12);
+        }
+
+        .leader-icon {
+            width: 75px;
+            height: 75px;
+            background: #eaf4ff;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            font-size: 29px;
+        }
+
+        .leader-card:nth-child(even) .leader-icon {
+            background: #f4ebe5;
+            color: var(--brown);
+        }
+
+        .leader-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .leader-role {
+            display: inline-block;
+            color: var(--brown);
+            background: #f7eee8;
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .leader-contact {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            border-top: 1px solid #edf0f5;
+            padding-top: 18px;
+        }
+
+        .contact-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #eaf4ff;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .contact-btn:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .contact-btn.whatsapp {
+            background: #e8f8ed;
+            color: #20a45b;
+        }
+
+        .contact-btn.whatsapp:hover {
+            background: #20a45b;
+            color: white;
+        }
+
+        /* RESEARCHERS */
+
+        .research-section {
+            background: white;
+        }
+
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .researcher-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px 15px;
+            text-align: center;
+            border: 1px solid #e8edf4;
+            transition: .3s;
+        }
+
+        .researcher-card:hover {
+            border-color: var(--blue);
+            transform: translateY(-5px);
+        }
+
+        .researcher-icon {
+            width: 58px;
+            height: 58px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            color: var(--brown);
+            font-size: 23px;
+        }
+
+        .researcher-card h3 {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .researcher-card .leader-contact {
+            padding-top: 13px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #142337;
+            padding: 35px 7%;
+            text-align: center;
+            color: white;
+        }
+
+        footer h3 {
+            color: #75baff;
+            margin-bottom: 12px;
+        }
+
+        footer p {
+            color: #c8d4e2;
+            font-size: 12px;
+            line-height: 2;
+        }
+
+        /* RESPONSIVE */
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: var(--blue);
+            color: white;
+            padding: 10px 13px;
+            border-radius: 6px;
+            font-size: 18px;
+        }
+
+        @media(max-width: 900px) {
+            .leadership-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .research-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 600px) {
+            nav {
+                flex-wrap: wrap;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding-top: 18px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .leadership-grid,
+            .research-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 60px 6%;
+            }
+
+            .section {
+                padding: 50px 6%;
+            }
+
+            .section-heading h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="navbar">
-<h2>Leadership</h2>
-<div>
-<a href="/dashboard">Dashboard</a>
-<a href="/logout">Logout</a>
-</div>
-</div>
+<!-- NAVIGATION -->
 
-<div class="container">
-<div class="card"><h3>Chairperson</h3><p>James kiilu mutiso</p></div>
-<div class="card"><h3>Assistant Chairperson</h3><p>Francis Wanjiku</p></div>
-<div class="card"><h3>Secretary</h3><p>james Nderitu</p></div>
-<div class="card"><h3>Assistant Secretary</h3><p>Charles Muthoni</p></div>
-<div class="card"><h3>Treasurer</h3><p>jakie mugambi</p></div>
-<div class="card"><h3>Assistant Treasurer</h3><p>Morgan Kungutia</p></div>
-<div class="card"><h3>Welfare Organiser</h3><p>Mercy Mwita</p></div>
-<div class="card"><h3>Organising Secretary</h3><p>samuel karugi</p></div>
-<div class="card"><h3>Researchers</h3><p>Marius Kiplagat,Raphael koome,Miriam Kawira,Erickson Egala</p></div>
-</div>
+<nav>
+    <a href="/index" class="logo">
+        <!-- <i class="></i> -->
+        <span>MNP INNOVATION CLUB</span>
+    </a>
+
+    <button class="menu-btn" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-links" id="navLinks">
+        <a href="/index">Home</a>
+        <a href="/about">About Us</a>
+        <a href="/innovations">Innovations</a>
+        <a href="/gallery">Gallery</a>
+        <a href="/leadership">Leadership</a>
+        <a href="/sponsorship">Sponsorship</a>
+        <a href="/contact">Contact</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+
+<!-- <section class="hero">
+    <span class="tag">MERU NATIONAL POLYTECHNIC</span>
+
+    <h1>
+        Welcome to Innovation Club
+        <span>Leadership</span>
+    </h1>
+
+    <p>
+        Meet the dedicated leadership team and researchers
+        driving innovation, creativity, research and skills
+        development at Meru National Polytechnic.
+    </p>
+
+    <div class="hero-line"></div>
+</section> -->
+
+<!-- LEADERSHIP -->
+
+<section class="section">
+    <div class="section-heading">
+        <small>Our Leadership Team</small>
+        <h2>Club Executive Leadership</h2>
+        <p>Connect with our club leaders through their contacts.</p>
+    </div>
+
+    <div class="leadership-grid">
+
+        <!-- CHAIRPERSON -->
+        <div class="leader-card">
+            <div class="leader-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+
+            <span class="leader-role">CHAIRPERSON</span>
+            <h3>James Kiilu</h3>
+
+            <div class="leader-contact">
+                <a href="tel:+254710329922 class="contact-btn" title="Call">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254710329922" class="contact-btn whatsapp" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- ASSISTANT CHAIRPERSON -->
+        <div class="leader-card">
+            <div class="leader-icon">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <span class="leader-role">ASSISTANT CHAIRPERSON</span>
+            <h3>Francis Wanjiku</h3>
+
+            <div class="leader-contact">
+                <a href="tel:+254788364022" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254788364022" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- TREASURER -->
+        <div class="leader-card">
+            <div class="leader-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+
+            <span class="leader-role">TREASURER</span>
+            <h3>Jakie Makena Mugambi</h3>
+
+            <div class="leader-contact">
+                <a href="tel:+254768271182"class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254768271821" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- ASSISTANT TREASURER -->
+        <div class="leader-card">
+            <div class="leader-icon">
+                <i class="fas fa-coins"></i>
+            </div>
+
+            <span class="leader-role">ASSISTANT TREASURER</span>
+            <h3>Morgan Kungutia</h3>
+
+            <div class="leader-contact">
+                <a href="tel:+254100494304" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254100494304" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- SECRETARY -->
+        <div class="leader-card">
+            <div class="leader-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+
+            <span class="leader-role">SECRETARY</span>
+            <h3>James Nderitu</h3>
+
+            <div class="leader-contact">
+                <a href="tel:+254740023924" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254740023924" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- ASSISTANT SECRETARY -->
+        <div class="leader-card">
+            <div class="leader-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+
+            <span class="leader-role">ASSISTANT SECRETARY</span>
+            <h3>Charles Njoroge</h3>
+
+            <div class="leader-contact">
+                <a href="tel:+254794332241" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254794332241" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- RESEARCHERS -->
+
+<section class="section research-section">
+    <div class="section-heading">
+        <small>Innovation and Research</small>
+        <h2>Our Researchers</h2>
+        <p>Meet the researchers contributing to innovation and technological development.</p>
+    </div>
+
+    <div class="research-grid">
+
+        <!-- RESEARCHER 1 -->
+        <div class="researcher-card">
+            <div class="researcher-icon">
+                <i class="fas fa-microscope"></i>
+            </div>
+            <h3>Raphael Koome</h3>
+            <p>Electrical Engineering</p>
+
+            <div class="leader-contact">
+                <a href="tel:+254798309651" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254798309651" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- RESEARCHER 2 -->
+        <div class="researcher-card">
+            <div class="researcher-icon">
+                <i class="fas fa-flask"></i>
+            </div>
+            <h3>Caleb Munene</h3>
+            <p>ICT</p>
+
+            <div class="leader-contact">
+                <a href="tel:+254115456878" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254115456878" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- RESEARCHER 3 -->
+        <div class="researcher-card">
+            <div class="researcher-icon">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <h3>Erickson Egala</h3>
+            <p>Civil Engineering</p>
+
+            <div class="leader-contact">
+                <a href="tel:+254712232551" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254712232551" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- RESEARCHER 4 -->
+        <div class="researcher-card">
+            <div class="researcher-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3>Mercy Mwita</h3>
+            <p>Applied Sciences</p>
+
+            <div class="leader-contact">
+                <a href="tel:+254700590488" class="contact-btn">
+                    <i class="fas fa-phone"></i>
+                </a>
+
+                <a href="https://wa.me/254700590488" class="contact-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+    <h3>MNP Innovation Club</h3>
+
+    <p>
+        Meru National Polytechnic<br>
+        Innovation • Research • Creativity • Skills Development
+    </p>
+
+    <p style="margin-top:15px;">
+        © <span id="year"></span> Meru National Polytechnic Innovation Club.
+        All Rights Reserved.
+    </p>
+</footer>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("navLinks").classList.toggle("active");
+    }
+
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
+</script>
 
 </body>
 </html>
