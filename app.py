@@ -431,6 +431,16 @@ def init_db():
             "images": "TEXT"
         })
 
+        # Innovator accounts and project ownership (safe for existing databases)
+        migrate_columns(cursor, "innovators", {
+            "password_hash": "TEXT",
+            "account_status": "TEXT NOT NULL DEFAULT 'Active'"
+        })
+        migrate_columns(cursor, "innovations", {
+            "innovator_id": "INTEGER"
+        })
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_innovations_innovator_id ON innovations(innovator_id)")
+
         # INNOVATION LIKES
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS innovation_likes (
@@ -1263,6 +1273,14 @@ def innovations():
             or request.headers.get("Sec-Fetch-Mode") == "cors"
         )
 
+        # Every new project must belong to the signed-in innovator account.
+        if not session.get("innovator_id"):
+            message = "Please log in as an innovator before submitting a project."
+            if is_ajax:
+                return jsonify({"success": False, "message": message}), 401
+            flash(message, "error")
+            return redirect(url_for("innovator_login"))
+
         def response_error(message, status=400):
 
             if is_ajax:
@@ -1417,9 +1435,10 @@ def innovations():
                     email,
                     phone,
                     whatsapp,
-                    images
+                    images,
+                    innovator_id
                 )
-                VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?, ?, ?, ?, ?)
             """, (
                 name,
                 department,
@@ -1432,7 +1451,8 @@ def innovations():
                 email,
                 phone,
                 whatsapp,
-                images_json
+                images_json,
+                session.get("innovator_id")
             ))
 
             innovation_id = cursor.lastrowid
@@ -1599,8 +1619,11 @@ def explore():
         db.close()
 
 
-@app.route("/innovator_register", methods=["POST"])
+@app.route("/innovator_register", methods=["GET", "POST"])
 def innovator_register():
+    if request.method == "GET":
+        return redirect(url_for("explore") + "#register")
+
     full_name = form_value("full_name", "name")
     email = form_value("email").lower()
     phone = form_value("phone")
@@ -1610,71 +1633,129 @@ def innovator_register():
     innovation_name = form_value("innovation_name", "innovation")
     description = form_value("description")
     stage = form_value("stage")
+    password = request.form.get("password", "")
+    confirm_password = request.form.get("confirm_password", "")
 
-    if not full_name or not email or not phone or not field:
-        flash(
-            "Please provide your name, email, phone number and innovation field.",
-            "error"
-        )
+    if not all([full_name, email, phone, field, password, confirm_password]):
+        flash("Please complete all required fields, including your password.", "error")
         return redirect(url_for("explore") + "#register")
-
     if "@" not in email or "." not in email.rsplit("@", 1)[-1]:
         flash("Please enter a valid email address.", "error")
         return redirect(url_for("explore") + "#register")
+    if len(password) < 8:
+        flash("Your password must contain at least 8 characters.", "error")
+        return redirect(url_for("explore") + "#register")
+    if password != confirm_password:
+        flash("The passwords do not match.", "error")
+        return redirect(url_for("explore") + "#register")
 
     db = get_db()
-
     try:
         submission_date = current_time()
+        password_hash = generate_password_hash(password)
         cursor = db.execute("""
             INSERT INTO innovators (
                 full_name, email, phone, county, institution, field,
-                innovation_name, description, stage, status, registration_date
+                innovation_name, description, stage, status, registration_date,
+                password_hash, account_status
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?, 'Active')
         """, (
             full_name, email, phone, county, institution, field,
-            innovation_name, description, stage, submission_date
+            innovation_name, description, stage, submission_date, password_hash
         ))
         innovator_id = cursor.lastrowid
-
         db.execute("""
-            INSERT INTO notifications (
-                title, message, category, url, is_read, created_at
-            )
+            INSERT INTO notifications (title, message, category, url, is_read, created_at)
             VALUES (?, ?, ?, ?, 0, ?)
         """, (
             "New Innovator Registration",
-            f"{full_name} has registered as an innovator.",
-            "innovator",
-            "/admin_dashboard",
-            submission_date
+            f"{full_name} has created an innovator account.",
+            "innovator", "/admin_dashboard", submission_date
         ))
         db.commit()
-
-        app.logger.info("Innovator registration #%s submitted.", innovator_id)
-        flash(
-            "Your innovator registration has been submitted successfully. "
-            "Your application is awaiting approval.",
-            "success"
-        )
-
+        session.clear()
+        session["innovator_id"] = innovator_id
+        session["innovator_name"] = full_name
+        session["innovator_email"] = email
+        flash("Your innovator account has been created. Welcome to the Hub!", "success")
+        return redirect(url_for("innovator_dashboard"))
     except sqlite3.IntegrityError:
         db.rollback()
-        flash(
-            "This email address is already registered. Please use another email address.",
-            "error"
-        )
-
+        flash("This email address already has an account. Please log in instead.", "error")
     except Exception:
         db.rollback()
         app.logger.exception("Innovator registration failed.")
-        flash("Unable to submit your registration. Please try again.", "error")
-
+        flash("Unable to create your account. Please try again.", "error")
     finally:
         db.close()
-
     return redirect(url_for("explore") + "#register")
+
+
+@app.route("/innovator_login", methods=["GET", "POST"])
+def innovator_login():
+    if session.get("innovator_id"):
+        return redirect(url_for("innovator_dashboard"))
+    if request.method == "POST":
+        email = form_value("email").lower()
+        password = request.form.get("password", "")
+        db = get_db()
+        try:
+            innovator = db.execute("""
+                SELECT * FROM innovators WHERE email = ? COLLATE NOCASE LIMIT 1
+            """, (email,)).fetchone()
+            if (not innovator or not innovator["password_hash"]
+                    or not check_password_hash(innovator["password_hash"], password)):
+                flash("Invalid email or password. Please try again.", "error")
+            elif innovator["account_status"] != "Active":
+                flash("Your account is currently disabled. Contact the Hub administrator.", "error")
+            else:
+                session.clear()
+                session["innovator_id"] = innovator["id"]
+                session["innovator_name"] = innovator["full_name"]
+                session["innovator_email"] = innovator["email"]
+                flash("Welcome back, " + innovator["full_name"] + "!", "success")
+                return redirect(url_for("innovator_dashboard"))
+        finally:
+            db.close()
+    return render_template("innovator_login.html")
+
+
+@app.route("/innovator_logout")
+def innovator_logout():
+    session.pop("innovator_id", None)
+    session.pop("innovator_name", None)
+    session.pop("innovator_email", None)
+    flash("You have been logged out.", "success")
+    return redirect(url_for("explore"))
+
+
+@app.route("/innovator_dashboard")
+def innovator_dashboard():
+    innovator_id = session.get("innovator_id")
+    if not innovator_id:
+        flash("Please log in to access your innovator account.", "error")
+        return redirect(url_for("innovator_login"))
+    db = get_db()
+    try:
+        innovator = db.execute("SELECT * FROM innovators WHERE id = ?", (innovator_id,)).fetchone()
+        if not innovator:
+            session.clear()
+            flash("Your innovator account could not be found. Please log in again.", "error")
+            return redirect(url_for("innovator_login"))
+        projects = db.execute("""
+            SELECT * FROM innovations WHERE innovator_id = ? ORDER BY id DESC
+        """, (innovator_id,)).fetchall()
+        total_projects = len(projects)
+        pending_projects = sum(1 for project in projects if (project["status"] or "").lower() == "pending")
+        approved_projects = sum(1 for project in projects if (project["status"] or "").lower() in ("approved", "active"))
+        return render_template(
+            "innovator_dashboard.html", innovator=innovator, projects=projects,
+            total_projects=total_projects, pending_projects=pending_projects,
+            approved_projects=approved_projects
+        )
+    finally:
+        db.close()
 
 
 # =========================================================
