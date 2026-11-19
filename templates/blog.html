@@ -1,556 +1,1869 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Hub Blog & Global Technology Trends - Meru National Polytechnic Innovation and Skills Hub">
-    <title>Tech Blog & Global Trends | MNP Innovation & Skills Hub</title>
-    
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Global inventions, emerging technologies and innovation stories from the MNP Innovation and Skills Hub.">
+<meta name="theme-color" content="#2b8ef1">
 
-    <style>
-        /* ==========================================
-           1. COLOR PALETTE & LIGHT THEME SYSTEM
-           ========================================== */
-        :root {
-            --brand-primary: #8b5e3c;      /* Warm Earth / Coffee Brown */
-            --brand-primary-dark: #6e482d;
-            --brand-primary-light: rgba(139, 94, 60, 0.08);
-            
-            --brand-accent: #2b8ef1;       /* Electric Tech Blue */
-            --brand-accent-dark: #1b6ec4;
-            --brand-accent-light: rgba(43, 142, 241, 0.08);
-            --brand-accent-glow: rgba(43, 142, 241, 0.2);
-            
-            --surface-bg: #ffffff;         /* Pure White Background */
-            --surface-alt: #f8fafc;        /* Soft Off-White Section Fill */
-            --surface-card: #ffffff;       /* Card Fill */
-            
-            --text-heading: #0f172a;       /* Dark Heading */
-            --text-body: #475569;          /* Readable Body Slate */
-            --text-muted: #64748b;
-            --border-light: #e2e8f0;       /* Light Gray Border */
-            
-            --radius-sm: 8px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-full: 9999px;
+<title>Technology & Innovation Journal | MNP SkillsHub</title>
 
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        /* Global Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+:root{
+    --blue:#2b8ef1;
+    --blue-dark:#176fc1;
+    --blue-light:#eaf4ff;
 
-        html {
-            scroll-behavior: smooth;
-        }
+    --brown:#8b5e3c;
+    --brown-light:#f7f0eb;
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--surface-bg);
-            color: var(--text-body);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+    --white:#ffffff;
+    --ink:#243449;
+    --muted:#718096;
+    --line:#e5ebf2;
+    --soft:#f7faff;
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+    --shadow:0 16px 45px rgba(43,142,241,.10);
+}
 
-        ul {
-            list-style: none;
-        }
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-        .container {
-            width: 90%;
-            max-width: 1240px;
-            margin: 0 auto;
-        }
+html{
+    scroll-behavior:smooth;
+    scroll-padding-top:90px;
+}
 
-        .section-padding {
-            padding: 80px 0;
-        }
+body{
+    font-family:"DM Sans",sans-serif;
+    color:var(--ink);
+    line-height:1.7;
+    background:var(--white);
+    overflow-x:hidden;
+}
 
-        /* Section Header */
-        .section-header {
-            text-align: center;
-            max-width: 680px;
-            margin: 0 auto 50px auto;
-        }
+a{
+    text-decoration:none;
+    color:inherit;
+}
 
-        .section-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--brand-primary-light);
-            border: 1px solid rgba(139, 94, 60, 0.25);
-            color: var(--brand-primary);
-            font-size: 0.82rem;
-            font-weight: 700;
-            padding: 6px 18px;
-            border-radius: var(--radius-full);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 16px;
-        }
+button,input{
+    font:inherit;
+}
 
-        .section-header h2 {
-            font-size: 2.3rem;
-            color: var(--text-heading);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
+button{
+    cursor:pointer;
+}
 
-        /* ==========================================
-           2. NAVIGATION HEADER
-           ========================================== */
-        header {
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-light);
-        }
+.container{
+    width:min(1160px,91%);
+    margin:auto;
+}
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 85px;
-        }
+.section{
+    padding:78px 0;
+}
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+/* =========================
+   SECTION HEADINGS
+========================= */
 
-        .school-logo {
-            height: 48px;
-            width: auto;
-            object-fit: contain;
-            display: block;
-        }
+.eyebrow{
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    padding:7px 14px;
+    border-radius:99px;
+    background:var(--brown-light);
+    border:1px solid #ead9cc;
+    color:var(--brown);
+    font-size:.76rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
 
-        .logo-text {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text-heading);
-            line-height: 1.2;
-        }
+.section-heading{
+    text-align:center;
+    max-width:730px;
+    margin:0 auto 36px;
+}
 
-        .logo-text span {
-            color: var(--brand-accent);
-        }
+.section-heading h2{
+    font:800 clamp(1.8rem,3.5vw,2.5rem)/1.2 Manrope,sans-serif;
+    color:var(--blue-dark);
+    margin:15px 0 12px;
+    letter-spacing:-.7px;
+}
 
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.section-heading p{
+    color:var(--muted);
+}
 
-        .nav-btn-link {
-            padding: 8px 18px;
-            border-radius: var(--radius-full);
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-body);
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid var(--border-light);
-            background: var(--surface-alt);
-        }
+/* =========================
+   HEADER AND NAVIGATION
+========================= */
 
-        .nav-btn-link:hover, .nav-btn-link.active {
-            color: #ffffff;
-            background: var(--brand-primary);
-            border-color: var(--brand-primary);
-        }
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(255,255,255,.97);
+    backdrop-filter:blur(15px);
+    border-bottom:2px solid var(--blue);
+}
 
-        /* Buttons */
-        .btn-custom {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 10px 20px;
-            border-radius: var(--radius-full);
-            font-size: 0.88rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid transparent;
-            white-space: nowrap;
-        }
+.navbar{
+    min-height:78px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
 
-        .btn-earth {
-            background-color: var(--brand-primary);
-            color: #ffffff;
-            box-shadow: 0 4px 14px rgba(139, 94, 60, 0.3);
-        }
-        .btn-earth:hover {
-            background-color: var(--brand-primary-dark);
-            transform: translateY(-2px);
-        }
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
 
-        .btn-blue {
-            background-color: var(--brand-accent);
-            color: #ffffff;
-            box-shadow: 0 4px 14px var(--brand-accent-glow);
-        }
-        .btn-blue:hover {
-            background-color: var(--brand-accent-dark);
-            transform: translateY(-2px);
-        }
+.brand-mark{
+    width:45px;
+    height:45px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    color:var(--white);
+    background:var(--blue);
+    font-size:1.2rem;
+    box-shadow:0 5px 15px rgba(43,142,241,.2);
+}
 
-        /* ==========================================
-           3. BLOG HERO & ONLINE TECH SEARCH WIDGET
-           ========================================== */
-        .blog-hero {
-            padding: 70px 0;
-            background: linear-gradient(135deg, var(--brand-primary-light), var(--brand-accent-light));
-            text-align: center;
-            border-bottom: 1px solid var(--border-light);
-        }
+.brand-name{
+    font:800 1.05rem Manrope,sans-serif;
+    color:var(--brown);
+    line-height:1.15;
+}
 
-        .blog-hero h1 {
-            font-size: 2.8rem;
-            color: var(--text-heading);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
+.brand-name span{
+    color:var(--blue);
+}
 
-        .blog-hero p {
-            font-size: 1.1rem;
-            color: var(--text-body);
-            max-width: 650px;
-            margin: 0 auto 30px auto;
-        }
+.brand-sub{
+    display:block;
+    font:700 .67rem "DM Sans",sans-serif;
+    color:var(--brown);
+    margin-top:4px;
+}
 
-        /* Live Tech Trends Online Search Bar */
-        .tech-search-box {
-            max-width: 650px;
-            margin: 0 auto;
-            background: var(--surface-card);
-            padding: 10px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-light);
-            display: flex;
-            box-shadow: 0 10px 30px -10px rgba(43, 142, 241, 0.15);
-        }
+.nav-links{
+    display:flex;
+    gap:7px;
+    align-items:center;
+}
 
-        .tech-search-box input {
-            flex-grow: 1;
-            border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-family: inherit;
-            outline: none;
-            background: transparent;
-            color: var(--text-heading);
-        }
+.nav-links a{
+    padding:9px 12px;
+    border-radius:10px;
+    color:var(--brown);
+    font-size:.87rem;
+    font-weight:700;
+    transition:.2s;
+}
 
-        /* ==========================================
-           4. FEATURED GLOBAL INVENTION / TREND BANNER
-           ========================================== */
-        .featured-trend-card {
-            background: var(--surface-alt);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            overflow: hidden;
-            margin-bottom: 50px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-        }
+.nav-links a:hover,
+.nav-links a.active{
+    background:var(--blue);
+    color:var(--white);
+}
 
-        .featured-content {
-            padding: 45px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+.nav-toggle{
+    display:none;
+    border:1px solid var(--blue);
+    background:var(--white);
+    color:var(--blue);
+    width:43px;
+    height:43px;
+    border-radius:12px;
+}
 
-        .featured-badge {
-            display: inline-block;
-            background: var(--brand-accent-light);
-            color: var(--brand-accent);
-            font-size: 0.78rem;
-            font-weight: 800;
-            padding: 5px 14px;
-            border-radius: var(--radius-full);
-            text-transform: uppercase;
-            width: fit-content;
-            margin-bottom: 15px;
-        }
+/* =========================
+   HERO SECTION
+========================= */
 
-        .featured-content h3 {
-            font-size: 1.8rem;
-            color: var(--text-heading);
-            margin-bottom: 15px;
-            font-weight: 800;
-        }
+.hero{
+    position:relative;
+    overflow:hidden;
+    padding:86px 0 78px;
+    text-align:center;
+    color:var(--white);
 
-        .featured-content p {
-            color: var(--text-body);
-            margin-bottom: 25px;
-            font-size: 1.02rem;
-        }
+    background:
+    radial-gradient(circle at 82% 15%,rgba(255,255,255,.22),transparent 28%),
+    radial-gradient(circle at 8% 100%,rgba(139,94,60,.45),transparent 30%),
+    linear-gradient(125deg,#2b8ef1,#176fc1 65%,#8b5e3c);
+}
 
-        .featured-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            min-height: 320px;
-        }
+.hero-inner{
+    max-width:850px;
+    margin:auto;
+    position:relative;
+    z-index:1;
+}
 
-        /* ==========================================
-           5. BLOG POSTS GRID (CURRENT TRENDS & INVENTIONS)
-           ========================================== */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
+.hero .eyebrow{
+    background:rgba(255,255,255,.15);
+    border-color:rgba(255,255,255,.3);
+    color:var(--white);
+}
 
-        .blog-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
+.hero h1{
+    font:800 clamp(2.3rem,5.5vw,4.2rem)/1.08 Manrope,sans-serif;
+    letter-spacing:-1.7px;
+    margin:22px 0 18px;
+}
 
-        .blog-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(43, 142, 241, 0.4);
-            box-shadow: 0 15px 30px -10px rgba(43, 142, 241, 0.15);
-        }
+.hero h1 span{
+    color:var(--white);
+}
 
-        .blog-img {
-            height: 220px;
-            width: 100%;
-            object-fit: cover;
-        }
+.hero p{
+    max-width:700px;
+    margin:auto;
+    color:var(--white);
+    font-size:1.08rem;
+}
 
-        .blog-body {
-            padding: 28px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
+.actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:29px;
+}
 
-        .blog-category {
-            font-size: 0.78rem;
-            font-weight: 800;
-            color: var(--brand-primary);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
+/* =========================
+   BUTTONS
+========================= */
 
-        .blog-body h3 {
-            font-size: 1.3rem;
-            color: var(--text-heading);
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    border:0;
+    border-radius:12px;
+    padding:12px 20px;
+    font-size:.9rem;
+    font-weight:800;
+    transition:.2s;
+}
 
-        .blog-body p {
-            font-size: 0.95rem;
-            color: var(--text-body);
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
+.btn:hover{
+    transform:translateY(-2px);
+}
 
-        .blog-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-light);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
+.btn-blue{
+    background:var(--blue);
+    color:var(--white);
+    box-shadow:0 9px 22px rgba(43,142,241,.25);
+}
 
-        /* ==========================================
-           6. FOOTER
-           ========================================== */
-        footer {
-            background: #0f172a;
-            color: #94a3b8;
-            border-top: 1px solid var(--border-light);
-            padding: 50px 0 25px 0;
-            text-align: center;
-        }
+.btn-blue:hover{
+    background:var(--brown);
+}
 
-        footer p {
-            font-size: 0.9rem;
-            color: #94a3b8;
-        }
+.btn-white{
+    background:var(--white);
+    color:var(--blue-dark);
+}
 
-        /* Responsive */
-        @media (max-width: 992px) {
-            .featured-trend-card {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+.btn-outline{
+    border:1px solid var(--white);
+    color:var(--white);
+    background:transparent;
+}
+
+.btn-outline:hover{
+    background:var(--white);
+    color:var(--brown);
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-wrap{
+    margin-top:-27px;
+    position:relative;
+    z-index:3;
+}
+
+.search-panel{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:12px;
+    padding:17px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+}
+
+.search-field{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 14px;
+    border:1px solid var(--line);
+    background:var(--soft);
+    border-radius:12px;
+}
+
+.search-field:focus-within{
+    border-color:var(--blue);
+}
+
+.search-field i{
+    color:var(--blue);
+}
+
+.search-field input{
+    width:100%;
+    border:0;
+    outline:0;
+    background:transparent;
+    padding:13px 0;
+    color:var(--ink);
+}
+
+/* =========================
+   FEATURED ARTICLE
+========================= */
+
+.featured{
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    overflow:hidden;
+    border-radius:24px;
+    background:var(--blue);
+    color:var(--white);
+    box-shadow:var(--shadow);
+    margin-bottom:75px;
+}
+
+.featured-copy{
+    padding:clamp(28px,5vw,54px);
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+}
+
+.featured-label{
+    padding:6px 12px;
+    border-radius:99px;
+    background:var(--brown);
+    border:1px solid rgba(255,255,255,.3);
+    color:var(--white);
+    font-size:.72rem;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.featured h2{
+    font:800 clamp(1.65rem,3vw,2.35rem)/1.2 Manrope,sans-serif;
+    margin:19px 0 14px;
+}
+
+.featured p{
+    color:var(--white);
+    margin-bottom:23px;
+}
+
+.featured .btn-blue{
+    background:var(--brown);
+}
+
+.featured .btn-blue:hover{
+    background:var(--white);
+    color:var(--blue);
+}
+
+.featured-image{
+    min-height:340px;
+}
+
+.featured-image img{
+    width:100%;
+    height:100%;
+    min-height:340px;
+    object-fit:cover;
+}
+
+/* =========================
+   ARTICLE FILTERS
+========================= */
+
+.filters{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:9px;
+    margin:0 auto 32px;
+}
+
+.filter{
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--brown);
+    border-radius:99px;
+    padding:9px 15px;
+    font-size:.82rem;
+    font-weight:800;
+    transition:.2s;
+}
+
+.filter:hover,
+.filter.active{
+    background:var(--blue);
+    border-color:var(--blue);
+    color:var(--white);
+}
+
+/* =========================
+   ARTICLE GRID
+========================= */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:23px;
+}
+
+.card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    background:var(--white);
+    display:flex;
+    flex-direction:column;
+    transition:.25s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow);
+    border-color:var(--blue);
+}
+
+.card-image{
+    height:195px;
+    position:relative;
+    overflow:hidden;
+    background:var(--blue-light);
+}
+
+.card-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform .4s;
+}
+
+.card:hover .card-image img{
+    transform:scale(1.05);
+}
+
+.tag{
+    position:absolute;
+    top:13px;
+    left:13px;
+    padding:6px 10px;
+    border-radius:8px;
+    background:var(--white);
+    color:var(--brown);
+    font-size:.68rem;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.card-body{
+    padding:21px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+}
+
+.meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    color:#8290a2;
+    font-size:.73rem;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.meta i{
+    color:var(--blue);
+    margin-right:4px;
+}
+
+.card h3{
+    font:800 1.1rem/1.35 Manrope,sans-serif;
+    color:var(--brown);
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:.89rem;
+    color:var(--muted);
+    margin-bottom:17px;
+    flex:1;
+}
+
+.card-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    border-top:1px solid var(--line);
+    padding-top:13px;
+}
+
+.read{
+    font-size:.81rem;
+    color:var(--blue-dark);
+    font-weight:800;
+}
+
+.read:hover{
+    color:var(--brown);
+}
+
+.kind{
+    font-size:.72rem;
+    color:#8996a6;
+    font-weight:700;
+}
+
+.empty{
+    display:none;
+    grid-column:1/-1;
+    text-align:center;
+    padding:45px;
+    color:var(--muted);
+}
+
+.empty i{
+    display:block;
+    font-size:2rem;
+    color:var(--blue);
+    margin-bottom:12px;
+}
+
+/* =========================
+   SKILLS SECTION
+========================= */
+
+.skills{
+    background:var(--soft);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+}
+
+.skills-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:17px;
+}
+
+.skill{
+    padding:22px;
+    border:1px solid var(--line);
+    background:var(--white);
+    border-radius:16px;
+    transition:.25s;
+}
+
+.skill:hover{
+    transform:translateY(-5px);
+    border-color:var(--blue);
+    box-shadow:var(--shadow);
+}
+
+.skill-icon{
+    width:44px;
+    height:44px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    background:var(--blue);
+    color:var(--white);
+    font-size:1.1rem;
+    margin-bottom:14px;
+}
+
+.skill:nth-child(even) .skill-icon{
+    background:var(--brown);
+}
+
+.skill h3{
+    font:800 1rem Manrope,sans-serif;
+    color:var(--brown);
+    margin-bottom:7px;
+}
+
+.skill p{
+    font-size:.84rem;
+    color:var(--muted);
+}
+
+/* =========================
+   RESEARCH SOURCES
+========================= */
+
+.sources{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:11px;
+    margin-top:22px;
+}
+
+.sources a{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    color:var(--blue-dark);
+    font-size:.82rem;
+    font-weight:800;
+    transition:.2s;
+}
+
+.sources a:hover{
+    background:var(--blue);
+    border-color:var(--blue);
+    color:var(--white);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    background:var(--blue);
+    color:var(--white);
+    padding:46px 0 22px;
+    border-top:5px solid var(--brown);
+}
+
+.footer-main{
+    display:flex;
+    justify-content:space-between;
+    gap:30px;
+    padding-bottom:28px;
+}
+
+.footer-brand{
+    max-width:430px;
+}
+
+.footer-brand .brand-name{
+    color:var(--white);
+}
+
+.footer-brand .brand-sub{
+    color:var(--white);
+}
+
+.footer-brand p{
+    font-size:.87rem;
+    margin-top:13px;
+    color:var(--white);
+}
+
+.footer-links h4{
+    font:800 1rem Manrope,sans-serif;
+    color:var(--white);
+    margin-bottom:10px;
+}
+
+.footer-links a{
+    display:block;
+    font-size:.85rem;
+    margin:7px 0;
+    color:var(--white);
+}
+
+.footer-links a:hover{
+    color:#f2d7c3;
+    text-decoration:underline;
+}
+
+.copyright{
+    border-top:1px solid rgba(255,255,255,.3);
+    padding-top:19px;
+    text-align:center;
+    font-size:.8rem;
+    color:var(--white);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media(max-width:980px){
+
+    .grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .skills-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .nav-links a{
+        padding:8px 9px;
+        font-size:.82rem;
+    }
+}
+
+@media(max-width:720px){
+
+    .navbar{
+        min-height:70px;
+    }
+
+    .nav-toggle{
+        display:block;
+    }
+
+    .nav-links{
+        display:none;
+        position:absolute;
+        top:70px;
+        left:0;
+        right:0;
+        padding:13px 5% 18px;
+        background:var(--white);
+        border-bottom:2px solid var(--blue);
+        box-shadow:0 15px 25px #10243a12;
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .nav-links.open{
+        display:flex;
+    }
+
+    .nav-links a{
+        padding:11px 13px;
+    }
+
+    .hero{
+        padding:68px 0;
+    }
+
+    .search-panel{
+        grid-template-columns:1fr;
+    }
+
+    .search-panel .btn{
+        width:100%;
+    }
+
+    .featured{
+        grid-template-columns:1fr;
+    }
+
+    .featured-image{
+        order:-1;
+        min-height:230px;
+    }
+
+    .featured-image img{
+        min-height:230px;
+        max-height:260px;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .card-image{
+        height:220px;
+    }
+
+    .footer-main{
+        flex-direction:column;
+    }
+
+    .section{
+        padding:62px 0;
+    }
+}
+
+@media(max-width:440px){
+
+    .skills-grid{
+        grid-template-columns:1fr;
+    }
+
+    .actions .btn{
+        width:100%;
+    }
+
+    .hero h1{
+        letter-spacing:-1px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+    *{
+        scroll-behavior:auto!important;
+        transition:none!important;
+    }
+}
+
+</style>
 </head>
+
 <body>
 
-    <!-- ==========================================
-         NAVIGATION HEADER
-         ========================================== -->
-    <header>
-        <div class="container navbar">
-            <a href="/index" class="brand-logo">
-                <!-- <img src="logo.png" alt="Meru National Polytechnic Logo" class="school-logo"> -->
-                <div class="logo-text">
-                    MNP <span>SkillsHub</span>
-                </div>
-            </a>
+<!-- =========================
+     HEADER
+========================= -->
 
-            <nav class="nav-menu">
-                <a href="/index" class="nav-btn-link"><i class="fa-solid fa-house"></i> Home</a>
-                <a href="/innovations" class="nav-btn-link"><i class="fa-solid fa-rocket"></i> Innovations</a>
-                <a href="/forum" class="nav-btn-link"><i class="fa-solid fa-comments"></i> Forum</a>
-                <a href="/blog" class="nav-btn-link active"><i class="fa-solid fa-newspaper"></i> Blog</a>
-                <a href="/about" class="nav-btn-link"><i class="fa-solid fa-circle-info"></i> About Us</a>
-            </nav>
-        </div>
-    </header>
+<header>
 
-    <!-- ==========================================
-         BLOG HERO & ONLINE TREND SEARCH WIDGET
-         ========================================== -->
-    <section class="blog-hero">
-        <div class="container">
-            <h1>Tech Blog & Global Innovations</h1>
-            <p>Explore current trends in artificial intelligence, physical robotics, quantum computing, and breakthrough inventions worldwide.</p>
-            
-            <!-- Live Search Bar to look up online tech trends -->
-            <div class="tech-search-box">
-                <input type="text" id="techSearchQuery" placeholder="Search online current tech trends (e.g. humanoid robots, quantum chips)...">
-                <button class="btn-custom btn-blue" onclick="searchOnlineTrends()">
-                    <i class="fa-solid fa-magnifying-glass"></i> Search Web
-                </button>
-            </div>
-        </div>
-    </section>
+<div class="container navbar">
 
-    <!-- ==========================================
-         MAIN BLOG & TRENDS CONTAINER
-         ========================================== -->
-    <section class="section-padding">
-        <div class="container">
-            
-            <!-- FEATURED GLOBAL TREND BANNER -->
-            <div class="featured-trend-card">
-                <div class="featured-content">
-                    <span class="featured-badge">Global Breakthrough Trend</span>
-                    <h3>The Agentic AI & Physical Robotics Revolution</h3>
-                    <p>
-                        Artificial Intelligence has moved past simple question-answering tools into the realm of **multi-agent orchestration** and **Physical AI**. Worldwide, humanoid robots and autonomous drones are reshaping manufacturing, logistics, and precision agriculture, while agentic coding software empowers developers to build entire apps in record time.
-                    </p>
-                    <a href="#blog-grid" class="btn-custom btn-earth" style="width: fit-content;">Read Full Global Analysis</a>
-                </div>
-                <div class="featured-img">
-                    <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80" alt="Artificial Intelligence Robotics">
-                </div>
-            </div>
+<a href="/index" class="brand">
 
-            <!-- SECTION HEADER -->
-            <div class="section-header" id="blog-grid">
-                <span class="section-tag"><i class="fa-solid fa-globe"></i> Worldwide Inventions</span>
-                <h2>Latest Inventions & Emerging Technologies</h2>
-            </div>
+<!-- <span class="brand-mark">
+<i class="fa-solid fa-lightbulb"></i>
+</span>
 
-            <!-- BLOG POSTS GRID -->
-            <div class="blog-grid">
-                
-                <!-- Blog Item 1 -->
-                <div class="blog-card">
-                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" alt="Quantum Computing" class="blog-img">
-                    <div class="blog-body">
-                        <span class="blog-category">Quantum & Compute</span>
-                        <h3>Quantum Computing & Scalable Qubits</h3>
-                        <p>With silicon quantum processors scaling up, researchers worldwide are utilizing multi-state qubits to tackle complex molecular simulations and cryptography problems in seconds.</p>
-                        <div class="blog-footer">
-                            <span><i class="fa-regular fa-calendar"></i> November 2026</span>
-                            <span style="color:var(--brand-accent); font-weight:700;">Global Report</span>
-                        </div>
-                    </div>
-                </div>
+<span class="brand-name">
+MNP <span>SkillsHub</span> -->
+<small class="brand-sub">Innovation & Skills Hub</small>
+</span>
 
-                <!-- Blog Item 2 -->
-                <div class="blog-card">
-                    <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=600&q=80" alt="Renewable Energy Grid" class="blog-img">
-                    <div class="blog-body">
-                        <span class="blog-category">Clean Energy</span>
-                        <h3>Everything-to-Grid Energy Systems</h3>
-                        <p>New sodium-ion battery chemistries and smart coordination software are turning electric vehicles and smart buildings into active, real-time power grid stabilizers.</p>
-                        <div class="blog-footer">
-                            <span><i class="fa-regular fa-calendar"></i> October 2026</span>
-                            <span style="color:var(--brand-accent); font-weight:700;">WEF Trend</span>
-                        </div>
-                    </div>
-                </div>
+</a>
 
-                <!-- Blog Item 3 -->
-                <div class="blog-card">
-                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80" alt="Biotech and Cancer Vaccines" class="blog-img">
-                    <div class="blog-body">
-                        <span class="blog-category">Biotech & Health</span>
-                        <h3>Personalized mRNA Cancer Vaccines</h3>
-                        <p>Synthesized directly from individual tumor mutations, personalized mRNA immunizations are achieving remarkable phase 3 trial results in oncology worldwide.</p>
-                        <div class="blog-footer">
-                            <span><i class="fa-regular fa-calendar"></i> October 2026</span>
-                            <span style="color:var(--brand-accent); font-weight:700;">Medical Breakthrough</span>
-                        </div>
-                    </div>
-                </div>
+<button class="nav-toggle" id="navToggle"
+aria-label="Toggle navigation"
+aria-expanded="false">
 
-            </div>
+<i class="fa-solid fa-bars"></i>
 
-        </div>
-    </section>
+</button>
 
-    <!-- ==========================================
-         FOOTER
-         ========================================== -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 The Meru National Polytechnic Innovation and Skills Hub. All Rights Reserved.</p>
-        </div>
-    </footer>
+<nav class="nav-links" id="navLinks">
 
-    <!-- INTERACTIVE SEARCH SCRIPT -->
-    <script>
-        function searchOnlineTrends() {
-            const query = document.getElementById('techSearchQuery').value.trim();
-            if (!query) {
-                alert('Please enter a technology keyword to search online.');
-                return;
-            }
-            // Opens a Google search query in a new tab for real-time global technology trends
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + ' emerging technology trends 2026 innovations')}`;
-            window.open(searchUrl, '_blank');
+<a href="/index">
+<i class="fa-solid fa-house"></i> Home
+</a>
+
+<a href="/innovations">
+<i class="fa-solid fa-rocket"></i> Innovations
+</a>
+
+<a href="/forum">
+<i class="fa-solid fa-comments"></i> Forum
+</a>
+
+<a href="/blog" class="active">
+<i class="fa-solid fa-newspaper"></i> Blog
+</a>
+
+<a href="/about">
+<i class="fa-solid fa-circle-info"></i> About
+</a>
+
+</nav>
+
+</div>
+</header>
+
+
+<main>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+<div class="container hero-inner">
+
+<!-- <span class="eyebrow">
+<i class="fa-solid fa-globe"></i>
+Discover what is shaping tomorrow
+</span>
+
+<h1>
+Ideas today.<br>
+<span>Breakthroughs tomorrow.</span>
+</h1> -->
+
+<p>
+Explore emerging inventions and technologies from around the world — from intelligent robotics and clean energy to medical science, space exploration and the future of food.
+</p>
+
+<div class="actions">
+
+<a href="#latest" class="btn btn-blue">
+<i class="fa-solid fa-compass"></i>
+Explore innovations
+</a>
+
+<a href="#sources" class="btn btn-outline">
+<i class="fa-solid fa-book-open"></i>
+Research sources
+</a>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- =========================
+     SEARCH
+========================= -->
+
+<div class="container search-wrap">
+
+<div class="search-panel">
+
+<label class="search-field" for="articleSearch">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+id="articleSearch"
+type="search"
+placeholder="Search AI, robotics, renewable energy, biotechnology..."
+autocomplete="off"
+>
+
+</label>
+
+<button class="btn btn-blue" type="button" onclick="searchWeb()">
+
+<i class="fa-brands fa-google"></i>
+Search the web
+
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+     FEATURED AND ARTICLES
+========================= -->
+
+<section class="section">
+
+<div class="container">
+
+<article class="featured">
+
+<div class="featured-copy">
+
+<span class="featured-label">
+<i class="fa-solid fa-star"></i>
+Featured technology outlook · 2026
+</span>
+
+<h2>
+Technology is moving from the screen into the physical world
+</h2>
+
+<p>
+Artificial intelligence is increasingly connecting with robots, factories, power networks, laboratories and transport systems. At the same time, scientists are developing new ways to produce materials, deliver medicines, generate energy and protect digital information.
+</p>
+
+<a class="btn btn-blue" href="#latest">
+Explore the stories
+<i class="fa-solid fa-arrow-right"></i>
+</a>
+
+</div>
+
+<div class="featured-image">
+
+<img
+src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1100&q=85"
+alt="Robot representing advances in artificial intelligence and robotics"
+loading="lazy"
+>
+
+</div>
+
+</article>
+
+
+<!-- ARTICLE HEADING -->
+
+<div class="section-heading" id="latest">
+
+<span class="eyebrow">
+<i class="fa-solid fa-earth-africa"></i>
+Worldwide inventions
+</span>
+
+<h2>Latest inventions & emerging technologies</h2>
+
+<p>
+Discover technologies being researched, tested or introduced across different industries. Use the filters to explore a field that interests you.
+</p>
+
+</div>
+
+
+<!-- FILTERS -->
+
+<div class="filters" aria-label="Filter articles">
+
+<button class="filter active" data-filter="all">All topics</button>
+<button class="filter" data-filter="ai">AI & Robotics</button>
+<button class="filter" data-filter="energy">Energy & Climate</button>
+<button class="filter" data-filter="health">Health & Biotech</button>
+<button class="filter" data-filter="computing">Computing & Security</button>
+<button class="filter" data-filter="space">Space</button>
+<button class="filter" data-filter="food">Food & Agriculture</button>
+<button class="filter" data-filter="materials">Materials</button>
+
+</div>
+
+
+<!-- ARTICLES -->
+
+<div class="grid" id="articleGrid">
+
+<!-- 1 -->
+
+<article class="card" data-category="ai" data-search="agentic artificial intelligence ai agents autonomous software workflows coding">
+
+<div class="card-image">
+<span class="tag">AI & software</span>
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="Artificial intelligence visualization" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 outlook</span>
+<span>AI systems</span>
+</div>
+
+<h3>Agentic AI: software that can plan and carry out tasks</h3>
+
+<p>
+AI agents are being developed to coordinate multi-step activities, use digital tools and support software development, research and business operations. Human oversight remains essential for sensitive decisions.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-top-trends-in-tech" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">AI research</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 2 -->
+
+<article class="card" data-category="ai" data-search="humanoid robots physical ai industrial robotics autonomous machines factories">
+
+<div class="card-image">
+<span class="tag">Robotics</span>
+<img src="https://images.unsplash.com/photo-1561144257-e32e8efc6e27?auto=format&fit=crop&w=800&q=80" alt="Industrial robotic arm" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 outlook</span>
+<span>Automation</span>
+</div>
+
+<h3>Physical AI and next-generation robots</h3>
+
+<p>
+Robots are being combined with AI systems that help them interpret surroundings and perform physical tasks in manufacturing, logistics, agriculture and controlled environments.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/stories/emerging-technologies/meet-the-2026-technology-pioneers" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Robotics</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 3 -->
+
+<article class="card" data-category="energy" data-search="everything to grid energy electric vehicles batteries smart grid renewable electricity">
+
+<div class="card-image">
+<span class="tag">Clean energy</span>
+<img src="https://images.unsplash.com/photo-1473341304170-971562b5d4af?auto=format&fit=crop&w=800&q=80" alt="Electricity transmission infrastructure" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 report</span>
+<span>Power systems</span>
+</div>
+
+<h3>Everything-to-grid energy systems</h3>
+
+<p>
+Electric vehicles, buildings and batteries can potentially store electricity and return it to the grid when demand rises, helping balance renewable power and improve flexibility.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Energy</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 4 -->
+
+<article class="card" data-category="energy" data-search="direct lithium extraction batteries electric vehicles minerals brine">
+
+<div class="card-image">
+<span class="tag">Battery technology</span>
+<img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80" alt="Electric vehicle charging" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 report</span>
+<span>Energy materials</span>
+</div>
+
+<h3>Direct lithium extraction for battery supply</h3>
+
+<p>
+New methods aim to recover lithium from underground brines more quickly than traditional evaporation approaches. Researchers are working to improve efficiency, water use and scale-up.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/stories/emerging-technologies/the-top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Battery materials</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 5 -->
+
+<article class="card" data-category="energy" data-search="passive radiative cooling materials buildings cooling climate heat">
+
+<div class="card-image">
+<span class="tag">Climate solutions</span>
+<img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80" alt="Modern building architecture" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 report</span>
+<span>Building science</span>
+</div>
+
+<h3>Passive radiative cooling materials</h3>
+
+<p>
+Specially engineered surfaces can reflect sunlight and release heat through infrared radiation. The goal is to cool buildings and equipment while reducing energy used for air conditioning.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Climate tech</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 6 -->
+
+<article class="card" data-category="health" data-search="personalized mrna cancer vaccines immunotherapy medicine oncology clinical trials">
+
+<div class="card-image">
+<span class="tag">Medical science</span>
+<img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" alt="Medical scientist in a laboratory" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 research</span>
+<span>Biotechnology</span>
+</div>
+
+<h3>Personalized mRNA cancer vaccines</h3>
+
+<p>
+Experimental vaccines are designed around mutations in an individual patient's tumour, aiming to train the immune system to recognise cancer cells. Research continues; these are not a guaranteed treatment.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore research <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Biotechnology</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 7 -->
+
+<article class="card" data-category="health" data-search="exosome drug delivery targeted medicine blood brain barrier biotechnology">
+
+<div class="card-image">
+<span class="tag">Drug delivery</span>
+<img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=800&q=80" alt="Biomedical laboratory equipment" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 research</span>
+<span>Medical technology</span>
+</div>
+
+<h3>Exosome-based targeted drug delivery</h3>
+
+<p>
+Scientists are investigating tiny biological packages called exosomes as possible carriers for therapeutic molecules. Manufacturing, quality control and safety remain important challenges.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore research <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Health tech</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 8 -->
+
+<article class="card" data-category="computing" data-search="quantum simulation computing drug discovery molecules quantum technology">
+
+<div class="card-image">
+<span class="tag">Quantum technology</span>
+<img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80" alt="Quantum computing visualization" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 outlook</span>
+<span>Advanced computing</span>
+</div>
+
+<h3>Quantum simulation for drug discovery</h3>
+
+<p>
+Quantum technologies may help researchers model complex molecular behaviour. Early work explores chemistry and medicine, but practical advantages still need careful validation.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://setr.stanford.edu/technology-areas-2026" target="_blank" rel="noopener">Explore research <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Quantum</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 9 -->
+
+<article class="card" data-category="computing" data-search="post quantum cryptography lattice based encryption cybersecurity quantum safe">
+
+<div class="card-image">
+<span class="tag">Cybersecurity</span>
+<img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" alt="Cybersecurity digital network" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 outlook</span>
+<span>Digital security</span>
+</div>
+
+<h3>Post-quantum cryptography</h3>
+
+<p>
+New encryption methods are being developed to protect information against future quantum-computing threats. Organisations are starting the process of upgrading older cryptographic systems.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.nist.gov/pqc" target="_blank" rel="noopener">Explore standards <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Cybersecurity</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 10 -->
+
+<article class="card" data-category="ai" data-search="world models artificial intelligence physical environments simulation climate">
+
+<div class="card-image">
+<span class="tag">AI research</span>
+<img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Digital earth and connected data networks" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 outlook</span>
+<span>Simulation</span>
+</div>
+
+<h3>World models: AI learning how environments work</h3>
+
+<p>
+World models learn patterns and physical relationships from data so AI systems can predict how environments may change. Potential uses include robotics, planning and scientific modelling.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore research <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Artificial intelligence</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 11 -->
+
+<article class="card" data-category="food" data-search="precision fermentation alternative proteins food production microbes agriculture">
+
+<div class="card-image">
+<span class="tag">Future of food</span>
+<img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80" alt="Biotechnology laboratory glassware" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 report</span>
+<span>Food technology</span>
+</div>
+
+<h3>Precision fermentation and alternative proteins</h3>
+
+<p>
+Microorganisms such as yeast can be programmed to produce selected proteins and useful ingredients in controlled fermentation systems, opening new possibilities for food production.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Agri-food tech</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 12 -->
+
+<article class="card" data-category="materials" data-search="PFAS destruction forever chemicals water treatment environmental technology">
+
+<div class="card-image">
+<span class="tag">Environmental science</span>
+<img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80" alt="Water chemistry laboratory research" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 report</span>
+<span>Clean water</span>
+</div>
+
+<h3>New methods for destroying persistent PFAS chemicals</h3>
+
+<p>
+Researchers are testing approaches that break chemical bonds in certain persistent pollutants rather than simply transferring them into another waste stream. Safe scale-up remains a challenge.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/stories/emerging-technologies/the-top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">Explore research <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Environmental tech</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 13 -->
+
+<article class="card" data-category="space" data-search="space exploration lunar resource extraction satellite space based solar energy">
+
+<div class="card-image">
+<span class="tag">Space technology</span>
+<img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80" alt="Planet Earth viewed from space" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 outlook</span>
+<span>Space systems</span>
+</div>
+
+<h3>Satellite networks and lunar resource research</h3>
+
+<p>
+Space innovation is extending beyond launch vehicles to satellite services, ground infrastructure and research into using resources on the Moon for future exploration.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.weforum.org/stories/emerging-technologies/meet-the-2026-technology-pioneers" target="_blank" rel="noopener">Explore trend <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Space innovation</span>
+</div>
+
+</div>
+</article>
+
+
+<!-- 14 -->
+
+<article class="card" data-category="energy" data-search="perovskite silicon tandem solar cells solar efficiency renewable energy">
+
+<div class="card-image">
+<span class="tag">Solar innovation</span>
+<img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80" alt="Solar panels generating renewable electricity" loading="lazy">
+</div>
+
+<div class="card-body">
+
+<div class="meta">
+<span><i class="fa-regular fa-calendar"></i> 2026 research</span>
+<span>Photovoltaics</span>
+</div>
+
+<h3>Tandem solar cells aim for higher efficiency</h3>
+
+<p>
+Perovskite-silicon tandem cells combine two light-absorbing materials to capture more of the solar spectrum. Researchers are working to improve durability and manufacturing.
+</p>
+
+<div class="card-foot">
+<a class="read" href="https://www.cas.org/resources/cas-insights/scientific-breakthroughs-2026-emerging-trends-watch" target="_blank" rel="noopener">Explore research <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<span class="kind">Solar energy</span>
+</div>
+
+</div>
+</article>
+
+</div>
+
+
+<!-- NO RESULTS -->
+
+<div class="empty" id="noResults">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<strong>No matching stories found.</strong>
+
+<p>Try another keyword or select "All topics".</p>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- =========================
+     SKILLS SECTION
+========================= -->
+
+<section class="section skills">
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="eyebrow">
+<i class="fa-solid fa-graduation-cap"></i>
+From ideas to skills
+</span>
+
+<h2>Technology creates opportunities for innovators</h2>
+
+<p>
+Explore these fields, build practical skills and turn local challenges into solutions with real-world value.
+</p>
+
+</div>
+
+
+<div class="skills-grid">
+
+<div class="skill">
+
+<div class="skill-icon">
+<i class="fa-solid fa-code"></i>
+</div>
+
+<h3>Software & AI</h3>
+
+<p>
+Learn programming, web development, data skills and responsible AI application.
+</p>
+
+</div>
+
+
+<div class="skill">
+
+<div class="skill-icon">
+<i class="fa-solid fa-microchip"></i>
+</div>
+
+<h3>Electronics & Robotics</h3>
+
+<p>
+Experiment with microcontrollers, sensors, automation and embedded systems.
+</p>
+
+</div>
+
+
+<div class="skill">
+
+<div class="skill-icon">
+<i class="fa-solid fa-solar-panel"></i>
+</div>
+
+<h3>Green Technology</h3>
+
+<p>
+Explore renewable energy, energy efficiency, water and climate-smart solutions.
+</p>
+
+</div>
+
+
+<div class="skill">
+
+<div class="skill-icon">
+<i class="fa-solid fa-flask"></i>
+</div>
+
+<h3>Research & Design</h3>
+
+<p>
+Identify problems, test ideas, document evidence and develop useful prototypes.
+</p>
+
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- =========================
+     RESEARCH SOURCES
+========================= -->
+
+<section class="section" id="sources">
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="eyebrow">
+<i class="fa-solid fa-book-open"></i>
+Continue your research
+</span>
+
+<h2>Explore trusted technology sources</h2>
+
+<p>
+These stories are an introduction. Visit the original research organisations for technical detail and updates.
+</p>
+
+<div class="sources">
+
+<a href="https://www.weforum.org/publications/top-10-emerging-technologies-of-2026" target="_blank" rel="noopener">
+World Economic Forum
+<i class="fa-solid fa-arrow-up-right-from-square"></i>
+</a>
+
+<a href="https://setr.stanford.edu/technology-areas-2026" target="_blank" rel="noopener">
+Stanford Emerging Tech Review
+<i class="fa-solid fa-arrow-up-right-from-square"></i>
+</a>
+
+<a href="https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-top-trends-in-tech" target="_blank" rel="noopener">
+McKinsey Tech Trends
+<i class="fa-solid fa-arrow-up-right-from-square"></i>
+</a>
+
+<a href="https://www.cas.org/resources/cas-insights/scientific-breakthroughs-2026-emerging-trends-watch" target="_blank" rel="noopener">
+CAS Science Insights
+<i class="fa-solid fa-arrow-up-right-from-square"></i>
+</a>
+
+<a href="https://www.nist.gov/pqc" target="_blank" rel="noopener">
+NIST Post-Quantum Cryptography
+<i class="fa-solid fa-arrow-up-right-from-square"></i>
+</a>
+
+</div>
+</div>
+</div>
+</section>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+<div class="container">
+
+<div class="footer-main">
+
+<div class="footer-brand">
+
+<a href="/index" class="brand">
+
+<!-- <span class="brand-mark">
+<i class="fa-solid fa-lightbulb"></i> -->
+</span>
+
+<!-- <span class="brand-name">
+MNP <span>SkillsHub</span>
+<small class="brand-sub">Innovation & Skills Hub</small>
+</span> -->
+
+</a>
+
+<p>
+Connecting creativity, technical skills, research and innovation to help shape practical solutions for Kenya and the world.
+</p>
+
+</div>
+
+
+<div class="footer-links">
+
+<h4>Explore the Hub</h4>
+
+<a href="/index">Home</a>
+<a href="/innovations">Innovations</a>
+<a href="/forum">Community Forum</a>
+<a href="/blog">Technology Blog</a>
+<a href="/about">About the Hub</a>
+
+</div>
+
+</div>
+
+
+<div class="copyright">
+
+&copy; 2026 Meru National Polytechnic Innovation and Skills Hub. All Rights Reserved.
+
+</div>
+
+</div>
+</footer>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+// MOBILE NAVIGATION
+
+const navToggle=document.getElementById("navToggle");
+const navLinks=document.getElementById("navLinks");
+
+navToggle.addEventListener("click",()=>{
+
+    const open=navLinks.classList.toggle("open");
+
+    navToggle.setAttribute("aria-expanded",String(open));
+
+    navToggle.innerHTML=open
+        ?'<i class="fa-solid fa-xmark"></i>'
+        :'<i class="fa-solid fa-bars"></i>';
+
+});
+
+
+// ARTICLE SEARCH AND FILTERS
+
+const searchInput=document.getElementById("articleSearch");
+
+const cards=[...document.querySelectorAll(".card")];
+
+const filters=[...document.querySelectorAll(".filter")];
+
+const empty=document.getElementById("noResults");
+
+let active="all";
+
+
+function filterArticles(){
+
+    const term=searchInput.value.trim().toLowerCase();
+
+    let count=0;
+
+    cards.forEach(card=>{
+
+        const category=
+            active==="all" ||
+            card.dataset.category===active;
+
+        const content=(
+            card.innerText+" "+
+            (card.dataset.search||"")
+        ).toLowerCase();
+
+        const show=
+            category &&
+            (!term || content.includes(term));
+
+        card.style.display=show?"flex":"none";
+
+        if(show){
+            count++;
         }
-    </script>
+
+    });
+
+    empty.style.display=count?"none":"block";
+
+}
+
+
+// CATEGORY FILTER BUTTONS
+
+filters.forEach(btn=>{
+
+    btn.addEventListener("click",()=>{
+
+        filters.forEach(x=>x.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        active=btn.dataset.filter;
+
+        filterArticles();
+
+    });
+
+});
+
+
+// LIVE SEARCH
+
+searchInput.addEventListener("input",filterArticles);
+
+
+// GOOGLE WEB SEARCH
+
+function searchWeb(){
+
+    const q=searchInput.value.trim();
+
+    if(!q){
+
+        searchInput.focus();
+
+        alert("Enter a technology or innovation topic to search.");
+
+        return;
+
+    }
+
+    window.open(
+        "https://www.google.com/search?q="+
+        encodeURIComponent(q+" technology innovation research"),
+        "_blank",
+        "noopener"
+    );
+
+}
+
+
+// ENTER KEY SEARCH
+
+searchInput.addEventListener("keydown",e=>{
+
+    if(e.key==="Enter"){
+
+        searchWeb();
+
+    }
+
+});
+
+
+// CLOSE MOBILE MENU AFTER NAVIGATION
+
+navLinks.querySelectorAll("a").forEach(link=>{
+
+    link.addEventListener("click",()=>{
+
+        navLinks.classList.remove("open");
+
+        navToggle.setAttribute("aria-expanded","false");
+
+        navToggle.innerHTML='<i class="fa-solid fa-bars"></i>';
+
+    });
+
+});
+
+</script>
+
 </body>
 </html>
