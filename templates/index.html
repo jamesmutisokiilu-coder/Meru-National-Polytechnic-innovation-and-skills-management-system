@@ -753,63 +753,187 @@
 
         /* ==========================================
            6. FOOTER
-           ========================================== */
-        footer {
-            background: #8b5e3c;
-            color: #94a3b8;
-            border-top: 1px solid var(--border-light);
-            padding: 70px 0 30px 0;
-        }
+      
+/* ==========================================
+   6. FOOTER
+========================================== */
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr repeat(3, 1fr);
-            gap: 40px;
-            margin-bottom: 50px;
-        }
+footer {
+    background: #593820;
+    color: #ffffff;
+    border-top: 3px solid #176fc1;
+    padding: 70px 0 30px;
+}
 
-        .footer-brand h4 {
-            color: #ffffff;
-            font-size: 1.3rem;
-            margin-bottom: 16px;
-        }
+/* Footer layout */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 50px;
+}
 
-        .footer-brand p {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
+/* Brand section */
+.footer-brand h4 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
 
-        .footer-col h5 {
-            color: #ffffff;
-            font-size: 0.95rem;
-            margin-bottom: 18px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
+.footer-brand p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #f1e7dc;
+    margin-bottom: 20px;
+}
 
-        .footer-col ul li {
-            margin-bottom: 10px;
-        }
+/* Footer headings */
+.footer-col h5 {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-        .footer-col ul a {
-            font-size: 0.88rem;
-            color: #94a3b8;
-            transition: var(--transition);
-        }
+/* Footer lists */
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        .footer-col ul a:hover {
-            color: var(--brand-accent);
-        }
+.footer-col ul li {
+    margin-bottom: 13px;
+}
 
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 25px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
+/* Footer links */
+.footer-col ul a {
+    display: inline-block;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #f5eadd;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 
+.footer-col ul a:hover {
+    color: #ffffff;
+    padding-left: 6px;
+}
+
+/* Footer buttons */
+footer button,
+footer .btn,
+footer .footer-btn {
+    display: inline-block;
+    background: #176fc1;
+    color: #ffffff !important;
+    border: 1px solid #ffffff;
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+footer button:hover,
+footer .btn:hover,
+footer .footer-btn:hover {
+    background: #ffffff;
+    color: #176fc1 !important;
+    border-color: #ffffff;
+}
+
+/* Social media icons */
+.footer-social {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.footer-social a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    background: #176fc1;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.footer-social a:hover {
+    background: #ffffff;
+    color: #176fc1 !important;
+    transform: translateY(-4px);
+}
+
+/* Footer bottom */
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.3);
+    padding-top: 25px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #f1e7dc;
+}
+
+.footer-bottom p {
+    color: #f1e7dc;
+    margin: 0;
+}
+
+/* Footer contact links */
+footer a {
+    color: #f5eadd;
+}
+
+footer a:hover {
+    color: #ffffff;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+    }
+}
+
+@media (max-width: 600px) {
+    footer {
+        padding: 45px 20px 25px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .footer-brand h4 {
+        font-size: 1.25rem;
+    }
+
+    .footer-col h5 {
+        font-size: 0.95rem;
+    }
+
+    .footer-bottom {
+        font-size: 0.82rem;
+        line-height: 1.7;
+    }
+}
+
+
+      
         /* ==========================================
            INNOVATION EXCELLENCE MOVING ANNOUNCEMENT
            ========================================== */
