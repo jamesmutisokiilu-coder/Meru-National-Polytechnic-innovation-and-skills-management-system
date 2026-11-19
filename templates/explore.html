@@ -539,6 +539,12 @@ footer p {
         <a href="#learning">Learning</a>
 
         <a href="#meet">Online Classes</a>
+        {% if session.get('innovator_id') %}
+            <a href="{{ url_for('innovator_dashboard') }}">My Account</a>
+            <a href="{{ url_for('innovator_logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('innovator_login') }}">Innovator Login</a>
+        {% endif %}
 
     </div>
 
@@ -659,6 +665,18 @@ footer p {
                 </div>
 
                 <div class="form-group">
+                    <label>Create Password *</label>
+                    <input type="password" name="password" minlength="8"
+                    placeholder="At least 8 characters" autocomplete="new-password" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password *</label>
+                    <input type="password" name="confirm_password" minlength="8"
+                    placeholder="Re-enter your password" autocomplete="new-password" required>
+                </div>
+
+                <div class="form-group">
 
                     <label>County</label>
 
@@ -763,6 +781,11 @@ footer p {
             </button>
 
         </form>
+        <p style="margin-top:20px;color:var(--gray);line-height:1.7;">
+            Already have an innovator account?
+            <a href="{{ url_for('innovator_login') }}" style="color:var(--blue);font-weight:bold;">Log in here</a>.
+            After registration, you can sign in anytime to view your submitted projects and their review status.
+        </p>
 
     </div>
 
