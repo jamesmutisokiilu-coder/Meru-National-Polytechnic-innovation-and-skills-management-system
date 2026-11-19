@@ -5,6 +5,7 @@ import secrets
 import json
 from functools import wraps
 from datetime import datetime
+from html import escape as html_escape
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -12,7 +13,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from flask import (
     Flask, render_template, request, redirect,
-    url_for, session, flash, jsonify
+    url_for, session, flash, jsonify, abort, render_template_string
 )
 
 
@@ -51,7 +52,7 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 45 * 1024 * 1024
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
@@ -429,6 +430,42 @@ def init_db():
             "whatsapp": "TEXT",
             "images": "TEXT"
         })
+
+        # INNOVATION LIKES
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS innovation_likes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                innovation_id INTEGER NOT NULL,
+                visitor_id TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                UNIQUE(innovation_id, visitor_id),
+                FOREIGN KEY (innovation_id)
+                    REFERENCES innovations(id) ON DELETE CASCADE
+            )
+        """)
+
+        # INNOVATION COMMENTS
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS innovation_comments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                innovation_id INTEGER NOT NULL,
+                name TEXT NOT NULL DEFAULT 'Visitor',
+                comment TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (innovation_id)
+                    REFERENCES innovations(id) ON DELETE CASCADE
+            )
+        """)
+
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_innovation_likes_innovation
+            ON innovation_likes(innovation_id)
+        """)
+
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_innovation_comments_innovation
+            ON innovation_comments(innovation_id)
+        """)
 
         # UPDATE EXISTING NOTIFICATIONS
         cursor.execute("""
@@ -1221,8 +1258,9 @@ def innovations():
     if request.method == "POST":
 
         is_ajax = (
-            request.headers.get("X-Requested-With") == "XMLHttpRequest"
-            or "application/json" in request.headers.get("Accept", "")
+            request.headers.get("X-Requested-With", "").lower() == "xmlhttprequest"
+            or "application/json" in request.headers.get("Accept", "").lower()
+            or request.headers.get("Sec-Fetch-Mode") == "cors"
         )
 
         def response_error(message, status=400):
@@ -1345,6 +1383,8 @@ def innovations():
             for image in image_files:
 
                 original_name = secure_filename(image.filename)
+                if "." not in original_name:
+                    raise ValueError("Invalid uploaded image filename.")
 
                 extension = original_name.rsplit(".", 1)[1].lower()
 
@@ -1464,7 +1504,8 @@ def innovations():
                     "Your project will appear in the gallery after approval."
                 ),
                 "innovation_id": innovation_id,
-                "status": "Pending"
+                "status": "Pending",
+                "message_type": "success"
             }), 201
 
         flash(
@@ -1642,95 +1683,71 @@ def innovator_register():
 
 @app.route("/api/innovations", methods=["GET"])
 def public_innovations_api():
+    """Return approved/active innovations for the public gallery."""
+
+    visitor_id = session.get("innovation_visitor_id")
+    if not visitor_id:
+        visitor_id = secrets.token_urlsafe(32)
+        session["innovation_visitor_id"] = visitor_id
 
     db = get_db()
 
     try:
-
         rows = db.execute("""
             SELECT *
             FROM innovations
-            WHERE LOWER(TRIM(COALESCE(status, '')))
-                IN ('active', 'approved')
+            WHERE LOWER(TRIM(COALESCE(status, ''))) IN ('active', 'approved')
             ORDER BY id DESC
         """).fetchall()
 
         projects = []
 
         for row in rows:
-
             project = dict(row)
-
             raw_images = project.get("images") or "[]"
 
             try:
-
-                image_list = (
-                    json.loads(raw_images)
-                    if isinstance(raw_images, str)
-                    else raw_images
-                )
-
+                image_list = json.loads(raw_images) if isinstance(raw_images, str) else raw_images
             except (TypeError, ValueError, json.JSONDecodeError):
-
                 image_list = []
 
             if not isinstance(image_list, list):
                 image_list = []
 
-            image_list = [
-                str(item)
-                for item in image_list
-                if item
-            ]
-
+            image_list = [str(item) for item in image_list if item]
             legacy_image = project.get("image") or ""
 
             if not image_list and legacy_image:
                 image_list = [legacy_image]
 
             project["images"] = image_list
-
-            project["image"] = (
-                legacy_image
-                or (image_list[0] if image_list else "")
-            )
-
-            project["title"] = (
-                project.get("name")
-                or "Untitled innovation"
-            )
-
-            project["uploader"] = (
-                project.get("uploader")
-                or project.get("student_name")
-                or ""
-            )
-
+            project["image"] = legacy_image or (image_list[0] if image_list else "")
+            project["title"] = project.get("name") or "Untitled innovation"
+            project["uploader"] = project.get("uploader") or project.get("student_name") or ""
             project["student_name"] = project["uploader"]
-
-            project["date"] = (
-                project.get("date")
-                or project.get("created_at")
-                or ""
-            )
-
-            project["category"] = (
-                project.get("category")
-                or "General"
-            )
-
-            project["department"] = (
-                project.get("department") or ""
-            )
-
-            project["description"] = (
-                project.get("description") or ""
-            )
-
+            project["date"] = project.get("date") or project.get("created_at") or ""
+            project["category"] = project.get("category") or "General"
+            project["department"] = project.get("department") or ""
+            project["description"] = project.get("description") or ""
+            project["problem"] = project.get("problem") or ""
+            project["solution"] = project.get("solution") or ""
             project["email"] = project.get("email") or ""
             project["phone"] = project.get("phone") or ""
             project["whatsapp"] = project.get("whatsapp") or ""
+
+            project["likes_count"] = db.execute("""
+                SELECT COUNT(*) FROM innovation_likes WHERE innovation_id = ?
+            """, (project["id"],)).fetchone()[0]
+
+            project["comments_count"] = db.execute("""
+                SELECT COUNT(*) FROM innovation_comments WHERE innovation_id = ?
+            """, (project["id"],)).fetchone()[0]
+
+            project["liked"] = bool(db.execute("""
+                SELECT 1 FROM innovation_likes
+                WHERE innovation_id = ? AND visitor_id = ?
+                LIMIT 1
+            """, (project["id"], visitor_id)).fetchone())
 
             projects.append(project)
 
@@ -1741,17 +1758,208 @@ def public_innovations_api():
         }), 200
 
     except Exception:
-
-        app.logger.exception(
-            "Public innovations gallery API failed."
-        )
-
+        app.logger.exception("Public innovations gallery API failed.")
         return jsonify({
             "success": False,
             "message": "Unable to load the innovations gallery.",
             "innovations": []
         }), 500
 
+    finally:
+        db.close()
+
+
+# =========================================================
+# LIKE / UNLIKE AN INNOVATION
+# =========================================================
+
+@app.route("/api/innovations/<int:innovation_id>/like", methods=["POST"])
+def like_innovation(innovation_id):
+    visitor_id = session.get("innovation_visitor_id")
+    if not visitor_id:
+        visitor_id = secrets.token_urlsafe(32)
+        session["innovation_visitor_id"] = visitor_id
+
+    db = get_db()
+    try:
+        innovation = db.execute("""
+            SELECT id FROM innovations
+            WHERE id = ?
+              AND LOWER(TRIM(COALESCE(status, ''))) IN ('active', 'approved')
+        """, (innovation_id,)).fetchone()
+
+        if not innovation:
+            return jsonify({"success": False, "message": "Innovation not found."}), 404
+
+        existing = db.execute("""
+            SELECT id FROM innovation_likes
+            WHERE innovation_id = ? AND visitor_id = ?
+        """, (innovation_id, visitor_id)).fetchone()
+
+        if existing:
+            db.execute("""
+                DELETE FROM innovation_likes
+                WHERE innovation_id = ? AND visitor_id = ?
+            """, (innovation_id, visitor_id))
+            liked = False
+        else:
+            db.execute("""
+                INSERT OR IGNORE INTO innovation_likes
+                (innovation_id, visitor_id, created_at)
+                VALUES (?, ?, ?)
+            """, (innovation_id, visitor_id, current_time()))
+            liked = True
+
+        db.commit()
+        likes_count = db.execute("""
+            SELECT COUNT(*) FROM innovation_likes WHERE innovation_id = ?
+        """, (innovation_id,)).fetchone()[0]
+
+        return jsonify({"success": True, "liked": liked, "likes_count": likes_count}), 200
+
+    except Exception:
+        db.rollback()
+        app.logger.exception("Innovation like operation failed.")
+        return jsonify({"success": False, "message": "Unable to update the like. Please try again."}), 500
+    finally:
+        db.close()
+
+
+# =========================================================
+# GET / POST INNOVATION COMMENTS
+# =========================================================
+
+@app.route("/api/innovations/<int:innovation_id>/comments", methods=["GET", "POST"])
+def innovation_comments(innovation_id):
+    db = get_db()
+    try:
+        innovation = db.execute("""
+            SELECT id FROM innovations
+            WHERE id = ?
+              AND LOWER(TRIM(COALESCE(status, ''))) IN ('active', 'approved')
+        """, (innovation_id,)).fetchone()
+
+        if not innovation:
+            return jsonify({"success": False, "message": "Innovation not found."}), 404
+
+        if request.method == "POST":
+            data = request.get_json(silent=True) or request.form
+            name = str(data.get("name") or data.get("commenter") or "Visitor").strip()
+            comment = str(data.get("comment") or data.get("content") or "").strip()
+
+            if not name:
+                name = "Visitor"
+            if len(name) > 80:
+                return jsonify({"success": False, "message": "Name must be 80 characters or fewer."}), 400
+            if not comment:
+                return jsonify({"success": False, "message": "Please write a comment before submitting."}), 400
+            if len(comment) > 1500:
+                return jsonify({"success": False, "message": "Comments cannot exceed 1500 characters."}), 400
+
+            db.execute("""
+                INSERT INTO innovation_comments
+                (innovation_id, name, comment, created_at)
+                VALUES (?, ?, ?, ?)
+            """, (innovation_id, name, comment, current_time()))
+            db.commit()
+
+        rows = db.execute("""
+            SELECT id, name, comment, created_at
+            FROM innovation_comments
+            WHERE innovation_id = ?
+            ORDER BY id DESC
+        """, (innovation_id,)).fetchall()
+
+        return jsonify({
+            "success": True,
+            "comments": [dict(row) for row in rows],
+            "comments_count": len(rows)
+        }), 200
+
+    except Exception:
+        db.rollback()
+        app.logger.exception("Innovation comments request failed.")
+        return jsonify({"success": False, "message": "Unable to process comments. Please try again."}), 500
+    finally:
+        db.close()
+
+
+# =========================================================
+# PUBLIC INNOVATION DETAIL / SHARE LINK
+# =========================================================
+
+@app.route("/innovation/<int:innovation_id>")
+def innovation_detail(innovation_id):
+    db = get_db()
+    try:
+        row = db.execute("""
+            SELECT * FROM innovations
+            WHERE id = ?
+              AND LOWER(TRIM(COALESCE(status, ''))) IN ('active', 'approved')
+        """, (innovation_id,)).fetchone()
+
+        if not row:
+            abort(404)
+
+        project = dict(row)
+        try:
+            images = json.loads(project.get("images") or "[]")
+        except (TypeError, ValueError, json.JSONDecodeError):
+            images = []
+        if not isinstance(images, list):
+            images = []
+        if not images and project.get("image"):
+            images = [project["image"]]
+
+        title = project.get("name") or "Innovation"
+        description = project.get("description") or "Explore this innovation from the MNP Innovation & Skills Hub."
+        image_url = url_for("static", filename="uploads/" + str(images[0]), _external=True) if images else ""
+        share_url = url_for("innovation_detail", innovation_id=innovation_id, _external=True)
+
+        safe_title = html_escape(title)
+        safe_description = html_escape(description[:300])
+        safe_image = html_escape(image_url, quote=True)
+        safe_url = html_escape(share_url, quote=True)
+        safe_name = html_escape(project.get("uploader") or "MNP Innovation & Skills Hub")
+        safe_department = html_escape(project.get("department") or "")
+        safe_category = html_escape(project.get("category") or "")
+        safe_date = html_escape(project.get("date") or "")
+        safe_problem = html_escape(project.get("problem") or "")
+        safe_solution = html_escape(project.get("solution") or "")
+
+        image_markup = (
+            f'<img src="{safe_image}" alt="{safe_title}" style="max-width:100%;max-height:560px;object-fit:contain;border-radius:14px">'
+            if safe_image else ""
+        )
+
+        return render_template_string("""<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title }} | MNP Innovation &amp; Skills Hub</title>
+<meta name="description" content="{{ description }}">
+<meta property="og:type" content="article"><meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}"><meta property="og:url" content="{{ share_url }}">
+{% if image_url %}<meta property="og:image" content="{{ image_url }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{{ title }}"><meta name="twitter:description" content="{{ description }}">
+{% if image_url %}<meta name="twitter:image" content="{{ image_url }}">{% endif %}
+<style>body{margin:0;background:#f4f7fb;color:#172033;font-family:Arial,sans-serif;line-height:1.65}.wrap{max-width:900px;margin:40px auto;padding:28px;background:#fff;border-radius:18px;box-shadow:0 8px 30px #17203312}.brand{color:#8b5e3c;font-weight:800}.meta{color:#64748b;font-size:14px}.hero{margin:22px 0;text-align:center;background:#f1f5f9;padding:15px;border-radius:14px}.tag{display:inline-block;background:#eaf3ff;color:#176fc1;border-radius:30px;padding:5px 12px;margin:4px;font-size:13px}h1{line-height:1.2}h2{margin-top:26px;color:#8b5e3c}.btn{display:inline-block;background:#176fc1;color:#fff;text-decoration:none;padding:11px 18px;border-radius:8px;margin-top:20px}@media(max-width:600px){.wrap{margin:12px;padding:18px}}</style></head>
+<body><main class="wrap"><div class="brand">Meru National Polytechnic · Innovation &amp; Skills Hub</div>
+<h1>{{ title }}</h1><div class="meta">Submitted by {{ uploader }}{% if department %} · {{ department }}{% endif %}{% if date %} · {{ date }}{% endif %}</div>
+{% if category %}<p><span class="tag">{{ category }}</span></p>{% endif %}<div class="hero">{{ image_markup|safe }}</div>
+<h2>About this innovation</h2><p>{{ description }}</p>{% if problem %}<h2>Problem addressed</h2><p>{{ problem }}</p>{% endif %}{% if solution %}<h2>Proposed solution</h2><p>{{ solution }}</p>{% endif %}
+<a class="btn" href="{{ gallery_url }}">Explore more innovations</a></main></body></html>""",
+            title=title,
+            description=description[:300],
+            share_url=share_url,
+            image_url=image_url,
+            uploader=project.get("uploader") or "MNP Innovation & Skills Hub",
+            department=project.get("department") or "",
+            date=project.get("date") or "",
+            category=project.get("category") or "",
+            image_markup=image_markup,
+            problem=project.get("problem") or "",
+            solution=project.get("solution") or "",
+            gallery_url=url_for("innovations")
+        )
     finally:
         db.close()
 
@@ -3368,11 +3576,11 @@ def file_too_large(error):
 
         return jsonify({
             "success": False,
-            "message": "The uploaded file is too large. Maximum size is 10 MB."
+            "message": "The uploaded files are too large. Maximum total request size is 45 MB."
         }), 413
 
     flash(
-        "The uploaded file is too large. Maximum size is 10 MB.",
+        "The uploaded files are too large. Maximum total request size is 45 MB.",
         "error"
     )
 
