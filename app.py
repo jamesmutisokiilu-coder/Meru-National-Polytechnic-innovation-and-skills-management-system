@@ -1,6 +1,11 @@
 
 import os
+import re
 import sqlite3
+import urllib.request
+import urllib.error
+import mimetypes
+from urllib.parse import quote, urlparse
 import secrets
 import json
 from functools import wraps
@@ -41,19 +46,18 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Render persistent disks can be mounted at /var/data.
 # Locally, the database remains beside this file unless DATABASE_PATH is set.
-DATABASE = os.environ.get(
-    "DATABASE_PATH",
-    os.path.join(BASE_DIR, "innovation_hub.db")
-)
-DATABASE = os.path.abspath(DATABASE)
-os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
+
+# Supabase PostgreSQL connection. Keep SQLite available for local development
+# only when DATABASE_URL is not configured.
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+SUPABASE_STORAGE_BUCKET = os.environ.get("SUPABASE_STORAGE_BUCKET", "innovation-uploads").strip()
 
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 45 * 1024 * 1024
-
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
 
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "innovator")
@@ -61,12 +65,115 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "extravaganza")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "innovator@local")
 
 
-# =========================================================
-# DATABASE FUNCTIONS
-# =========================================================
+class HybridRow(dict):
+    """A row supporting both row['column'] and row[0] access."""
+    def __init__(self, columns, values):
+        super().__init__(zip(columns, values))
+        self._values = tuple(values)
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self._values[key]
+        return super().__getitem__(key)
+
+
+def _hybrid_row_factory(cursor):
+    # Psycopg calls the factory before executing the query, so resolve column
+    # names lazily when each row is actually constructed.
+    return lambda values: HybridRow(
+        [column.name for column in cursor.description],
+        values
+    )
+
+
+class PostgreSQLCursor:
+    def __init__(self, cursor):
+        self.raw = cursor
+        self._lastrowid = None
+
+    @property
+    def lastrowid(self):
+        return self._lastrowid
+
+    @property
+    def rowcount(self):
+        return self.raw.rowcount
+
+    def execute(self, sql, params=None):
+        statement = sql.strip()
+        # SQLite compatibility used by the existing routes.
+        ignore_conflicts = bool(re.search(r"\bINSERT\s+OR\s+IGNORE\s+INTO\b", statement, flags=re.I))
+        statement = statement.replace("?", "%s")
+        statement = re.sub(r"\s+COLLATE\s+NOCASE\b", "", statement, flags=re.I)
+        statement = re.sub(r"\bINTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT\b",
+                           "BIGSERIAL PRIMARY KEY", statement, flags=re.I)
+        statement = re.sub(r"\bINSERT\s+OR\s+IGNORE\s+INTO\b",
+                           "INSERT INTO", statement, flags=re.I)
+        if statement.upper().startswith("PRAGMA FOREIGN_KEYS"):
+            return self
+
+        is_insert = statement.upper().startswith("INSERT ")
+        if is_insert and ignore_conflicts and "ON CONFLICT" not in statement.upper():
+            statement += " ON CONFLICT DO NOTHING"
+        # Capture generated ids for the handful of routes that use cursor.lastrowid.
+        if is_insert and not re.search(r"\bRETURNING\b", statement, flags=re.I):
+            statement += " RETURNING id"
+
+        self.raw.execute(statement, params or ())
+        self._lastrowid = None
+        if is_insert and re.search(r"\bRETURNING\s+id\b", statement, flags=re.I):
+            returned = self.raw.fetchone()
+            if returned:
+                self._lastrowid = returned["id"] if isinstance(returned, dict) else returned[0]
+        return self
+
+    def fetchone(self):
+        return self.raw.fetchone()
+
+    def fetchall(self):
+        return self.raw.fetchall()
+
+
+class PostgreSQLConnection:
+    def __init__(self, connection):
+        self.raw = connection
+
+    def execute(self, sql, params=None):
+        cursor = self.raw.cursor()
+        wrapped = PostgreSQLCursor(cursor)
+        return wrapped.execute(sql, params)
+
+    def cursor(self):
+        return PostgreSQLCursor(self.raw.cursor())
+
+    def commit(self):
+        self.raw.commit()
+
+    def rollback(self):
+        self.raw.rollback()
+
+    def close(self):
+        self.raw.close()
+
 
 def get_db():
-    connection = sqlite3.connect(DATABASE)
+    if DATABASE_URL:
+        try:
+            import psycopg
+            from psycopg.rows import tuple_row
+        except ImportError as exc:
+            raise RuntimeError(
+                "Install psycopg[binary] to use Supabase PostgreSQL."
+            ) from exc
+        connection = psycopg.connect(
+            DATABASE_URL,
+            row_factory=_hybrid_row_factory,
+            connect_timeout=15
+        )
+        return PostgreSQLConnection(connection)
+
+    # Local-only fallback. On Render, configure DATABASE_URL to use Supabase.
+    connection = sqlite3.connect(os.path.join(BASE_DIR, "innovation_hub.db"))
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
     return connection
@@ -86,35 +193,130 @@ def allowed_file(filename):
 def form_value(*names, default=""):
     for name in names:
         value = request.form.get(name)
-
         if value is not None:
             return value.strip()
-
     return default
 
 
 def get_table_columns(cursor, table_name):
+    if DATABASE_URL:
+        return {
+            row["column_name"]
+            for row in cursor.execute("""
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_schema = 'public' AND table_name = ?
+            """, (table_name,)).fetchall()
+        }
     return {
         row["name"]
-        for row in cursor.execute(
-            f"PRAGMA table_info({table_name})"
-        ).fetchall()
+        for row in cursor.execute(f"PRAGMA table_info({table_name})").fetchall()
     }
 
 
 def migrate_columns(cursor, table_name, migrations):
     existing_columns = get_table_columns(cursor, table_name)
-
     for column_name, definition in migrations.items():
-
         if column_name not in existing_columns:
-
+            # SQLite-compatible definitions are valid PostgreSQL column types.
             cursor.execute(
-                f"ALTER TABLE {table_name} "
-                f"ADD COLUMN {column_name} {definition}"
+                f"ALTER TABLE {table_name} ADD COLUMN {column_name} {definition}"
             )
-
             existing_columns.add(column_name)
+
+
+
+
+def first_innovation_image(row):
+    legacy = row["image"] if "image" in row.keys() else ""
+    if legacy:
+        return legacy
+    try:
+        raw = row["images"] if "images" in row.keys() else ""
+        parsed = json.loads(raw) if isinstance(raw, str) and raw else raw
+        return parsed[0] if isinstance(parsed, list) and parsed else ""
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return ""
+
+
+def storage_is_configured():
+    return bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY and SUPABASE_STORAGE_BUCKET)
+
+
+def storage_public_url(object_path):
+    encoded_path = quote(str(object_path).lstrip("/"), safe="/")
+    return (
+        f"{SUPABASE_URL}/storage/v1/object/public/"
+        f"{quote(SUPABASE_STORAGE_BUCKET, safe='')}/{encoded_path}"
+    )
+
+
+def upload_to_supabase(file_storage, object_path):
+    if not storage_is_configured():
+        raise RuntimeError(
+            "Supabase Storage is not configured. Set SUPABASE_URL, "
+            "SUPABASE_SERVICE_ROLE_KEY and SUPABASE_STORAGE_BUCKET."
+        )
+    data = file_storage.read()
+    if not data:
+        raise ValueError("The uploaded file is empty.")
+    content_type = (
+        getattr(file_storage, "mimetype", None)
+        or mimetypes.guess_type(file_storage.filename or "")[0]
+        or "application/octet-stream"
+    )
+    encoded_path = quote(object_path.lstrip("/"), safe="/")
+    bucket = quote(SUPABASE_STORAGE_BUCKET, safe="")
+    url = f"{SUPABASE_URL}/storage/v1/object/{bucket}/{encoded_path}"
+    req = urllib.request.Request(
+        url,
+        data=data,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+            "apikey": SUPABASE_SERVICE_ROLE_KEY,
+            "Content-Type": content_type,
+            "x-upsert": "true"
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            response.read()
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Supabase Storage upload failed: {detail}") from exc
+    return storage_public_url(object_path)
+
+
+def delete_from_supabase(public_url_or_path):
+    if not storage_is_configured() or not public_url_or_path:
+        return
+    value = str(public_url_or_path)
+    marker = f"/storage/v1/object/public/{SUPABASE_STORAGE_BUCKET}/"
+    if marker in value:
+        object_path = value.split(marker, 1)[1]
+    else:
+        object_path = value.lstrip("/")
+    object_path = object_path.split("?", 1)[0]
+    if not object_path:
+        return
+    bucket = quote(SUPABASE_STORAGE_BUCKET, safe="")
+    encoded_path = quote(object_path, safe="/")
+    req = urllib.request.Request(
+        f"{SUPABASE_URL}/storage/v1/object/{bucket}/{encoded_path}",
+        method="DELETE",
+        headers={
+            "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+            "apikey": SUPABASE_SERVICE_ROLE_KEY
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as response:
+            response.read()
+    except urllib.error.HTTPError as exc:
+        # A missing object should not prevent deleting its database record.
+        if exc.code != 404:
+            raise
 
 
 # =========================================================
@@ -1212,9 +1414,15 @@ def gallery():
             f"{secrets.token_hex(8)}_{filename}"
         )
 
-        image_file.save(
-            os.path.join(UPLOAD_FOLDER, unique_filename)
-        )
+        try:
+            image_url = upload_to_supabase(
+                image_file,
+                f"gallery/{unique_filename}"
+            )
+        except Exception:
+            app.logger.exception("Gallery image upload to Supabase failed.")
+            flash("Image upload failed. Please check Supabase Storage settings.", "error")
+            return redirect(url_for("gallery"))
 
         db = get_db()
 
@@ -1227,7 +1435,7 @@ def gallery():
             """, (
                 title,
                 description,
-                unique_filename,
+                image_url,
                 current_time()
             ))
 
@@ -1384,14 +1592,6 @@ def innovations():
 
             image.stream.seek(0)
 
-        upload_folder = os.path.join(
-            app.root_path,
-            "static",
-            "uploads"
-        )
-
-        os.makedirs(upload_folder, exist_ok=True)
-
         saved_images = []
         db = get_db()
 
@@ -1410,13 +1610,11 @@ def innovations():
                     secrets.token_hex(16) + "." + extension
                 )
 
-                image_path = os.path.join(
-                    upload_folder,
-                    unique_filename
+                image_url = upload_to_supabase(
+                    image,
+                    f"innovations/{unique_filename}"
                 )
-
-                image.save(image_path)
-                saved_images.append(unique_filename)
+                saved_images.append(image_url)
 
             images_json = json.dumps(saved_images)
 
@@ -1491,15 +1689,11 @@ def innovations():
 
             db.rollback()
 
-            for filename in saved_images:
-
-                image_path = os.path.join(
-                    upload_folder,
-                    filename
-                )
-
-                if os.path.exists(image_path):
-                    os.remove(image_path)
+            for image_url in saved_images:
+                try:
+                    delete_from_supabase(image_url)
+                except Exception:
+                    app.logger.exception("Could not clean up failed innovation image upload.")
 
             app.logger.exception(
                 "Innovation submission failed."
@@ -1602,7 +1796,7 @@ def explore():
             meet_sessions=meet_sessions
         )
 
-    except sqlite3.Error:
+    except Exception:
         app.logger.exception("Explore page database error.")
         flash("Unable to load some Explore page information.", "error")
         return render_template(
@@ -1680,7 +1874,7 @@ def innovator_register():
         session["innovator_email"] = email
         flash("Your innovator account has been created. Welcome to the Hub!", "success")
         return redirect(url_for("innovator_dashboard"))
-    except sqlite3.IntegrityError:
+    except Exception:
         db.rollback()
         flash("This email address already has an account. Please log in instead.", "error")
     except Exception:
@@ -2497,7 +2691,7 @@ def sponsor_register():
             "sponsor_id": sponsor_id
         }), 201
 
-    except sqlite3.IntegrityError:
+    except Exception:
 
         db.rollback()
 
@@ -3379,7 +3573,7 @@ def api_innovations():
                 "problem": row["problem"] or "",
                 "solution": row["solution"] or "",
                 "description": row["description"] or "",
-                "image": row["image"] or "",
+                "image": first_innovation_image(row),
                 "status": row["status"]
             }
             for row in records
@@ -3613,13 +3807,10 @@ def delete_gallery_image(image_id):
         flash("Image not found.", "error")
         return redirect(url_for("gallery"))
 
-    image_path = os.path.join(
-        UPLOAD_FOLDER,
-        image["image"]
-    )
-
-    if os.path.isfile(image_path):
-        os.remove(image_path)
+    try:
+        delete_from_supabase(image["image"])
+    except Exception:
+        app.logger.exception("Could not delete gallery image from Supabase Storage.")
 
     flash(
         "Gallery image deleted.",
