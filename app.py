@@ -358,7 +358,7 @@ def get_unread_notification_count():
         result = db.execute("""
             SELECT COUNT(*) AS total
             FROM notifications
-            WHERE is_read = 0
+            WHERE is_read = FALSE
         """).fetchone()
 
         return result["total"]
@@ -3309,7 +3309,7 @@ def api_notifications():
         unread_count = db.execute("""
             SELECT COUNT(*) AS total
             FROM notifications
-            WHERE is_read = 0
+            WHERE is_read = FALSE
         """).fetchone()["total"]
 
         return jsonify({
@@ -3350,7 +3350,7 @@ def mark_notification_read(notification_id):
 
         cursor = db.execute("""
             UPDATE notifications
-            SET is_read = 1
+            SET is_read = TRUE
             WHERE id = ?
         """, (notification_id,))
 
@@ -3386,8 +3386,8 @@ def mark_all_notifications_read():
 
         db.execute("""
             UPDATE notifications
-            SET is_read = 1
-            WHERE is_read = 0
+            SET is_read = TRUE
+            WHERE is_read = FALSE
         """)
 
         db.commit()
