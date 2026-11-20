@@ -335,7 +335,7 @@ def create_notification(
         db.execute("""
             INSERT INTO notifications
             (title, message, category, url, is_read, created_at)
-            VALUES (?, ?, ?, ?, 0, ?)
+            VALUES (?, ?, ?, ?, FALSE, ?)
         """, (
             title,
             message,
@@ -698,8 +698,6 @@ def init_db():
         WHERE is_read IS NULL
        """) 
 
-        # PostgreSQL timestamp columns cannot be compared with an empty
-        # string. Checking NULL works with both PostgreSQL and SQLite.
         cursor.execute("""
             UPDATE notifications
             SET created_at = ?
@@ -988,7 +986,7 @@ def assistant():
                     is_read,
                     created_at
                 )
-                VALUES (?, ?, ?, ?, 0, ?)
+                VALUES (?, ?, ?, ?, FALSE, ?)
             """, (
                 "New Assistance Request",
                 f"{name} has submitted a new assistance request.",
@@ -1667,7 +1665,7 @@ def innovations():
                     is_read,
                     created_at
                 )
-                VALUES (?, ?, ?, ?, 0, ?)
+                VALUES (?, ?, ?, ?, FALSE, ?)
             """, (
                 "New Innovation Submitted",
                 (
@@ -1863,7 +1861,7 @@ def innovator_register():
         innovator_id = cursor.lastrowid
         db.execute("""
             INSERT INTO notifications (title, message, category, url, is_read, created_at)
-            VALUES (?, ?, ?, ?, 0, ?)
+            VALUES (?, ?, ?, ?, FALSE, ?)
         """, (
             "New Innovator Registration",
             f"{full_name} has created an innovator account.",
@@ -2465,7 +2463,7 @@ def sponsorship():
                         is_read,
                         created_at
                     )
-                    VALUES (?, ?, ?, ?, 0, ?)
+                    VALUES (?, ?, ?, ?, FALSE, ?)
                 """, (
                     "New Innovation Support Request",
                     f"{sponsor} has requested support for {innovation}.",
@@ -2514,7 +2512,7 @@ def sponsorship():
                         is_read,
                         created_at
                     )
-                    VALUES (?, ?, ?, ?, 0, ?)
+                    VALUES (?, ?, ?, ?, FALSE, ?)
                 """, (
                     "New Sponsorship Enquiry",
                     f"{sponsor} has submitted a sponsorship message.",
@@ -2673,7 +2671,7 @@ def sponsor_register():
                 is_read,
                 created_at
             )
-            VALUES (?, ?, ?, ?, 0, ?)
+            VALUES (?, ?, ?, ?, FALSE, ?)
         """, (
             "New Sponsor Registration",
             f"{name} has registered as a sponsor.",
@@ -3028,7 +3026,7 @@ def sponsor_support():
                 is_read,
                 created_at
             )
-            VALUES (?, ?, ?, ?, 0, ?)
+            VALUES (?, ?, ?, ?, FALSE, ?)
         """, (
             "New Innovation Support Request",
             f"{sponsor['name']} has requested support for {innovation}.",
@@ -3149,7 +3147,7 @@ def sponsor_message():
                 is_read,
                 created_at
             )
-            VALUES (?, ?, ?, ?, 0, ?)
+            VALUES (?, ?, ?, ?, FALSE, ?)
         """, (
             "New Sponsorship Enquiry",
             f"{sponsor['name']} has submitted a sponsorship message.",
