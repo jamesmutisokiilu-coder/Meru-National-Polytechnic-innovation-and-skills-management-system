@@ -693,10 +693,10 @@ def init_db():
         """)
 
         cursor.execute("""
-            UPDATE notifications
-            SET is_read = 0
-            WHERE is_read IS NULL
-        """)
+        UPDATE notifications
+        SET is_read = FALSE
+        WHERE is_read IS NULL
+       """) 
 
         cursor.execute("""
             UPDATE notifications
