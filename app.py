@@ -698,10 +698,12 @@ def init_db():
         WHERE is_read IS NULL
        """) 
 
+        # PostgreSQL timestamp columns cannot be compared with an empty
+        # string. Checking NULL works with both PostgreSQL and SQLite.
         cursor.execute("""
             UPDATE notifications
             SET created_at = ?
-            WHERE created_at IS NULL OR created_at = ''
+            WHERE created_at IS NULL
         """, (current_time(),))
 
         cursor.execute("""
