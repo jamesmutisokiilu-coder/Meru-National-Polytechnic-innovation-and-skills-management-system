@@ -1921,7 +1921,7 @@ def innovator_logout():
     session.pop("innovator_name", None)
     session.pop("innovator_email", None)
     flash("You have been logged out.", "success")
-    return redirect(url_for("explore"))
+    return redirect(url_for("index"))
 
 
 @app.route("/innovator_dashboard")
