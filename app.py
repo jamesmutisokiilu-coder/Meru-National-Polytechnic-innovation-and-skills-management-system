@@ -1,4 +1,5 @@
-
+import uuid
+from datetime import datetime
 import os
 import re
 import sqlite3
@@ -811,6 +812,254 @@ def sponsor_required(function):
         return function(*args, **kwargs)
 
     return decorated_function
+
+
+
+
+
+# Allowed image formats
+ALLOWED_ACTIVITY_IMAGES = {"png", "jpg", "jpeg", "webp"}
+
+ACTIVITY_UPLOAD_FOLDER = os.path.join(
+    app.root_path, "static", "uploads", "activities"
+)
+
+os.makedirs(ACTIVITY_UPLOAD_FOLDER, exist_ok=True)
+
+
+def allowed_activity_image(filename):
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_ACTIVITY_IMAGES
+    )
+
+
+# =========================================================
+# DISPLAY ACTIVITIES
+# =========================================================
+
+@app.route("/activities")
+def activities():
+
+    db = get_db()
+
+    try:
+        today = datetime.now().strftime("%Y-%m-%d")
+
+        all_activities = db.execute("""
+            SELECT *
+            FROM activities
+            ORDER BY date ASC, id DESC
+        """).fetchall()
+
+        ongoing_activities = []
+        upcoming_activities = []
+
+        for activity in all_activities:
+
+            activity_status = activity["status"].lower()
+
+            if activity_status == "ongoing":
+                ongoing_activities.append(activity)
+
+            elif activity_status == "upcoming":
+                upcoming_activities.append(activity)
+
+        return render_template(
+            "activities.html",
+            ongoing_activities=ongoing_activities,
+            upcoming_activities=upcoming_activities,
+            is_admin=bool(session.get("admin_id")),
+            current_year=datetime.now().year
+        )
+
+    finally:
+        db.close()
+
+
+# =========================================================
+# ADD / UPLOAD NEW ACTIVITY
+# =========================================================
+
+@app.route("/admin/activities/add", methods=["POST"])
+@admin_required
+def add_activity():
+
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    status = request.form.get("status", "").strip().lower()
+    date = request.form.get("date", "").strip()
+    end_date = request.form.get("end_date", "").strip()
+    location = request.form.get("location", "").strip()
+
+    # Validate required fields
+    if not title or not description or not date:
+        flash("Please complete all required fields.", "error")
+        return redirect(url_for("activities"))
+
+    if status not in ["ongoing", "upcoming"]:
+        flash("Please select a valid activity status.", "error")
+        return redirect(url_for("activities"))
+
+    # Validate dates
+    try:
+        start = datetime.strptime(date, "%Y-%m-%d").date()
+
+        if end_date:
+            ending = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+            if ending < start:
+                flash("The ending date cannot be before the starting date.", "error")
+                return redirect(url_for("activities"))
+
+    except ValueError:
+        flash("Please provide valid activity dates.", "error")
+        return redirect(url_for("activities"))
+
+    # Handle image upload
+    image_path = None
+    image_file = request.files.get("image")
+
+    if image_file and image_file.filename:
+
+        if not allowed_activity_image(image_file.filename):
+            flash("Only PNG, JPG, JPEG and WEBP images are allowed.", "error")
+            return redirect(url_for("activities"))
+
+        # Limit image size to 5 MB
+        image_file.seek(0, os.SEEK_END)
+        image_size = image_file.tell()
+        image_file.seek(0)
+
+        if image_size > 5 * 1024 * 1024:
+            flash("Image size must not exceed 5 MB.", "error")
+            return redirect(url_for("activities"))
+
+        original_name = secure_filename(image_file.filename)
+
+        extension = original_name.rsplit(".", 1)[1].lower()
+
+        unique_filename = f"{uuid.uuid4().hex}.{extension}"
+
+        save_path = os.path.join(
+            ACTIVITY_UPLOAD_FOLDER,
+            unique_filename
+        )
+
+        image_file.save(save_path)
+
+        # Store the URL, not the physical filesystem path
+        image_path = f"/static/uploads/activities/{unique_filename}"
+
+    # Save activity into SQLite
+    db = get_db()
+
+    try:
+
+        db.execute("""
+            INSERT INTO activities (
+                title,
+                description,
+                image,
+                status,
+                date,
+                end_date,
+                location
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            title,
+            description,
+            image_path,
+            status,
+            date,
+            end_date or None,
+            location
+        ))
+
+        db.commit()
+
+        flash("Activity published successfully!", "success")
+
+    except Exception:
+        db.rollback()
+
+        # Remove uploaded image if database insertion fails
+        if image_path:
+            filename = os.path.basename(image_path)
+            saved_file = os.path.join(
+                ACTIVITY_UPLOAD_FOLDER, filename
+            )
+
+            if os.path.isfile(saved_file):
+                os.remove(saved_file)
+
+        flash("Unable to publish activity. Please try again.", "error")
+
+    finally:
+        db.close()
+
+    return redirect(url_for("activities"))
+
+
+# =========================================================
+# DELETE ACTIVITY
+# =========================================================
+
+@app.route(
+    "/admin/activities/delete/<int:activity_id>",
+    methods=["POST"]
+)
+@admin_required
+def delete_activity(activity_id):
+
+    db = get_db()
+
+    try:
+
+        activity = db.execute("""
+            SELECT *
+            FROM activities
+            WHERE id = ?
+        """, (activity_id,)).fetchone()
+
+        if not activity:
+            flash("Activity not found.", "error")
+            return redirect(url_for("activities"))
+
+        # Delete uploaded image if it belongs to this upload folder
+        image_path = activity["image"]
+
+        db.execute("""
+            DELETE FROM activities
+            WHERE id = ?
+        """, (activity_id,))
+
+        db.commit()
+
+        if image_path:
+            filename = os.path.basename(image_path)
+
+            if image_path.startswith("/static/uploads/activities/"):
+                saved_file = os.path.join(
+                    ACTIVITY_UPLOAD_FOLDER,
+                    filename
+                )
+
+                if os.path.isfile(saved_file):
+                    os.remove(saved_file)
+
+        flash("Activity deleted successfully.", "success")
+
+    except Exception:
+        db.rollback()
+        flash("Unable to delete activity.", "error")
+
+    finally:
+        db.close()
+
+    return redirect(url_for("activities"))
+
 
 
 # =========================================================
