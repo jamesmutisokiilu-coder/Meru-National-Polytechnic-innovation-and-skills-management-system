@@ -1634,52 +1634,84 @@ def post_discussion_reply(discussion_id):
 @app.route("/gallery", methods=["GET", "POST"])
 def gallery():
 
+    # ==========================================
+    # UPLOAD GALLERY IMAGE
+    # ==========================================
     if request.method == "POST":
 
+        # Only logged-in administrators can upload
         if "admin_id" not in session:
+            flash("Please log in as an administrator to upload images.", "error")
             return redirect(url_for("admin_login"))
 
         title = form_value("title")
         description = form_value("description")
         image_file = request.files.get("image")
 
-        if not title or not image_file or not image_file.filename:
+        # Validate title
+        if not title:
+            flash("Please provide an image title.", "error")
+            return redirect(url_for("gallery"))
+
+        # Validate image selection
+        if not image_file or not image_file.filename:
+            flash("Please select an image to upload.", "error")
+            return redirect(url_for("gallery"))
+
+        # Validate image extension
+        if not allowed_file(image_file.filename):
+            flash(
+                "Unsupported image format. Please upload a JPG, JPEG, PNG or WEBP image.",
+                "error"
+            )
+            return redirect(url_for("gallery"))
+
+        # Generate a unique filename
+        original_filename = secure_filename(image_file.filename)
+
+        unique_filename = (
+            f"{secrets.token_hex(12)}_{original_filename}"
+        )
+
+        storage_path = f"gallery/{unique_filename}"
+
+        # ==========================================
+        # UPLOAD IMAGE TO SUPABASE STORAGE
+        # ==========================================
+        try:
+            image_url = upload_to_supabase(
+                image_file,
+                storage_path
+            )
+
+            if not image_url:
+                raise Exception("Supabase did not return an image URL.")
+
+        except Exception:
+            app.logger.exception(
+                "Failed to upload gallery image to Supabase Storage."
+            )
 
             flash(
-                "Please provide a title and select an image.",
+                "Image upload failed. Please check your Supabase Storage configuration.",
                 "error"
             )
 
             return redirect(url_for("gallery"))
 
-        if not allowed_file(image_file.filename):
-
-            flash("Unsupported image format.", "error")
-            return redirect(url_for("gallery"))
-
-        filename = secure_filename(image_file.filename)
-
-        unique_filename = (
-            f"{secrets.token_hex(8)}_{filename}"
-        )
-
-        try:
-            image_url = upload_to_supabase(
-                image_file,
-                f"gallery/{unique_filename}"
-            )
-        except Exception:
-            app.logger.exception("Gallery image upload to Supabase failed.")
-            flash("Image upload failed. Please check Supabase Storage settings.", "error")
-            return redirect(url_for("gallery"))
-
+        # ==========================================
+        # SAVE IMAGE DETAILS TO DATABASE
+        # ==========================================
         db = get_db()
 
         try:
-
             db.execute("""
-                INSERT INTO gallery
-                (title, description, image, date)
+                INSERT INTO gallery (
+                    title,
+                    description,
+                    image,
+                    date
+                )
                 VALUES (?, ?, ?, ?)
             """, (
                 title,
@@ -1690,29 +1722,68 @@ def gallery():
 
             db.commit()
 
+            flash(
+                "Gallery image uploaded and saved successfully.",
+                "success"
+            )
+
+        except Exception:
+            db.rollback()
+
+            app.logger.exception(
+                "Failed to save gallery image details to the database."
+            )
+
+            flash(
+                "The image was uploaded, but its details could not be saved. Please try again.",
+                "error"
+            )
+
         finally:
             db.close()
 
-        flash(
-            "Gallery image uploaded successfully.",
-            "success"
-        )
-
         return redirect(url_for("gallery"))
 
+    # ==========================================
+    # FETCH GALLERY IMAGES FROM DATABASE
+    # ==========================================
     db = get_db()
 
     try:
-
         images = db.execute("""
-            SELECT * FROM gallery
+            SELECT
+                id,
+                title,
+                description,
+                image,
+                date
+            FROM gallery
             ORDER BY id DESC
         """).fetchall()
+
+    except Exception:
+        app.logger.exception(
+            "Failed to retrieve gallery images from the database."
+        )
+
+        flash(
+            "Unable to load gallery images. Please try again later.",
+            "error"
+        )
+
+        images = []
 
     finally:
         db.close()
 
-    return render_template("gallery.html", images=images)
+    # ==========================================
+    # DISPLAY GALLERY
+    # ==========================================
+    return render_template(
+        "gallery.html",
+        images=images
+    )
+
 
 
 # =========================================================
@@ -4142,3 +4213,4 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 5000)),
         debug=(os.environ.get("FLASK_DEBUG", "false").lower() == "true" and not IS_PRODUCTION)
     )
+
